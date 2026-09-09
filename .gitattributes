@@ -1,0 +1,6 @@
+# テキストファイルは LF に統一
+* text=auto eol=lf
+
+# Windows バッチファイルのみ CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
