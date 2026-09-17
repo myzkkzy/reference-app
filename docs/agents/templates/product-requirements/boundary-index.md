@@ -13,5 +13,5 @@
 <!-- index は一覧と参照先の案内に限定する。特定の業務領域（境界）の要求一覧に使用する。その領域に属する要求を掲載し、各要求本文の該当節へ直接リンクする。関連する横断要求や全体・隣接領域の要求一覧への参照を設ける。目的・背景、対象者、成功指標の詳細、対話、変更・合意の記録、対象範囲・対象外、未決事項・仮定は掲載しない。要求の情報は個々の要求本文、決定の背景・根拠はPDRで管理する。 -->
 
 <!-- DDDの補助資料は作成済みのものだけ「関連文書」から参照する。
-要求：domain-overview.md・glossary.md。要件：context-map.md・glossary.md・境界別business-flow.md。
-自身の工程に該当するものだけ掲載し、詳細本文や架空のDEM/REQ行をindexへ追加しない。 -->
+要求：domain-overview.md・glossary.md。要件：context-map.md・境界別business-flow.md。全工程の用語集は docs/product-demands/glossary.md のみを参照する。
+自身の工程の補助資料と要求側の共通用語集への参照を掲載し、詳細本文や架空のDEM/REQ行をindexへ追加しない。 -->

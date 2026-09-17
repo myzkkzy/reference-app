@@ -15,5 +15,5 @@
 <!-- index は一覧と参照先の案内に限定する。横断要件を含む全要件の本文の該当節へ直接リンクする。対象範囲・対象外、責務、受入条件、未決事項、設計担当への引継ぎ、変更・合意の記録などの詳細情報は掲載しない。要件の詳細は要件本文で管理し、本文は転記しない。 -->
 
 <!-- DDDの補助資料は作成済みのものだけ「関連文書」から参照する。
-要求：domain-overview.md・glossary.md。要件：context-map.md・glossary.md・境界別business-flow.md。
-自身の工程に該当するものだけ掲載し、詳細本文や架空のDEM/REQ行をindexへ追加しない。 -->
+要求：domain-overview.md・glossary.md。要件：context-map.md・境界別business-flow.md。全工程の用語集は docs/product-demands/glossary.md のみを参照する。
+自身の工程の補助資料と要求側の共通用語集への参照を掲載し、詳細本文や架空のDEM/REQ行をindexへ追加しない。 -->

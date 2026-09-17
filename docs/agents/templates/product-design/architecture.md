@@ -18,7 +18,7 @@
 
 ## コンテキストと実装構成
 
-- ドメイン入力：{{要件側glossary.md・context-map.md・business-flow.mdへのリンクと確認時点。未作成は未作成とし、既存REQからの提案と確定事項を区別}}
+- ドメイン入力：{{docs/product-demands/glossary.md と要件側context-map.md・business-flow.mdへのリンクと確認時点。未作成は未作成とし、既存REQからの提案と確定事項を区別}}
 
 | コンテキスト・用語定義 | 責務・所有するモデル | 対応する実装構成 | 文書の業務境界との対応 | 関連REQ・DES |
 | --- | --- | --- | --- | --- |
