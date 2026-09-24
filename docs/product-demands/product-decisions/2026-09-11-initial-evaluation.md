@@ -1,3 +1,8 @@
+---
+type: Product Decision
+title: "初期評価の範囲"
+description: "初期評価の範囲に関する対話の決定と根拠を記録する。"
+---
 # 初期評価の範囲
 
 - 判断日：2026-09-11
@@ -19,6 +24,6 @@
 
 ## 関連要求
 
-- [DEM-001：比較したい参考画像を継続して蓄積する](../reference-collection/collection.md#dem-001比較したい参考画像を継続して蓄積する)
-- [DEM-002：多くの画像を見渡し全体と細部を比較する](../reference-exploration/comparison.md#dem-002多くの画像を見渡し全体と細部を比較する)
-- [DEM-003：画像の関係や気づきを自分なりに整理する](../reference-exploration/organization.md#dem-003画像の関係や気づきを自分なりに整理する)
+- [DEM-001：比較したい参考画像を継続して蓄積する](../collection.md#dem-001比較したい参考画像を継続して蓄積する)
+- [DEM-002：多くの画像を見渡し全体と細部を比較する](../comparison.md#dem-002多くの画像を見渡し全体と細部を比較する)
+- [DEM-003：画像の関係や気づきを自分なりに整理する](../organization.md#dem-003画像の関係や気づきを自分なりに整理する)

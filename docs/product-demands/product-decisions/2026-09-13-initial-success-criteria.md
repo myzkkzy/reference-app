@@ -1,3 +1,8 @@
+---
+type: Product Decision
+title: "初期版の達成目安と全要求の評価方法の判断"
+description: "初期版の達成目安と全要求の評価方法の判断に関する対話の決定と根拠を記録する。"
+---
 # 初期版の達成目安と全要求の評価方法の判断
 
 - 判断日：2026-09-13
@@ -27,9 +32,9 @@
 
 ## 関連要求
 
-- [DEM-001](../reference-collection/collection.md#dem-001比較したい参考画像を継続して蓄積する)
-- [DEM-002](../reference-exploration/comparison.md#dem-002多くの画像を見渡し全体と細部を比較する)
-- [DEM-003](../reference-exploration/organization.md#dem-003画像の関係や気づきを自分なりに整理する)
+- [DEM-001](../collection.md#dem-001比較したい参考画像を継続して蓄積する)
+- [DEM-002](../comparison.md#dem-002多くの画像を見渡し全体と細部を比較する)
+- [DEM-003](../organization.md#dem-003画像の関係や気づきを自分なりに整理する)
 - [DEM-004](../cross-cutting.md#dem-004蓄積内容を保ち後日再開する)
 - [DEM-005](../cross-cutting.md#dem-005別pcでも蓄積内容を使い続ける)
 - [DEM-006](../cross-cutting.md#dem-006他の制作者とリファレンスを確認し考えや方向性をすり合わせる)

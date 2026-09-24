@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manage OKF"
+  short_description: "汎用OKF文書の探索・作成・更新・移行と形式検査を行う"
+  default_prompt: "$manage-okf を使い、指定したバンドルを適用規則に従って確認してください。"

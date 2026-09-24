@@ -1,3 +1,8 @@
+---
+type: Product Decision
+title: "要求ドラフト作成への移行"
+description: "要求ドラフト作成への移行に関する対話の決定と根拠を記録する。"
+---
 # 要求ドラフト作成への移行
 
 - 判断日：2026-09-11
@@ -19,8 +24,8 @@
 
 ## 関連要求
 
-- [DEM-001：比較したい参考画像を継続して蓄積する](../reference-collection/collection.md#dem-001比較したい参考画像を継続して蓄積する)
-- [DEM-002：多くの画像を見渡し全体と細部を比較する](../reference-exploration/comparison.md#dem-002多くの画像を見渡し全体と細部を比較する)
-- [DEM-003：画像の関係や気づきを自分なりに整理する](../reference-exploration/organization.md#dem-003画像の関係や気づきを自分なりに整理する)
+- [DEM-001：比較したい参考画像を継続して蓄積する](../collection.md#dem-001比較したい参考画像を継続して蓄積する)
+- [DEM-002：多くの画像を見渡し全体と細部を比較する](../comparison.md#dem-002多くの画像を見渡し全体と細部を比較する)
+- [DEM-003：画像の関係や気づきを自分なりに整理する](../organization.md#dem-003画像の関係や気づきを自分なりに整理する)
 - [DEM-004：蓄積内容を保ち後日再開する](../cross-cutting.md#dem-004蓄積内容を保ち後日再開する)
 - [DEM-005：別PCでも蓄積内容を使い続ける](../cross-cutting.md#dem-005別pcでも蓄積内容を使い続ける)
