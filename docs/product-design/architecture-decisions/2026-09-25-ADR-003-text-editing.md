@@ -10,7 +10,7 @@ description: PixiJS表示のメモを編集するときにHTML textareaを併用
 - 作成日：2026-09-25
 - 決定日：未決
 - 決定者・判断権限の根拠：設計担当の技術提案。本人は「ほぼ全てPixiJS」を選択し、`@pixi/ui`でテキスト入力を実現できるか確認したが、`textarea`併用を明示採用していない。
-- 関連要求・要件・設計：[DEM-003](../../product-demands/organization.md#dem-003画像の関係や気づきを自分なりに整理する)、[REQ-010](../../product-requirements/organization.md#req-010独立メモの編集と配置)。DESは未作成。
+- 関連要求・要件・設計：[DEM-003](../../product-demands/organization.md#dem-003画像の関係や気づきを自分なりに整理する)、[REQ-010](../../product-requirements/organization.md#req-010独立メモの編集と配置)、[DES-001：全体設計](../architecture.md#des-001リファレンスボードの全体設計)。
 
 ## 背景・制約
 
