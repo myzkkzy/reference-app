@@ -6,9 +6,9 @@ description: SQLiteを含むプロジェクトの保存単位、要求結果契�
 
 # DES-009：プロジェクトの保存・読込・復旧設計
 
-- 設計状態：ドラフト。2026-09-30に保存統合・復元を具体化したが、2026-10-03に資源制御も具体化したが、障害・性能検証と変更要件のレビューが残るため実装引継ぎ可能とはしない。
+- 設計状態：ドラフト。保存統合・復元と資源制御を具体化したが、障害・性能検証と変更要件のレビューが残るため実装引継ぎ可能とはしない。
 - 目的・範囲：プロジェクト永続化の処理契約と失敗時の保護。物理構造は[DES-008](data-design/project-file.md)、編集単位は[DES-002](board-state.md)、画面は[DES-007](screen-design/persistence.md)を正本とする。
-- 入力確認日：2026-09-30。本人の設定独立保存、確認中の保存停止と戻った後の集約実行、入力済みメモ保存・IME変換中除外、同一ファイル再読込、取込完了待ち、表示位置保存、全保存での復旧用更新の回答と、本設計具体化計画の実行指示を確認。要件全体への合意・製品試験合格とは区別する。
+- 入力確認日：2026-09-30。ユーザーの設定独立保存、確認中の保存停止と戻った後の集約実行、入力済みメモ保存・IME変換中除外、同一ファイル再読込、取込完了待ち、表示位置保存、全保存での復旧用更新の回答と、本設計具体化計画の実行指示を確認。要件全体への合意・製品試験合格とは区別する。
 - 参照要件：[REQ-011～019](../product-requirements/cross-cutting.md#req-011保存内容の復元)（011～017・019は今回の意味変更に伴いドラフト、018は合意済み）、[REQ-023～025](../product-requirements/cross-cutting.md#req-023保存中の操作反応)（条件付き合意：保存中操作と500枚再開）。変更後の受入条件と既存性能基準は要件本文を正本とする。
 - 関連ADR：[ADR-011](architecture-decisions/2026-10-05-ADR-011-project-lock-and-retry.md)（排他・明示再試行、提案）、[ADR-004](architecture-decisions/2026-09-26-ADR-004-zip-board-storage.md)・[ADR-010](architecture-decisions/2026-09-29-ADR-010-sqlite-project-storage.md)は採用、[ADR-005](architecture-decisions/2026-09-26-ADR-005-save-recovery-policy.md)は変更要件レビュー・障害検証が残る提案。
 
@@ -74,7 +74,7 @@ flowchart TD
 6. 置換先を照合・同期する。保持有効かつ旧正常内容がある場合は、退避のコピーから復旧用を一時生成・検証・同期して`.recovery`へ置く。既存復旧用の更新にも退避付き置換を使う。設定・表示位置だけの保存も対象。保持無効なら既存復旧用を更新・削除しない。
 7. 本ファイルと必要な復旧用処理を確認後、完了記録を完全に書き出して同期する。この地点を保存成功とし、直前成功スナップショットと両成功番号を更新して通知する。同期失敗・不完全な記録を成功扱いしない。成功後の一時領域整理だけの失敗は保存失敗へ戻さず、後片付け保留として扱う。
 
-`ReplaceFileW`には失敗後もファイルの所在が変わる場合があり、`REPLACEFILE_WRITE_THROUGH`は未サポート。同期は`FlushFileBuffers`で別途行う。2026-09-30確認：[ReplaceFileW](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-replacefilew)、[FlushFileBuffers](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers)、[MoveFileExW](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefileexw)。API選定は障害検証合格を意味しない。
+`ReplaceFileW`には失敗後もファイルの所在が変わる場合があり、`REPLACEFILE_WRITE_THROUGH`は未サポート。同期は`FlushFileBuffers`で別途行う。確認した資料：[ReplaceFileW](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-replacefilew)、[FlushFileBuffers](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers)、[MoveFileExW](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefileexw)。API選定は障害検証合格を意味しない。
 
 同一保存先のアプリ内・別プロセスからの二重書込を排他する。外部アプリの同時書換えを協調ロックだけで防げるとはみなさず、置換直前と直後の照合で検出した競合は成功にしない。別名保存先の既存ファイルも無断で上書きしない。
 
@@ -100,7 +100,7 @@ flowchart TD
 
 ## 画像処理・資源管理
 
-2026-10-03の本人の計画実行指示を反映する。以下は16GB評価環境に対する初期設計値であり、性能達成・障害保護の実証ではない。初版ではキャッシュ容量・並列数を利用者向け設定に公開しない。
+ユーザーの計画実行指示を反映する。以下は16GB評価環境に対する初期設計値であり、性能達成・障害保護の実証ではない。初版ではキャッシュ容量・並列数を利用者向け設定に公開しない。
 
 | 管理対象 | 初期設計値 |
 | --- | --- |
@@ -202,10 +202,10 @@ flowchart TD
 
 | 対象・区分 | 担当・確定時期・解消条件・進行範囲 |
 | --- | --- |
-| 要件・画面同期 | 2026-09-30にREQ-011～017・019へ反映。意味変更した要件はドラフトとし、本人の個別回答・計画実行指示と全REQへの合意を区別する。新規保存先、復旧用保持と復旧後別名保存も反映済み |
+| 要件・画面同期 | REQ-011～017・019へ反映。意味変更した要件はドラフトとし、ユーザーの個別回答・計画実行指示と全REQへの合意を区別する。新規保存先、復旧用保持と復旧後別名保存も反映済み |
 | 入力境界 | DES-002に前面化・途中保存・取消・IME・文章内Undoを具体化。要件担当が実装前に差分を反映・レビューする |
 | 保存・回復の検証 | ReplaceFileW・同期・準備／完了記録・退避・復旧用更新順を本書へ具体化。実装／検証担当が各境界の異常終了と外部競合・再起動を検証するまで成立確認済みにしない |
-| SQLite配布・資源制御 | 資源上限と管理方式は2026-10-03に本書・DES-008へ反映。Rustバインディング、同梱版、防御設定、変換ライブラリ・色変換・縮小フィルターの具体的選定は実装前に完了する。500枚は性能評価条件 |
+| SQLite配布・資源制御 | 資源上限と管理方式は本書・DES-008へ反映。Rustバインディング、同梱版、防御設定、変換ライブラリ・色変換・縮小フィルターの具体的選定は実装前に完了する。500枚は性能評価条件 |
 | 移送 | 保存成功後にプロジェクトを閉じ、その後OSコピーする方針をDES-007へ反映。開いたままの安定コピー対象提供は初版の手順に含めない |
 | 失敗後の継続・排他 | 本書に方式とAPI根拠を具体化。要件反映、実装／検証担当による各障害・パス別名・ACL・異常終了の実証を実装引継ぎ前に確認。文書方式は確定、成立は未検証 |
 | 性能・検証準備 | 検証担当が既存共通評価条件の未決を解消して実測する。設定保存もZIP更新を伴うため、保存中の性能基準で確認。独立退避・ハッシュ・同期を省いて目標を満たした扱いにしない |
@@ -214,7 +214,7 @@ flowchart TD
 
 ## フォント差読込と保存原本
 
-2026-10-05の計画反映。読込・検証後の保存原本をB0とし、Rustの直前成功スナップショット・画像参照・元ZIPハッシュとして保持する。端末フォントによる高さ再計算・枠調整・座標補正後のB1はTypeScriptの未保存状態として分け、B0を調整結果で書き換えない。原本の同値性は保存属性とファイルハッシュで検査し、保存していないメモ高の違いだけで破損扱いしない。
+計画反映。読込・検証後の保存原本をB0とし、Rustの直前成功スナップショット・画像参照・元ZIPハッシュとして保持する。端末フォントによる高さ再計算・枠調整・座標補正後のB1はTypeScriptの未保存状態として分け、B0を調整結果で書き換えない。原本の同値性は保存属性とファイルハッシュで検査し、保存していないメモ高の違いだけで破損扱いしない。
 
 1. B0の保存項目の値域・参照・画像外周・枠範囲を検証する。本文・幅・文字サイズを保って全メモの高さを当該端末で再計算する。高さの減少で枠を自動縮小しない。
 2. 未所属メモは全文外周が範囲を超えた軸だけ、範囲内へ戻す最小量を平行移動する。所属メモはグループ単位で内容＋余白を含む必要枠を拡大し、拡大後枠を範囲内へ戻す最小量で枠と全所属要素を平行移動する。相対位置・本文・幅・文字サイズを維持する。補正はグリッド／他要素へ吸着させない。
@@ -223,7 +223,7 @@ flowchart TD
 5. 保存属性が変わった場合だけB1のboardRevisionを1、savedBoardRevisionを0とする。メモ高だけ変化し枠・座標が同値なら番号は0のまま。履歴は新規空で開始し、環境調整をUndo項目に入れない。次の利用者操作のUndo基準はB1。
 6. 設定だけの保存はB0/view0＋最新設定であり、B1の枠・座標を混入させない。初回のボード保存成功でB1を新成功基準にする。B1保存前の終了・切替も未保存保護を適用する。
 
-保存中心／倍率は補正に連動して変更しない。全体表示・メモ編集開始で利用者が表示を変えられる。フォントの取得・描画契約はDES-004。OS取得根拠（2026-10-05確認）：[SystemParametersInfoW](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-systemparametersinfow)、[NONCLIENTMETRICSW](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nonclientmetricsw)。描画・折返しの一致は実機検証待ち。
+保存中心／倍率は補正に連動して変更しない。全体表示・メモ編集開始で利用者が表示を変えられる。フォントの取得・描画契約はDES-004。OS取得根拠：[SystemParametersInfoW](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-systemparametersinfow)、[NONCLIENTMETRICSW](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nonclientmetricsw)。描画・折返しの一致は実機検証待ち。
 
 ## 同一ファイルの排他契約
 
@@ -238,7 +238,7 @@ flowchart TD
 - `WAIT_ABANDONED`は所有取得と同時に整合照合が必要な状態である。正常な取得の場合も前回プロセス終了でmutexが消滅している可能性があるため、中断記録検査を省かない。放置ロックファイルやPIDの生死推測による削除は使わない。プロセス終了でOSがハンドルを閉じ、所有スレッド死亡ではmutexが放棄状態になる。所有スレッドが稼働中に失われたら書込を停止し、プロジェクトを閉じるまで編集を保持する。
 - 既定セキュリティ記述子を使用し、他Windowsユーザーでアクセス拒否なら開かない。昇格要求やACLを自動緩和しない。これは利用者の別PC逐次利用とWindows11範囲の確認を代替しない。
 
-2026-10-05に一次資料確認：[CreateMutexExW](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createmutexexw)、[WaitForSingleObject](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)、[ReleaseMutex](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-releasemutex)、[名前空間](https://learn.microsoft.com/en-us/windows/win32/termserv/kernel-object-namespaces)、[最終パス](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfinalpathnamebyhandlew)、[ファイル識別](https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-file_id_info)。API仕様を組合せた方式は設計判断であり、実機のパス別名・置換・ACL・異常終了の実証ではない。
+一次資料確認：[CreateMutexExW](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createmutexexw)、[WaitForSingleObject](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)、[ReleaseMutex](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-releasemutex)、[名前空間](https://learn.microsoft.com/en-us/windows/win32/termserv/kernel-object-namespaces)、[最終パス](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfinalpathnamebyhandlew)、[ファイル識別](https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-file_id_info)。API仕様を組合せた方式は設計判断であり、実機のパス別名・置換・ACL・異常終了の実証ではない。
 
 ## 置換以降の失敗と再試行
 

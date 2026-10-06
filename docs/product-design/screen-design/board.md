@@ -8,11 +8,11 @@ description: 画像取込・選択・配置・グループ・メモ・参照維�
 
 - 設計状態：ドラフト。セッション決定の振る舞いを反映済み。配置・文言と残るキー割当ては設計案で、要件反映・操作性実証待ち。
 - 目的・範囲：収集・比較・整理の主要操作を具体化する。
-- 入力確認日：2026-09-28。参照要件：[REQ-001](../../product-requirements/collection.md#req-001画像の追加経路)、[REQ-002](../../product-requirements/collection.md#req-002静止画形式と複数フレームの扱い)、[REQ-003](../../product-requirements/collection.md#req-003複数取込と失敗通知)、[REQ-004](../../product-requirements/comparison.md#req-004全体と細部の表示)、[REQ-005](../../product-requirements/comparison.md#req-005制作中の参照維持)、[REQ-006](../../product-requirements/organization.md#req-006画像の移動回転拡縮)、[REQ-007](../../product-requirements/organization.md#req-007画像の削除)、[REQ-008](../../product-requirements/organization.md#req-008グループへの所属と解除)、[REQ-009](../../product-requirements/organization.md#req-009グループの一括移動)、[REQ-010](../../product-requirements/organization.md#req-010独立メモの編集と配置)、[REQ-015](../../product-requirements/cross-cutting.md#req-015保存状態の識別)、[REQ-016](../../product-requirements/cross-cutting.md#req-016保存失敗時の内容保護と再試行)、[REQ-021](../../product-requirements/cross-cutting.md#req-021通常時の操作反応)、[REQ-022](../../product-requirements/cross-cutting.md#req-022通常時の細部表示)、[REQ-023](../../product-requirements/cross-cutting.md#req-023保存中の操作反応)、[REQ-024](../../product-requirements/cross-cutting.md#req-024保存中の細部表示)、[REQ-026](../../product-requirements/cross-cutting.md#req-026ローカル500枚の初回取込性能)。REQ-004・006・010・021～024・026は条件付き合意、015・016は2026-09-30更新でドラフト、その他は合意済み。
+- 入力確認日：2026-09-28。参照要件：[REQ-001](../../product-requirements/collection.md#req-001画像の追加経路)、[REQ-002](../../product-requirements/collection.md#req-002静止画形式と複数フレームの扱い)、[REQ-003](../../product-requirements/collection.md#req-003複数取込と失敗通知)、[REQ-004](../../product-requirements/comparison.md#req-004全体と細部の表示)、[REQ-005](../../product-requirements/comparison.md#req-005制作中の参照維持)、[REQ-006](../../product-requirements/organization.md#req-006画像の移動回転拡縮)、[REQ-007](../../product-requirements/organization.md#req-007画像の削除)、[REQ-008](../../product-requirements/organization.md#req-008グループへの所属と解除)、[REQ-009](../../product-requirements/organization.md#req-009グループの一括移動)、[REQ-010](../../product-requirements/organization.md#req-010独立メモの編集と配置)、[REQ-015](../../product-requirements/cross-cutting.md#req-015保存状態の識別)、[REQ-016](../../product-requirements/cross-cutting.md#req-016保存失敗時の内容保護と再試行)、[REQ-021](../../product-requirements/cross-cutting.md#req-021通常時の操作反応)、[REQ-022](../../product-requirements/cross-cutting.md#req-022通常時の細部表示)、[REQ-023](../../product-requirements/cross-cutting.md#req-023保存中の操作反応)、[REQ-024](../../product-requirements/cross-cutting.md#req-024保存中の細部表示)、[REQ-026](../../product-requirements/cross-cutting.md#req-026ローカル500枚の初回取込性能)。REQ-004・006・010・021～024・026は条件付き合意、015・016は更新でドラフト、その他は合意済み。
 - 依存設計：[DES-005](overview.md#des-005全体画面設計)、[DES-002](../board-state.md#des-002ボードの編集状態とグループ構造)、[DES-004](../data-design/board-state.md#des-004ボードのデータ設計)。
 - 分割元・先：DES-001・002の表示操作から独立。従来の保存・失敗通知の詳細を[DES-007](persistence.md#des-007保存再開引継ぎの画面設計)へ分割した。
 
-2026-10-03更新：画像資源制限と編集方針の反映後、REQ-001～004・006～017・019はドラフト。REQ-005・018は合意済み、REQ-020～026は条件付き合意。以下に残る過去の参照状態は入力時点の記録で、現在状態の正本は要件本文とする。
+更新内容：画像資源制限と編集方針の反映後、REQ-001～004・006～017・019はドラフト。REQ-005・018は合意済み、REQ-020～026は条件付き合意。以下に残る過去の参照状態は入力時点の記録で、現在状態の正本は要件本文とする。
 
 ## ボードと要素の表示
 
@@ -20,7 +20,7 @@ description: 画像取込・選択・配置・グループ・メモ・参照維�
 
 図の上段は画像選択時の配置案、下段は取込中・配置操作中・メモ編集中・保存失敗時に変わる部分のワイヤーフレーム案である。中央のボードに画像とメモを置く。画像の選択枠には四隅の拡縮ハンドルと回転ハンドル、メモには移動用ヘッダーと文章領域を示す。右側のコンテキスト欄は画像・メモ・グループ・複数選択に応じて変わる。画像選択時の図には「取り消す」「やり直す」「最前面へ」「最背面へ」の配置案を示す。グループのヘッダーを選択・移動の入口とする案であり、全グループの枠保持・必要時拡大・明示fitと選択時前面化は[ADR-007](../architecture-decisions/2026-09-26-ADR-007-board-coordinates-and-groups.md)に方針を反映済み。要件への反映と画面配置案の確定は区別する。
 
-2026-10-04、既存2図の画面枠・ボタン・所属先の選択・前面表示のチェック・メモ入力をMockupプリセット中心の表現へ更新した。画像・メモ・グループの固有表現、選択枠・ハンドル、遷移の状態・接続線はGeneralで補う。TIFF通知は「先頭ページのみ追加、残りは未取込」を示す。既存の操作と遷移先、案・未決の区分を維持し、新しい画面・操作は追加しない。
+既存2図の画面枠・ボタン・所属先の選択・前面表示のチェック・メモ入力をMockupプリセット中心の表現へ更新した。画像・メモ・グループの固有表現、選択枠・ハンドル、遷移の状態・接続線はGeneralで補う。TIFF通知は「先頭ページのみ追加、残りは未取込」を示す。既存の操作と遷移先、案・未決の区分を維持し、新しい画面・操作は追加しない。
 
 ボードのパン・ズームは表示変換であり、画像・メモの配置を変えない。座標・所属・重なり順の定義は[DES-004](../data-design/board-state.md#座標所属グループ枠)を参照する。枠内へ置くだけで所属させず、所属先をコンテキスト欄で明示する案とする。
 
@@ -68,7 +68,7 @@ JPEG・PNG・WebP・GIF・TIFF・BMPを対象に、GIF・WebPは先頭コマ、T
 
 ## グリッドとスナップの操作契約
 
-2026-10-05、自由回転のみ／スナップなしという以前の案を、利用者のスナップ追加指定で変更する。回転角の数値入力は設けない。
+自由回転のみ／スナップなしという以前の案を、利用者のスナップ追加指定で変更する。回転角の数値入力は設けない。
 
 - プロジェクト設定にグリッド表示（初期オン）、間隔8・16・32・64・128（初期32）、スナップ有効（初期オン）、回転刻み5・15・45・90度（初期15）を配置する。表示とスナップは独立切替。原点基準の縦横線とし、縮小時は画面上の間隔が8 CSSpx以上になるまで2の累乗で線を間引く。吸着は元の間隔を維持する。
 - 移動・幅変更・枠変更・画像拡縮の候補は、グリッドと他要素の水平／垂直外接矩形の端・中心。回転画像は回転後AABB。グループ移動は保持枠、複数選択移動は選択全体AABB。回転の他要素／グリッド位置への吸着は行わず、角度だけ刻みに合わせる。

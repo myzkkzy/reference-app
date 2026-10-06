@@ -8,12 +8,12 @@ description: 単一ボードとダイアログの分担、操作・通知・フ�
 
 - 設計状態：ドラフト。決定済みの振る舞いと設計上の配置・文言案を区別し、要件反映・実証待ちを維持する。
 - 目的・範囲：主要操作を単一ボード、固定UI、ダイアログ、同一画面内の状態に具体化する。
-- 入力確認日：2026-09-28。REQ-001～026の本文・受入条件・合意状態を確認。REQ-004・006・010・020～026は条件付き合意、011～017・019は2026-09-30の更新でドラフト、その他は合意済み。条件付き合意の限界値・評価条件は確定しない。
-- 参照要件：[REQ-001](../../product-requirements/collection.md#req-001画像の追加経路)、[REQ-002](../../product-requirements/collection.md#req-002静止画形式と複数フレームの扱い)、[REQ-003](../../product-requirements/collection.md#req-003複数取込と失敗通知)、[REQ-004](../../product-requirements/comparison.md#req-004全体と細部の表示)、[REQ-005](../../product-requirements/comparison.md#req-005制作中の参照維持)、[REQ-006](../../product-requirements/organization.md#req-006画像の移動回転拡縮)、[REQ-007](../../product-requirements/organization.md#req-007画像の削除)、[REQ-008](../../product-requirements/organization.md#req-008グループへの所属と解除)、[REQ-009](../../product-requirements/organization.md#req-009グループの一括移動)、[REQ-010](../../product-requirements/organization.md#req-010独立メモの編集と配置)、[REQ-011](../../product-requirements/cross-cutting.md#req-011保存内容の復元)、[REQ-012](../../product-requirements/cross-cutting.md#req-01230秒ごとの自動保存)、[REQ-013](../../product-requirements/cross-cutting.md#req-013自動保存設定)、[REQ-014](../../product-requirements/cross-cutting.md#req-014手動保存)、[REQ-015](../../product-requirements/cross-cutting.md#req-015保存状態の識別)、[REQ-016](../../product-requirements/cross-cutting.md#req-016保存失敗時の内容保護と再試行)、[REQ-017](../../product-requirements/cross-cutting.md#req-017未保存での終了)、[REQ-018](../../product-requirements/cross-cutting.md#req-018原本に依存しない継続)、[REQ-019](../../product-requirements/cross-cutting.md#req-019本人の別pcへの引継ぎ)、[REQ-020](../../product-requirements/cross-cutting.md#req-020windows-11でのインストール不要利用)、[REQ-021](../../product-requirements/cross-cutting.md#req-021通常時の操作反応)、[REQ-022](../../product-requirements/cross-cutting.md#req-022通常時の細部表示)、[REQ-023](../../product-requirements/cross-cutting.md#req-023保存中の操作反応)、[REQ-024](../../product-requirements/cross-cutting.md#req-024保存中の細部表示)、[REQ-025](../../product-requirements/cross-cutting.md#req-025保存済み500枚の再開性能)、[REQ-026](../../product-requirements/cross-cutting.md#req-026ローカル500枚の初回取込性能)。
+- 入力確認日：2026-09-28。REQ-001～026の本文・受入条件・合意状態を確認。REQ-004・006・010・020～026は条件付き合意、011～017・019は更新でドラフト、その他は合意済み。条件付き合意の限界値・評価条件は確定しない。
+- 参照要件：[REQ-001](../../product-requirements/collection.md#req-001画像の追加経路)、[REQ-002](../../product-requirements/collection.md#req-002静止画形式と複数フレームの扱い)、[REQ-003](../../product-requirements/collection.md#req-003複数取込と失敗通知)、[REQ-004](../../product-requirements/comparison.md#req-004全体と細部の表示)、[REQ-005](../../product-requirements/comparison.md#req-005制作中の参照維持)、[REQ-006](../../product-requirements/organization.md#req-006画像の移動回転拡縮)、[REQ-007](../../product-requirements/organization.md#req-007画像の削除)、[REQ-008](../../product-requirements/organization.md#req-008グループへの所属と解除)、[REQ-009](../../product-requirements/organization.md#req-009グループの一括移動)、[REQ-010](../../product-requirements/organization.md#req-010独立メモの編集と配置)、[REQ-011](../../product-requirements/cross-cutting.md#req-011保存内容の復元)、[REQ-012](../../product-requirements/cross-cutting.md#req-01230秒ごとの自動保存)、[REQ-013](../../product-requirements/cross-cutting.md#req-013自動保存設定)、[REQ-014](../../product-requirements/cross-cutting.md#req-014手動保存)、[REQ-015](../../product-requirements/cross-cutting.md#req-015保存状態の識別)、[REQ-016](../../product-requirements/cross-cutting.md#req-016保存失敗時の内容保護と再試行)、[REQ-017](../../product-requirements/cross-cutting.md#req-017未保存での終了)、[REQ-018](../../product-requirements/cross-cutting.md#req-018原本に依存しない継続)、[REQ-019](../../product-requirements/cross-cutting.md#req-019利用者の別pcへの引継ぎ)、[REQ-020](../../product-requirements/cross-cutting.md#req-020windows-11でのインストール不要利用)、[REQ-021](../../product-requirements/cross-cutting.md#req-021通常時の操作反応)、[REQ-022](../../product-requirements/cross-cutting.md#req-022通常時の細部表示)、[REQ-023](../../product-requirements/cross-cutting.md#req-023保存中の操作反応)、[REQ-024](../../product-requirements/cross-cutting.md#req-024保存中の細部表示)、[REQ-025](../../product-requirements/cross-cutting.md#req-025保存済み500枚の再開性能)、[REQ-026](../../product-requirements/cross-cutting.md#req-026ローカル500枚の初回取込性能)。
 - 依存設計：[DES-001](../architecture.md#画面操作の全体図)、[DES-002](../board-state.md#des-002ボードの編集状態とグループ構造)、[DES-003](../data-design/overview.md#des-003全体データ設計)。
 - 分割元・先：DES-001の概要図から独立した共通画面方針。ボード詳細はDES-006、保存関連詳細はDES-007を正本とする。
 
-2026-10-03更新：画像資源制限と編集方針の反映後、REQ-001～004・006～017・019はドラフト。REQ-005・018は合意済み、REQ-020～026は条件付き合意。以下に残る過去の参照状態は入力時点の記録で、現在状態の正本は要件本文とする。
+更新内容：画像資源制限と編集方針の反映後、REQ-001～004・006～017・019はドラフト。REQ-005・018は合意済み、REQ-020～026は条件付き合意。以下に残る過去の参照状態は入力時点の記録で、現在状態の正本は要件本文とする。
 
 ## 表示責務
 
@@ -55,17 +55,17 @@ REQ-020の対応Windows 11範囲は未決。REQ-021～026の目標・評価条�
 
 ## 文書・図の検査とレビュー状態
 
-2026-09-29、添付6図をdraw.io Desktopで出力し、SVG/XML構文、単一ページ、埋込編集データ、要素IDの重複、親・接続先の存在を確認した。正式SVGから編集データを抽出して6図とも再出力でき、改図前の要素IDをすべて維持した。出力PNGを全体と拡大で確認し、日本語・操作部品・状態差分・矢印・条件ラベルを読めること、遷移線の交差・共有区間・無関係ノード通過がないことを確認した。OKF厳格リンク検査は47文書、エラー0・警告0。
+添付6図をdraw.io Desktopで出力し、SVG/XML構文、単一ページ、埋込編集データ、要素IDの重複、親・接続先の存在を確認した。正式SVGから編集データを抽出して6図とも再出力でき、改図前の要素IDをすべて維持した。出力PNGを全体と拡大で確認し、日本語・操作部品・状態差分・矢印・条件ラベルを読めること、遷移線の交差・共有区間・無関係ノード通過がないことを確認した。OKF厳格リンク検査は47文書、エラー0・警告0。
 
-当時のMarkdown閲覧環境での埋込表示は未確認だった。図の確認は製品の動作・性能、要件の受入合格を保証しない。2026-09-30に設定独立保存・メモ保存・確認ゲート・復元候補の画面記述を更新した。ドラッグ中の手動確定操作と移送中の書込競合など残件があるドラフトである。
+当時のMarkdown閲覧環境での埋込表示は未確認だった。図の確認は製品の動作・性能、要件の受入合格を保証しない。設定独立保存・メモ保存・確認ゲート・復元候補の画面記述を更新した。ドラッグ中の手動確定操作と移送中の書込競合など残件があるドラフトである。
 
-2026-10-04、既存6図をMockup優先の表現へ更新した。Desktop版draw.ioを起動せず、インストール済みの描画資源とローカルのヘッドレスブラウザーを使用し、図データの編集・描画はメモリ上で行った。正式SVGを置き換える前に出力画像の全体と拡大を確認し、日本語・部品の状態・条件ラベルが読めること、文字の重なりや遷移線の交差・共有区間・無関係ノード通過がないことを確認した。構造・再読込・再編集の確認結果は今回の図を対象とし、上記のDesktop書出し記録とは区別する。設計状態はドラフトを維持し、新規画面の追加、未決事項の確定、製品の受入試験は行っていない。
+既存6図をMockup優先の表現へ更新した。Desktop版draw.ioを起動せず、インストール済みの描画資源とローカルのヘッドレスブラウザーを使用し、図データの編集・描画はメモリ上で行った。正式SVGを置き換える前に出力画像の全体と拡大を確認し、日本語・部品の状態・条件ラベルが読めること、文字の重なりや遷移線の交差・共有区間・無関係ノード通過がないことを確認した。構造・再読込・再編集の確認結果は今回の図を対象とし、上記のDesktop書出し記録とは区別する。設計状態はドラフトを維持し、新規画面の追加、未決事項の確定、製品の受入試験は行っていない。
 
-2026-10-05、途中終了後の記録を照合し、6図が検証時の内容と一致することを確認した。Markdownをmarkdown-it-pyでHTML化したローカルのヘッドレスEdge環境では、6図すべての読込成功と本文内の埋込表示を確認した。他のMarkdown閲覧環境での表示互換性までは確認していない。OKFの文書形式・厳格リンク検査は52文書、エラー0・警告0。今回のWindows警告の有無は利用者からの回答がなく未確認であり、過去の警告の根本解消を認定しない。
+途中終了後の記録を照合し、6図が検証時の内容と一致することを確認した。Markdownをmarkdown-it-pyでHTML化したローカルのヘッドレスEdge環境では、6図すべての読込成功と本文内の埋込表示を確認した。他のMarkdown閲覧環境での表示互換性までは確認していない。OKFの文書形式・厳格リンク検査は52文書、エラー0・警告0。今回のWindows警告の有無は利用者からの回答がなく未確認であり、過去の警告の根本解消を認定しない。
 
 ## 狭い画面の配置契約
 
-2026-10-05の計画反映。クライアント幅800 CSSpx未満では上部操作を「メニュー」へまとめ、右コンテキスト欄を「選択操作」の折畳みパネルへ移す。800以上では従来の横並び操作と右欄。800は配置の設計初期値であり、操作感の実証値ではない。
+計画反映。クライアント幅800 CSSpx未満では上部操作を「メニュー」へまとめ、右コンテキスト欄を「選択操作」の折畳みパネルへ移す。800以上では従来の横並び操作と右欄。800は配置の設計初期値であり、操作感の実証値ではない。
 
 480×320でも上部40・下部40 CSSpxを固定し、残りボード領域を確保する。メニュー・選択操作・設定ダイアログは利用可能領域内で本文をスクロールし、完了／戻る／閉じるのフッターを固定する。最前面・Undo／Redo・文字サイズ・グリッド／スナップ設定をすべて到達可能にする。狭い画面では通知一覧を下部状態から開く折畳みとし、保存失敗・未保存は固定帯へ残す。OSダイアログはOSに任せる。
 
@@ -75,6 +75,6 @@ REQ-020の対応Windows 11範囲は未決。REQ-021～026の目標・評価条�
 
 ## セッション決定反映後の文書確認
 
-2026-10-05、今回の計画反映後は添付9図（既存6図更新・新規3図）を対象に、SVGと埋込編集データの構造検査、正式SVGからの編集データ再読込、描画・出力時の編集データ一致を確認した。既存図の要素IDを保持した。ローカルのヘッドレスEdgeで全体と原寸の拡大表示を点検し、グリッド・スナップ補助線・文字サイズ操作・最小画面・設定失敗・保存再試行の表示、文字の重なり、配線の交差・共有区間・無関係ノード通過を確認した。
+今回の計画反映後は添付9図（既存6図更新・新規3図）を対象に、SVGと埋込編集データの構造検査、正式SVGからの編集データ再読込、描画・出力時の編集データ一致を確認した。既存図の要素IDを保持した。ローカルのヘッドレスEdgeで全体と原寸の拡大表示を点検し、グリッド・スナップ補助線・文字サイズ操作・最小画面・設定失敗・保存再試行の表示、文字の重なり、配線の交差・共有区間・無関係ノード通過を確認した。
 
 DES-005・006・007のMarkdownをmarkdown-it-pyでHTML化し、本文内の9図すべてが読込成功した。他のMarkdown閲覧環境での互換性とWindows警告の有無は未確認を維持する。OKF形式・厳格リンク検査は53文書、エラー0・警告0。今回の完了はセッション決定の設計反映と文書整合レビューであり、要件合意・ADR一括採用・製品試験合格ではない。上流反映・実機成立確認・操作性と性能の実証は各DESの引継ぎ節を正本とする。

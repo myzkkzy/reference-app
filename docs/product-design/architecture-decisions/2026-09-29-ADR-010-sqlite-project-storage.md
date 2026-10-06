@@ -8,8 +8,8 @@ description: ZIP内の構造化データにSQLiteを採用し、確定状態か�
 
 - 状態：採用（構造化データの保存技術と保存用DB生成の範囲）。設定・復旧等の追加動作の要件合意を含まない。
 - 作成日・決定日：2026-09-29。
-- 決定者・根拠：本人が本チャットで「sqlite とする方針で設計検討」を指定し、文書整備計画の実行を依頼した。保存時のDB生成は既存のTypeScript正本とスナップショット境界を維持する設計担当の技術選定。
-- 関連：[REQ-011](../../product-requirements/cross-cutting.md#req-011保存内容の復元)、[REQ-014](../../product-requirements/cross-cutting.md#req-014手動保存)、[REQ-016](../../product-requirements/cross-cutting.md#req-016保存失敗時の内容保護と再試行)、[REQ-018](../../product-requirements/cross-cutting.md#req-018原本に依存しない継続)、[REQ-019](../../product-requirements/cross-cutting.md#req-019本人の別pcへの引継ぎ)、[DES-008](../data-design/project-file.md)、[DES-009](../project-persistence.md)。
+- 決定者・根拠：ユーザーが本チャットで「sqlite とする方針で設計検討」を指定し、文書整備計画の実行を依頼した。保存時のDB生成は既存のTypeScript正本とスナップショット境界を維持する設計担当の技術選定。
+- 関連：[REQ-011](../../product-requirements/cross-cutting.md#req-011保存内容の復元)、[REQ-014](../../product-requirements/cross-cutting.md#req-014手動保存)、[REQ-016](../../product-requirements/cross-cutting.md#req-016保存失敗時の内容保護と再試行)、[REQ-018](../../product-requirements/cross-cutting.md#req-018原本に依存しない継続)、[REQ-019](../../product-requirements/cross-cutting.md#req-019利用者の別pcへの引継ぎ)、[DES-008](../data-design/project-file.md)、[DES-009](../project-persistence.md)。
 
 ## 背景・制約と比較
 
@@ -17,8 +17,8 @@ description: ZIP内の構造化データにSQLiteを採用し、確定状態か�
 
 | 選択肢 | 読解・整合性管理 | 負担・判断 |
 | --- | --- | --- |
-| JSON | テキストで直接確認可能。参照・型・制約の検証をアプリが担う | 全体スナップショットには適するが、本人のSQLite指定により不採用。既存採用ADRの置換ではない |
-| SQLite | SQL、主キー・外部キー・制約、トランザクションで構造化データを扱える | バインディングと版移行の管理が必要。本人指定と整合性を明示できる点から採用 |
+| JSON | テキストで直接確認可能。参照・型・制約の検証をアプリが担う | 全体スナップショットには適するが、ユーザーのSQLite指定により不採用。既存採用ADRの置換ではない |
+| SQLite | SQL、主キー・外部キー・制約、トランザクションで構造化データを扱える | バインディングと版移行の管理が必要。ユーザーの指定と整合性を明示できる点から採用 |
 | MessagePack等のバイナリ構造化形式 | 型付きの値を保存できるが、関係整合性は別途アプリで管理 | 容量や速度の具体的な課題・実測がなく追加形式の利点を根拠付けられないため不採用 |
 | TOML等の手編集設定形式 | 設定を人が編集しやすい | 多数のボード要素と関係を同じ契約で扱う利益が薄く不採用 |
 
@@ -36,7 +36,7 @@ DB内の参照検査とSQLでの内容確認が可能になる。一方、外部
 
 ## 根拠資料・試作結果
 
-2026-09-29に次の一次資料を確認した。
+次の一次資料を確認した。
 
 - [SQLiteのアプリケーション保存形式](https://www.sqlite.org/appfileformat.html)：関係データ、SQLとトランザクションを利用する根拠。今回のZIP併用方式の性能保証ではない。
 - [外部キー](https://www.sqlite.org/foreignkeys.html)：接続ごとの有効化と参照制約。
@@ -50,4 +50,4 @@ SQLiteという形式選択自体に未決はない。上流への設定・復�
 
 - 置換元・置換先：なし。ADR-004のZIP・PNG採用を補完する。
 
-2026-10-05関連レビュー：今回の編集・数値・排他・保存再試行の具体化は、この採用判断の基盤・方式を変更しない。本文契約への詳細追加であり、置換ADRは作らず、既存理由と採用状態を保持する。製品の成立検証とは別に扱う。
+関連レビュー：今回の編集・数値・排他・保存再試行の具体化は、この採用判断の基盤・方式を変更しない。本文契約への詳細追加であり、置換ADRは作らず、既存理由と採用状態を保持する。製品の成立検証とは別に扱う。

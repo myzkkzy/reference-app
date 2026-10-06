@@ -9,7 +9,7 @@ description: TypeScript・Rust・実Tauriアプリのテスト基盤と、採用
 - 状態：採用
 - 作成日：2026-09-29
 - 決定日：2026-09-29
-- 決定者・判断権限の根拠：2026-09-29の本人による計画実装指示を受け、設計担当が既存構成内のテスト基盤を採用する。既存の条件付き合意、受入条件、提案中の設計判断は変更しない。
+- 決定者・判断権限の根拠：ユーザーによる計画実装指示を受け、設計担当が既存構成内のテスト基盤を採用する。既存の条件付き合意、受入条件、提案中の設計判断は変更しない。
 - 関連要求・要件・設計：[DEM-004](../../product-demands/cross-cutting.md#dem-004蓄積内容を保ち後日再開する)、[REQ-003](../../product-requirements/collection.md#req-003複数取込と失敗通知)、[REQ-011](../../product-requirements/cross-cutting.md#req-011保存内容の復元)、[REQ-016](../../product-requirements/cross-cutting.md#req-016保存失敗時の内容保護と再試行)、[REQ-020](../../product-requirements/cross-cutting.md#req-020windows-11でのインストール不要利用)、[DES-001](../architecture.md#des-001リファレンスボードの全体設計)。
 
 ## 背景・制約
@@ -48,9 +48,9 @@ TypeScriptの単体・結合はVitest、Rustは標準テスト機構と`cargo te
 
 ## 根拠資料・試作結果
 
-- 比較表のVitest、Jest、Rust、Tauri WebDriver、WebdriverIOのサービス・設定資料、Playwright WebView2を2026-09-29に確認した。
+- 比較表のVitest、Jest、Rust、Tauri WebDriver、WebdriverIOのサービス・設定資料、Playwright WebView2を確認した。
 - WebdriverIOのサービス説明と設定資料には外部方式のprovider名称に記述差がある。本文では接続方式を決め、設定値は導入版のAPIで確認する。
-- 2026-09-29の本対話における計画実装指示を反映した（要約）。導入・起動試験・自動テスト・実機計測は未実施。
+- 本対話における計画実装指示を反映した（要約）。導入・起動試験・自動テスト・実機計測は未実施。
 
 ## 未決条件
 
@@ -61,4 +61,4 @@ TypeScriptの単体・結合はVitest、Rustは標準テスト機構と`cargo te
 - 置換元：なし
 - 置換先：なし
 
-2026-10-05関連レビュー：今回の編集・数値・排他・保存再試行の具体化は、この採用判断の基盤・方式を変更しない。本文契約への詳細追加であり、置換ADRは作らず、既存理由と採用状態を保持する。製品の成立検証とは別に扱う。
+関連レビュー：今回の編集・数値・排他・保存再試行の具体化は、この採用判断の基盤・方式を変更しない。本文契約への詳細追加であり、置換ADRは作らず、既存理由と採用状態を保持する。製品の成立検証とは別に扱う。

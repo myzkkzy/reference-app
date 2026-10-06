@@ -9,24 +9,24 @@ description: 画像ボードとメニューなどの表示をPixiJSに統一す�
 - 状態：採用
 - 作成日：2026-09-25
 - 決定日：未特定（2026-09-25に記録）
-- 決定者・判断権限の根拠：本人が対話でWebGLによる画像表示を希望し、UI方式として「ほぼ全てPixiJS」を選択した。これは表示方式の採用であり、すべての入力をCanvas内で完結させる決定ではない。
+- 決定者・判断権限の根拠：ユーザーが対話でWebGLによる画像表示を希望し、UI方式として「ほぼ全てPixiJS」を選択した。これは表示方式の採用であり、すべての入力をCanvas内で完結させる決定ではない。
 - 関連要求・要件・設計：[DEM-002](../../product-demands/comparison.md#dem-002多くの画像を見渡し全体と細部を比較する)、[DEM-003](../../product-demands/organization.md#dem-003画像の関係や気づきを自分なりに整理する)、[REQ-004](../../product-requirements/comparison.md#req-004全体と細部の表示)、[REQ-006](../../product-requirements/organization.md#req-006画像の移動回転拡縮)、[REQ-010](../../product-requirements/organization.md#req-010独立メモの編集と配置)、[REQ-021](../../product-requirements/cross-cutting.md#req-021通常時の操作反応)、[REQ-022](../../product-requirements/cross-cutting.md#req-022通常時の細部表示)、[REQ-023](../../product-requirements/cross-cutting.md#req-023保存中の操作反応)、[REQ-024](../../product-requirements/cross-cutting.md#req-024保存中の細部表示)、[REQ-025](../../product-requirements/cross-cutting.md#req-025保存済み500枚の再開性能)、[REQ-026](../../product-requirements/cross-cutting.md#req-026ローカル500枚の初回取込性能)、[DES-001：全体設計](../architecture.md#des-001リファレンスボードの全体設計)。
 
 ## 背景・制約
 
-画像を多数配置する単一ボードで、俯瞰・細部表示、移動・回転・拡縮、グループ、メモ、メニューを扱う。初期版はTauri上のWebViewで動く。画像をCanvas上のWebGLで表示し、メニュー等もできるだけPixiJSで構成したいという本人の選択がある。
+画像を多数配置する単一ボードで、俯瞰・細部表示、移動・回転・拡縮、グループ、メモ、メニューを扱う。初期版はTauri上のWebViewで動く。画像をCanvas上のWebGLで表示し、メニュー等もできるだけPixiJSで構成したいというユーザーの選択がある。
 
 ## 選択肢と判断基準
 
 | 選択肢 | 判断基準への適合 | 利点 | 不利益・リスク | 根拠 |
 | --- | --- | --- | --- | --- |
-| PixiJS v8のWebGL描画でボードとメニュー等を表示し、必要なUI部品に`@pixi/ui`を使う | 本人の選択と一致。画像と操作UIを同じ描画系で扱える | 表示の座標系・見た目を統一しやすい | メニューのキーボード操作、フォーカス、アクセシビリティを明示的に設計する必要がある | [PixiJSレンダラー](https://pixijs.com/8.x/guides/components/renderers)、[イベント](https://pixijs.com/8.x/guides/components/events)、[`@pixi/ui`](https://github.com/pixijs/ui)（2026-09-25確認） |
-| 画像ボードをPixiJS、メニュー等をHTMLとReactで表示する | 一般的なWeb UI部品を使いやすい | 文字入力・フォーカスなどを標準のDOMに寄せられる | ボードとUIの二系統の表示・座標管理になり、本人の選んだ方式と異なる | [React公式](https://react.dev/)（2026-09-25確認） |
-| ボードとUIをHTML/CSS主体で表示する | 通常のフォームを作りやすい | DOMの操作部品を広く使える | 多数画像の拡縮・配置という描画中心の画面で別の描画設計が必要 | [MDN Canvas API](https://developer.mozilla.org/docs/Web/API/Canvas_API)（2026-09-25確認） |
+| PixiJS v8のWebGL描画でボードとメニュー等を表示し、必要なUI部品に`@pixi/ui`を使う | ユーザーの選択と一致。画像と操作UIを同じ描画系で扱える | 表示の座標系・見た目を統一しやすい | メニューのキーボード操作、フォーカス、アクセシビリティを明示的に設計する必要がある | [PixiJSレンダラー](https://pixijs.com/8.x/guides/components/renderers)、[イベント](https://pixijs.com/8.x/guides/components/events)、[`@pixi/ui`](https://github.com/pixijs/ui) |
+| 画像ボードをPixiJS、メニュー等をHTMLとReactで表示する | 一般的なWeb UI部品を使いやすい | 文字入力・フォーカスなどを標準のDOMに寄せられる | ボードとUIの二系統の表示・座標管理になり、ユーザーの選んだ方式と異なる | [React公式](https://react.dev/) |
+| ボードとUIをHTML/CSS主体で表示する | 通常のフォームを作りやすい | DOMの操作部品を広く使える | 多数画像の拡縮・配置という描画中心の画面で別の描画設計が必要 | [MDN Canvas API](https://developer.mozilla.org/docs/Web/API/Canvas_API) |
 
 ## 決定と理由
 
-TypeScript＋Vite上でPixiJS v8を採用し、WebGLレンダラーで画像ボードを描画する。メニュー、ツールバー、選択表示、通知、ダイアログもPixiJSの画面固定レイヤーに表示し、適合する部品は`@pixi/ui`を利用する。本人の「ほぼ全てPixiJS」という選択を、Canvasに描かれる画面の方針として反映する。デスクトップ基盤は[ADR-001](2026-09-25-ADR-001-tauri-desktop-runtime.md)、テキスト編集時の入力方式は[ADR-003](2026-09-25-ADR-003-text-editing.md)で扱う。
+TypeScript＋Vite上でPixiJS v8を採用し、WebGLレンダラーで画像ボードを描画する。メニュー、ツールバー、選択表示、通知、ダイアログもPixiJSの画面固定レイヤーに表示し、適合する部品は`@pixi/ui`を利用する。ユーザーの「ほぼ全てPixiJS」という選択を、Canvasに描かれる画面の方針として反映する。デスクトップ基盤は[ADR-001](2026-09-25-ADR-001-tauri-desktop-runtime.md)、テキスト編集時の入力方式は[ADR-003](2026-09-25-ADR-003-text-editing.md)で扱う。
 
 ## 影響・利点・不利益・リスク
 
@@ -37,7 +37,7 @@ TypeScript＋Vite上でPixiJS v8を採用し、WebGLレンダラーで画像ボ�
 
 ## 根拠資料・試作結果
 
-- [PixiJS v8のレンダラー](https://pixijs.com/8.x/guides/components/renderers)、[イベント](https://pixijs.com/8.x/guides/components/events)、[アクセシビリティ](https://pixijs.com/8.x/guides/components/accessibility)、[性能上の注意](https://pixijs.com/8.x/guides/concepts/performance-tips)、[`@pixi/ui`の部品一覧](https://github.com/pixijs/ui)を2026-09-25に確認した。
+- [PixiJS v8のレンダラー](https://pixijs.com/8.x/guides/components/renderers)、[イベント](https://pixijs.com/8.x/guides/components/events)、[アクセシビリティ](https://pixijs.com/8.x/guides/components/accessibility)、[性能上の注意](https://pixijs.com/8.x/guides/concepts/performance-tips)、[`@pixi/ui`の部品一覧](https://github.com/pixijs/ui)を確認した。
 - 試作・実機計測は未実施。操作性・アクセシビリティ・性能の検証結果はない。
 
 ## 未決条件
@@ -50,4 +50,4 @@ TypeScript＋Vite上でPixiJS v8を採用し、WebGLレンダラーで画像ボ�
 - 置換元：なし
 - 置換先：なし
 
-2026-10-05関連レビュー：今回の編集・数値・排他・保存再試行の具体化は、この採用判断の基盤・方式を変更しない。本文契約への詳細追加であり、置換ADRは作らず、既存理由と採用状態を保持する。製品の成立検証とは別に扱う。
+関連レビュー：今回の編集・数値・排他・保存再試行の具体化は、この採用判断の基盤・方式を変更しない。本文契約への詳細追加であり、置換ADRは作らず、既存理由と採用状態を保持する。製品の成立検証とは別に扱う。

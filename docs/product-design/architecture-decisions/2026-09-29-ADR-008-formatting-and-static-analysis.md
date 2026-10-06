@@ -9,7 +9,7 @@ description: TypeScriptとRustの整形・静的検査・型検査を分担す�
 - 状態：採用
 - 作成日：2026-09-29
 - 決定日：2026-09-29
-- 決定者・判断権限の根拠：本人によるPrettier＋ESLint／typescript-eslintの選択と、2026-09-29の計画実装指示を受け、設計担当が開発基盤の方式を記録する。要求・要件の合意状態や受入条件は変更しない。
+- 決定者・判断権限の根拠：ユーザーによるPrettier＋ESLint／typescript-eslintの選択と、計画実装指示を受け、設計担当が開発基盤の方式を記録する。要求・要件の合意状態や受入条件は変更しない。
 - 関連要求・要件・設計：[DEM-004](../../product-demands/cross-cutting.md#dem-004蓄積内容を保ち後日再開する)、[REQ-016](../../product-requirements/cross-cutting.md#req-016保存失敗時の内容保護と再試行)、[DES-001](../architecture.md#des-001リファレンスボードの全体設計)。静的検査はこれらの品質を支える開発手段であり、受入条件の充足を保証しない。
 
 ## 背景・制約
@@ -18,22 +18,22 @@ TypeScriptとRustを併用する構成に対し、書式の統一、コード品
 
 ## 選択肢と判断基準
 
-同じ対象への適合、責務分離、設定・保守負担、本人の選択を基準とする。速度の実測比較はしていない。
+同じ対象への適合、責務分離、設定・保守負担、ユーザーの選択を基準とする。速度の実測比較はしていない。
 
 | 選択肢 | 判断基準への適合 | 利点 | 不利益・リスク | 根拠 |
 | --- | --- | --- | --- | --- |
-| Prettier＋ESLint／typescript-eslint | TypeScriptの整形と品質検査を分担でき、本人の選択と一致する | 整形と品質ルールを別々に管理できる | 複数ツールの設定・互換性管理と、整形ルールの競合回避が必要 | [Prettier](https://prettier.io/docs/comparison)、[typescript-eslint](https://typescript-eslint.io/getting-started/) |
-| Biome | Web向けの整形と検査をまとめられる | ツールの窓口を統合できる | 必要な対象形式・検査規則への適合は別途確認が必要。本人の選択と異なる | [Biome](https://biomejs.dev/) |
+| Prettier＋ESLint／typescript-eslint | TypeScriptの整形と品質検査を分担でき、ユーザーの選択と一致する | 整形と品質ルールを別々に管理できる | 複数ツールの設定・互換性管理と、整形ルールの競合回避が必要 | [Prettier](https://prettier.io/docs/comparison)、[typescript-eslint](https://typescript-eslint.io/getting-started/) |
+| Biome | Web向けの整形と検査をまとめられる | ツールの窓口を統合できる | 必要な対象形式・検査規則への適合は別途確認が必要。ユーザーの選択と異なる | [Biome](https://biomejs.dev/) |
 | rustfmt＋Clippy | Rustの整形と品質検査を分担できる | Cargoを通じてRust開発へ組み込める | Rustツールチェーンとルールの更新管理が必要 | [cargo fmt](https://doc.rust-lang.org/cargo/commands/cargo-fmt.html)、[Clippy](https://doc.rust-lang.org/clippy/) |
 | 整形・検査を手動レビューだけで行う | 自動検出と統一の目的を満たしにくい | ツール設定は不要 | 書式差や機械的に検出可能な問題もレビュー負担になる | 本設計の責務・保守負担による比較 |
 
 ## 決定と理由
 
-PrettierでTypeScript・Web関連ファイル・Markdown等の対応形式を整形し、ESLint＋typescript-eslintでTypeScriptのコード品質を検査する。本人の選択を反映し、整形と品質検査の責務を分ける。ESLint側でPrettierと競合する整形規則を持たせない。
+PrettierでTypeScript・Web関連ファイル・Markdown等の対応形式を整形し、ESLint＋typescript-eslintでTypeScriptのコード品質を検査する。ユーザーの選択を反映し、整形と品質検査の責務を分ける。ESLint側でPrettierと競合する整形規則を持たせない。
 
 typescript-eslintでは型情報を利用する検査も対象とする。型を使った品質規則の検査と、TypeScriptコンパイラーによる型の整合確認は別の責務として扱う。
 
-RustはrustfmtとClippyを使用する。TypeScriptは`tsc --noEmit`で型検査し、整形・lint・Viteによる生成と区別する。これらは設計担当による技術上の理由であり、本人が述べた理由の逐語記録ではない。
+RustはrustfmtとClippyを使用する。TypeScriptは`tsc --noEmit`で型検査し、整形・lint・Viteによる生成と区別する。これらは設計担当による技術上の理由であり、ユーザーが述べた理由の逐語記録ではない。
 
 ## 影響・利点・不利益・リスク
 
@@ -41,10 +41,10 @@ RustはrustfmtとClippyを使用する。TypeScriptは`tsc --noEmit`で型検査
 
 ## 根拠資料・試作結果
 
-- 比較表のPrettier、typescript-eslint、Biome、cargo fmt、Clippyの公式資料を2026-09-29に確認した。
-- [TypeScript noEmit](https://www.typescriptlang.org/tsconfig/noEmit.html)を2026-09-29に確認した。
-- [typescript-eslintの型情報を利用する検査](https://typescript-eslint.io/getting-started/typed-linting/)を2026-09-29に確認した。
-- 2026-09-29の本対話における本人の計画実装指示を反映した（要約）。ツールの導入・設定・実行、試作は未実施。
+- 比較表のPrettier、typescript-eslint、Biome、cargo fmt、Clippyの公式資料を確認した。
+- [TypeScript noEmit](https://www.typescriptlang.org/tsconfig/noEmit.html)を確認した。
+- [typescript-eslintの型情報を利用する検査](https://typescript-eslint.io/getting-started/typed-linting/)を確認した。
+- 本対話におけるユーザーの計画実装指示を反映した（要約）。ツールの導入・設定・実行、試作は未実施。
 
 ## 未決条件
 
@@ -55,4 +55,4 @@ RustはrustfmtとClippyを使用する。TypeScriptは`tsc --noEmit`で型検査
 - 置換元：なし
 - 置換先：なし
 
-2026-10-05関連レビュー：今回の編集・数値・排他・保存再試行の具体化は、この採用判断の基盤・方式を変更しない。本文契約への詳細追加であり、置換ADRは作らず、既存理由と採用状態を保持する。製品の成立検証とは別に扱う。
+関連レビュー：今回の編集・数値・排他・保存再試行の具体化は、この採用判断の基盤・方式を変更しない。本文契約への詳細追加であり、置換ADRは作らず、既存理由と採用状態を保持する。製品の成立検証とは別に扱う。

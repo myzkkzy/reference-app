@@ -34,7 +34,7 @@ ZIP置換でファイル実体IDが変わり、パスだけではハードリン
 
 ## 根拠・確認日・試作
 
-2026-10-05確認の一次資料：[CreateMutexExW](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createmutexexw)、[WaitForSingleObject](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)、[FILE_ID_INFO](https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-file_id_info)。所有スレッド・名前空間・最終パス等の追加根拠と具体契約は[DES-009](../project-persistence.md#同一ファイルの排他契約)に集約する。保存APIの既存選定と記録の成功境界は変更しない。試作・障害試験は未実施。
+確認した一次資料：[CreateMutexExW](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createmutexexw)、[WaitForSingleObject](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)、[FILE_ID_INFO](https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-file_id_info)。所有スレッド・名前空間・最終パス等の追加根拠と具体契約は[DES-009](../project-persistence.md#同一ファイルの排他契約)に集約する。保存APIの既存選定と記録の成功境界は変更しない。試作・障害試験は未実施。
 
 ## 未決条件・引継ぎ
 
