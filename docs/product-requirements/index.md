@@ -5,24 +5,24 @@
 | 要件ID | 要件名 | 短い説明 | 詳細 |
 | --- | --- | --- | --- |
 | REQ-001 | 画像の追加経路 | ドラッグ・ファイル選択・コピーから追加 | [REQ-001](collection.md#req-001画像の追加経路) |
-| REQ-002 | 静止画形式と複数フレームの扱い | 6形式と先頭コマ・ページの取込 | [REQ-002](collection.md#req-002静止画形式と複数フレームの扱い) |
+| REQ-002 | 静止画形式と複数フレームの扱い | 6形式・先頭コマ等の取込と4K・sRGB変換 | [REQ-002](collection.md#req-002静止画形式と複数フレームの扱い) |
 | REQ-003 | 複数取込と失敗通知 | 一括取込の正常分追加と失敗通知 | [REQ-003](collection.md#req-003複数取込と失敗通知) |
-| REQ-004 | 全体と細部の表示 | ボード全体から画像の細部へ拡大 | [REQ-004](comparison.md#req-004全体と細部の表示) |
+| REQ-004 | 全体と細部の表示 | 余白付き全体表示・再開倍率維持・最大1600% | [REQ-004](comparison.md#req-004全体と細部の表示) |
 | REQ-005 | 制作中の参照維持 | 制作アプリとの重なり時も画像を表示 | [REQ-005](comparison.md#req-005制作中の参照維持) |
-| REQ-006 | 画像の移動・回転・拡縮 | 位置・角度・表示サイズを変更 | [REQ-006](organization.md#req-006画像の移動回転拡縮) |
-| REQ-007 | 画像の削除 | 原本を残して削除・直後の取消が可能 | [REQ-007](organization.md#req-007画像の削除) |
-| REQ-008 | グループへの所属と解除 | 画像・メモの任意所属と解除 | [REQ-008](organization.md#req-008グループへの所属と解除) |
+| REQ-006 | 画像の移動・回転・拡縮 | 配置範囲内で移動・刻み回転・比率維持拡縮 | [REQ-006](organization.md#req-006画像の移動回転拡縮) |
+| REQ-007 | 画像の削除 | 原本を残して削除・共通履歴でUndo／Redo | [REQ-007](organization.md#req-007画像の削除) |
+| REQ-008 | グループへの所属と解除 | 任意所属と解除・手動枠の保持 | [REQ-008](organization.md#req-008グループへの所属と解除) |
 | REQ-009 | グループの一括移動 | 画像・メモ間の相対位置を保って移動 | [REQ-009](organization.md#req-009グループの一括移動) |
-| REQ-010 | 独立メモの編集と配置 | 所属を必要としない文章の作成・配置 | [REQ-010](organization.md#req-010独立メモの編集と配置) |
-| REQ-011 | 保存内容の復元 | 画像・配置・グループ・メモを復元 | [REQ-011](cross-cutting.md#req-011保存内容の復元) |
+| REQ-010 | 独立メモの編集と配置 | 幅・文字サイズ・10,000クラスタ・入力境界 | [REQ-010](organization.md#req-010独立メモの編集と配置) |
+| REQ-011 | 保存内容の復元 | 本文・寸法・設定・表示と再開調整を復元 | [REQ-011](cross-cutting.md#req-011保存内容の復元) |
 | REQ-012 | 30秒ごとの自動保存 | 有効時に30秒周期で保存 | [REQ-012](cross-cutting.md#req-01230秒ごとの自動保存) |
-| REQ-013 | 自動保存設定 | 初期有効と設定変更の再起動後保持 | [REQ-013](cross-cutting.md#req-013自動保存設定) |
+| REQ-013 | 自動保存設定 | プロジェクト設定の独立保存と再起動後保持 | [REQ-013](cross-cutting.md#req-013自動保存設定) |
 | REQ-014 | 手動保存 | 自動保存設定にかかわらず保存 | [REQ-014](cross-cutting.md#req-014手動保存) |
-| REQ-015 | 保存状態の識別 | 保存中・完了・失敗・未保存を区別 | [REQ-015](cross-cutting.md#req-015保存状態の識別) |
-| REQ-016 | 保存失敗時の内容保護と再試行 | 保存失敗後も編集内容を保持 | [REQ-016](cross-cutting.md#req-016保存失敗時の内容保護と再試行) |
+| REQ-015 | 保存状態の識別 | ボードと設定の保存状態・未保存を区別 | [REQ-015](cross-cutting.md#req-015保存状態の識別) |
+| REQ-016 | 保存失敗時の内容保護と再試行 | 失敗後の書込停止・照合再試行・別名保存 | [REQ-016](cross-cutting.md#req-016保存失敗時の内容保護と再試行) |
 | REQ-017 | 未保存での終了 | 保存・破棄・戻るを選んで終了 | [REQ-017](cross-cutting.md#req-017未保存での終了) |
 | REQ-018 | 原本に依存しない継続 | 原本がなくても再開・別PC利用 | [REQ-018](cross-cutting.md#req-018原本に依存しない継続) |
-| REQ-019 | 本人の別PCへの引継ぎ | 最新内容を移して別PCで継続 | [REQ-019](cross-cutting.md#req-019本人の別pcへの引継ぎ) |
+| REQ-019 | 本人の別PCへの引継ぎ | 保存して閉じたファイルをコピーし継続 | [REQ-019](cross-cutting.md#req-019本人の別pcへの引継ぎ) |
 | REQ-020 | Windows 11でのインストール不要利用 | Windows 11で追加導入なしに利用 | [REQ-020](cross-cutting.md#req-020windows-11でのインストール不要利用) |
 | REQ-021 | 通常時の操作反応 | 通常時の反応100ms以内 | [REQ-021](cross-cutting.md#req-021通常時の操作反応) |
 | REQ-022 | 通常時の細部表示 | 通常時の細部表示1秒以内 | [REQ-022](cross-cutting.md#req-022通常時の細部表示) |
@@ -36,10 +36,10 @@
 | 対象要求・リンク | 対応要件・リンク | 要件化状況 | 未対応部分・保留理由 |
 | --- | --- | --- | --- |
 | [DEM-001](../product-demands/collection.md#dem-001比較したい参考画像を継続して蓄積する) | [REQ-001](collection.md#req-001画像の追加経路)、[REQ-002](collection.md#req-002静止画形式と複数フレームの扱い)、[REQ-003](collection.md#req-003複数取込と失敗通知)、[REQ-018](cross-cutting.md#req-018原本に依存しない継続)、[REQ-026](cross-cutting.md#req-026ローカル500枚の初回取込性能) | 一部具体化 | [性能評価の画像実体・手順等](cross-cutting.md#性能の共通評価条件)は本文のスキップ事項を参照 |
-| [DEM-002](../product-demands/comparison.md#dem-002多くの画像を見渡し全体と細部を比較する) | [REQ-004](comparison.md#req-004全体と細部の表示)、[REQ-005](comparison.md#req-005制作中の参照維持)、[REQ-006](organization.md#req-006画像の移動回転拡縮)、[REQ-021](cross-cutting.md#req-021通常時の操作反応)、[REQ-022](cross-cutting.md#req-022通常時の細部表示)、[REQ-023](cross-cutting.md#req-023保存中の操作反応)、[REQ-024](cross-cutting.md#req-024保存中の細部表示) | 一部具体化 | [表示倍率](comparison.md#req-004全体と細部の表示)・[性能測定条件等](cross-cutting.md#性能の共通評価条件)は本文のスキップ事項を参照 |
-| [DEM-003](../product-demands/organization.md#dem-003画像の関係や気づきを自分なりに整理する) | [REQ-006](organization.md#req-006画像の移動回転拡縮)、[REQ-007](organization.md#req-007画像の削除)、[REQ-008](organization.md#req-008グループへの所属と解除)、[REQ-009](organization.md#req-009グループの一括移動)、[REQ-010](organization.md#req-010独立メモの編集と配置) | 一部具体化 | [操作の限界値](organization.md#req-006画像の移動回転拡縮)・[メモ上限](organization.md#req-010独立メモの編集と配置)は本文のスキップ事項を参照 |
+| [DEM-002](../product-demands/comparison.md#dem-002多くの画像を見渡し全体と細部を比較する) | [REQ-004](comparison.md#req-004全体と細部の表示)、[REQ-005](comparison.md#req-005制作中の参照維持)、[REQ-006](organization.md#req-006画像の移動回転拡縮)、[REQ-021](cross-cutting.md#req-021通常時の操作反応)、[REQ-022](cross-cutting.md#req-022通常時の細部表示)、[REQ-023](cross-cutting.md#req-023保存中の操作反応)、[REQ-024](cross-cutting.md#req-024保存中の細部表示) | 一部具体化 | 全体表示・再開・最小画面の振る舞いは具体化済み。[性能測定条件等](cross-cutting.md#性能の共通評価条件)は本文の残件を参照 |
+| [DEM-003](../product-demands/organization.md#dem-003画像の関係や気づきを自分なりに整理する) | [REQ-006](organization.md#req-006画像の移動回転拡縮)、[REQ-007](organization.md#req-007画像の削除)、[REQ-008](organization.md#req-008グループへの所属と解除)、[REQ-009](organization.md#req-009グループの一括移動)、[REQ-010](organization.md#req-010独立メモの編集と配置) | 具体化済み | [編集・配置共通ルール](organization.md#編集履歴と重なり順の共通ルール)と[メモ入力](organization.md#req-010独立メモの編集と配置)の振る舞い・受入条件へ反映済み。合意・実機成立は別に扱う |
 | [DEM-004](../product-demands/cross-cutting.md#dem-004蓄積内容を保ち後日再開する) | [REQ-011](cross-cutting.md#req-011保存内容の復元)、[REQ-012](cross-cutting.md#req-01230秒ごとの自動保存)、[REQ-013](cross-cutting.md#req-013自動保存設定)、[REQ-014](cross-cutting.md#req-014手動保存)、[REQ-015](cross-cutting.md#req-015保存状態の識別)、[REQ-016](cross-cutting.md#req-016保存失敗時の内容保護と再試行)、[REQ-017](cross-cutting.md#req-017未保存での終了)、[REQ-018](cross-cutting.md#req-018原本に依存しない継続)、[REQ-020](cross-cutting.md#req-020windows-11でのインストール不要利用)、[REQ-023](cross-cutting.md#req-023保存中の操作反応)、[REQ-024](cross-cutting.md#req-024保存中の細部表示)、[REQ-025](cross-cutting.md#req-025保存済み500枚の再開性能) | 一部具体化 | [対応OS範囲](cross-cutting.md#req-020windows-11でのインストール不要利用)・[性能測定条件等](cross-cutting.md#性能の共通評価条件)は各要件のスキップ事項を参照。 |
-| [DEM-005](../product-demands/cross-cutting.md#dem-005別pcでも蓄積内容を使い続ける) | [REQ-018](cross-cutting.md#req-018原本に依存しない継続)、[REQ-019](cross-cutting.md#req-019本人の別pcへの引継ぎ)、[REQ-020](cross-cutting.md#req-020windows-11でのインストール不要利用) | 一部具体化 | [移送形式](cross-cutting.md#req-019本人の別pcへの引継ぎ)・[対応OS範囲](cross-cutting.md#req-020windows-11でのインストール不要利用)は各要件のスキップ事項を参照。 |
+| [DEM-005](../product-demands/cross-cutting.md#dem-005別pcでも蓄積内容を使い続ける) | [REQ-018](cross-cutting.md#req-018原本に依存しない継続)、[REQ-019](cross-cutting.md#req-019本人の別pcへの引継ぎ)、[REQ-020](cross-cutting.md#req-020windows-11でのインストール不要利用) | 一部具体化 | 移送形式・保存して閉じてからコピーする手順は決定済み。[対応OS範囲](cross-cutting.md#req-020windows-11でのインストール不要利用)と実機検証を残す。 |
 
 要件化状況は要件の合意状況・実装完了・試験合格とは区別する。
 

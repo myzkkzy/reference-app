@@ -13,6 +13,8 @@ PDR・ADRを扱う場合は[判断記録](../decisions.md)も読む。
 | 全体構成の設計 | [design-product：全体構成の設計](../../../../design-product/SKILL.md) |
 | 機能・責務の設計 | [design-product：機能・責務の設計](../../../../design-product/SKILL.md) |
 | データ構造・保存契約 | [design-product：データ構造の設計](../../../../design-product/SKILL.md) |
+| 画面の詳細設計 | [design-product：画面設計](../../../../design-product/SKILL.md) |
+| 画面遷移図・画面構成図の作成・更新・検査 | [drawio-ui-design](../../../../drawio-ui-design/SKILL.md) |
 | 技術判断の記録 | [evaluate-and-record-decisions：ADRの記録](../../../../evaluate-and-record-decisions/SKILL.md) |
 | テスト方針 | [design-product：テスト方針の策定](../../../../design-product/SKILL.md) |
 | DES・ADRの採番 | [manage-product-documents：文書IDの採番](../../../../manage-product-documents/SKILL.md) |
@@ -33,7 +35,8 @@ PDR・ADRを扱う場合は[判断記録](../decisions.md)も読む。
 - 条件付き合意の許可範囲を守り、独立して進められる設計を続ける。
 - 全体構成からテーマへ具体化し、局所的なコード構成は実装担当へ残す。
 - 全体設計とテスト方針もDESとして管理し、REQとの対応を記録する。
-- データ構造の記載枠と引継ぎの記載枠は該当DES本文へ挿入する。
+- 全体構成の3図を残し、データ設計・画面設計は独立した全体・テーマ別DES文書へ分けて参照する。引継ぎの記載枠は該当DES本文へ挿入する。
+- 画面設計に図が必要な場合はdrawio-ui-designを使い、同スキルの出力・検査スクリプトで`.drawio.svg`を生成する。構成図は低忠実度ワイヤーフレームとし、遷移図は線の交差・重複・無関係なノード通過を除く。対応する画面設計本文から埋め込み、図・本文の未決事項を揃え、出力画像を全体と拡大で点検する。
 - 要求の目的・意味の変更は要求担当、振る舞い・業務ルール・受入条件の変更は要件担当へ親経由で返す。
 - 具体的な試作・計測・テスト計画・実行が必要なら担当役割宛てに依頼を整理する。
 - 具体的ケース、環境、準備・後片付け、手順、テストダブル、自動化は検証担当へ渡す。

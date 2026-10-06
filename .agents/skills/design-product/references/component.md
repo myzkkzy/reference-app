@@ -19,6 +19,7 @@
 ## 参照資料
 
 - データの詳細が必要な場合：[データ構造の設計](data-model.md)。
+- 画面の詳細が必要な場合：[画面設計](screen-design.md)。
 - 別担当へ作業を渡す場合：[引継ぎの整理](../../manage-product-documents/references/handoff.md)。
 
 - 対応する成果物を作る場合：[テンプレート topic.md](../assets/templates/topic.md)。

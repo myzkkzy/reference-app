@@ -1,0 +1,4 @@
+interface:
+  display_name: "draw.io画面設計図"
+  short_description: "編集可能な遷移図・低忠実度ワイヤーフレームをSVGで作成"
+  default_prompt: "Use $drawio-ui-design to create an editable draw.io SVG for the requested screen design."

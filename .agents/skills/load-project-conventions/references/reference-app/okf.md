@@ -15,7 +15,7 @@
 | 要求（横断を含む） | Product Demands |
 | 要件（横断を含む） | Product Requirements |
 | PDR | Product Decision |
-| 全体・テーマ別・共通設計 | Product Design |
+| 全体・テーマ別・共通設計、データ設計、画面設計 | Product Design |
 | ADR | Architecture Decision |
 | テスト方針 | Test Strategy |
 
@@ -26,6 +26,7 @@
 - 工程索引にはfrontmatterを付けない。文書の`description`を案内文に利用し、対象文書の変更時に同期する。
 - 読み取りは「適用規則→全体索引→必要な工程索引→本文→根拠・対応先」と進める。特定IDが指定された場合は索引から本文該当節へ直接進める。
 - アプリの保存形式、エージェント設定、スキルそのものはバンドルの対象外。
+- 画面設計の`.drawio.svg`は対応するMarkdownから画像として参照する。OKFは画像リンクの存在を確認し、draw.io編集データの構造検査はdrawio-ui-designで扱う。
 
 ## 状態・権限
 
@@ -38,10 +39,10 @@
 
 - 内容は各工程のスキルで作成し、メタデータ・索引・形式検査は`manage-okf`で扱う。ID・合意・対応関係は`manage-product-documents`の責務とする。
 - [テンプレートの適用](templates.md)時に、上記の値でfrontmatterをファイル先頭へ追加する。汎用テンプレートやスキルへこの表を複製しない。
-- 依存の準備は[manage-okfの検査手順](../../../manage-okf/references/validation.md)を参照する。プロジェクトルートからの検査コマンド：
+- 検証直前に[manage-okfの検査手順](../../../manage-okf/references/validation.md)で依存を確認・準備する。`<ready-python>`は`.agents/skills/manage-okf/scripts/.venv`内の準備済みPythonの絶対パスに置き換える（Windowsは`Scripts/python.exe`、macOS/Linuxは`bin/python`）。パスは引用し、PowerShellでは引用した実行パスの前に`&`を付ける。プロジェクトルートからの検査コマンド：
 
 ```text
-python .agents/skills/manage-okf/scripts/validate_okf.py docs --require title --require description --strict-links
+<ready-python> .agents/skills/manage-okf/scripts/validate_okf.py docs --require title --require description --strict-links
 ```
 
 - 内部リンク切れはプロジェクト品質上のエラーとする。文書種別・日本語の要約・索引の案内品質は本規則と照合して確認する。外部URLの到達性は自動検査しない。
