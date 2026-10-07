@@ -12,6 +12,7 @@ description: 独自ZIP内のSQLite・PNGの構造、項目、参照制約と保�
 - 参照要件：[REQ-006～010](../../product-requirements/organization.md#req-006画像の移動回転拡縮)（006・010は条件付き合意、007～009は合意済み）、[REQ-011～019](../../product-requirements/cross-cutting.md#req-011保存内容の復元)（011～017・019は意味変更でドラフト、018は合意済み）。方針回答と要件全体への合意を区別する。
 - 依存設計：[DES-003](overview.md)、[DES-004](board-state.md)、[DES-009](../project-persistence.md)。DES-004は論理モデル、本書は物理形式を管理する。
 - 関連判断：[ADR-004](../architecture-decisions/2026-09-26-ADR-004-zip-board-storage.md)、[ADR-010](../architecture-decisions/2026-09-29-ADR-010-sqlite-project-storage.md)。
+- 資源上限の判断：[ADR-012](../architecture-decisions/2026-10-06-ADR-012-image-resource-limits.md)。
 
 更新内容：画像資源制限と編集方針の反映後、REQ-001～004・006～017・019はドラフト。REQ-005・018は合意済み、REQ-020～026は条件付き合意。以下に残る過去の参照状態は入力時点の記録で、現在状態の正本は要件本文とする。
 
