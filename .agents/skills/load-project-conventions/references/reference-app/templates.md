@@ -4,7 +4,7 @@
 このプロジェクトでは[文書規則](documents.md)と[状態規則](states.md)を適用する。
 判断記録は[判断記録の規則](decisions.md)も適用する。
 他プロジェクトでは、保存先・ID・状態名・管理担当・索引列をその規則に合わせる。
-要求ID・要件ID・設計IDの表記には、このプロジェクトの接頭辞を適用する。
+アイデアID・要求ID・要件ID・設計IDの表記には、このプロジェクトの接頭辞を適用する。
 ADRの表記や状態の例も、他環境への固定値ではない。
 同じ文書内のラベル、プレースホルダー、説明コメントもまとめて置換する。
 
@@ -12,18 +12,18 @@ ADRの表記や状態の例も、他環境への固定値ではない。
 
 - このプロジェクトでは[OKF適用規則](okf.md)の種別・必須項目を使い、`manage-okf`で形式を整える。
 - 汎用テンプレートは本文の記載枠として使う。通常文書を作るときはfrontmatterを先頭コメントより前に配置し、titleとdescriptionを本文から作る。
-- 工程索引はfrontmatterを追加せず、説明付きの文書リンク一覧と既存の業務上の一覧・対応表を持たせる。
+- 工程索引はfrontmatterを追加せず、分類への説明付きリンクと全ID一覧・対応表を持たせる。分類索引もfrontmatterを追加せず、その分類のID文書への説明付きリンクだけを持たせる。
 - 受入条件、引継ぎなど本文へ挿入する断片にはfrontmatterを追加しない。独立したデータ設計・画面設計文書には文書全体で一つのfrontmatterを置く。
 - 他プロジェクトでOKFが指定されていない場合は、これらのメタデータを強制しない。
 
 ## このプロジェクトの適用値
 
-- 要求IDは DEM-001 以降、要件IDは REQ-001 以降である。
+- アイデアIDは IDEA-001 以降、要求IDは DEM-001 以降、要件IDは REQ-001 以降である。
 - 設計IDは DES-001 以降、ADRのIDは ADR-001 以降である。
 - 実在するIDと本文リンクを使い、例の番号をそのまま採用しない。
 - 要求・要件・設計・ADRの状態名は状態規則と判断記録の規則を使う。
 - 構想の候補一覧リンクは、複製先から docs/product-ideas/index.md を参照する。
-- 入力・出力の保存先は文書規則、判断記録の規則から解決する。
+- 入力・出力の保存先は文書規則、判断記録の規則から解決する。本文テンプレートは1項目分だけ複製し、分類内のIDと英語の内容名を組み合わせたファイルとして保存する。横断テンプレートも1項目単位とする。
 - データ設計と画面設計は独立したDES文書として作り、機能設計から参照する。引継ぎの枠は対象DES本文へ挿入する。
 - 一覧の関連文書は存在するものだけを掲載する。
 - プレースホルダー、例示行、説明コメントは成果物で置換・除去する。
@@ -60,3 +60,7 @@ ADRの表記や状態の例も、他環境への固定値ではない。
 | product-design/adr-index.md | [manage-product-documents/adr-index.md](../../../manage-product-documents/assets/templates/adr-index.md) |
 | product-design/product-index.md | [manage-product-documents/design-index.md](../../../manage-product-documents/assets/templates/design-index.md) |
 | product-design/handoff.md | [manage-product-documents/handoff.md](../../../manage-product-documents/assets/templates/handoff.md) |
+
+分類索引には [category-index.md](../../../manage-product-documents/assets/templates/category-index.md) を使い、存在するID本文への説明付きリンクだけを置く。
+
+命名には本文IDと英語の内容名を使う。汎用テンプレートの保存名は `{{本文ID}}-{{英語の内容名}}.md` とし、接頭辞・番号・保存先は文書規則から解決する。

@@ -10,7 +10,7 @@ description: TypeScript・Rust・実Tauriアプリのテスト基盤と、採用
 - 作成日：2026-09-29
 - 決定日：2026-09-29
 - 決定者・判断権限の根拠：ユーザーによる計画実装指示を受け、設計担当が既存構成内のテスト基盤を採用する。既存の条件付き合意、受入条件、提案中の設計判断は変更しない。
-- 関連要求・要件・設計：[DEM-004](../../product-demands/cross-cutting.md#dem-004蓄積内容を保ち後日再開する)、[REQ-003](../../product-requirements/collection.md#req-003複数取込と失敗通知)、[REQ-011](../../product-requirements/cross-cutting.md#req-011保存内容の復元)、[REQ-016](../../product-requirements/cross-cutting.md#req-016保存失敗時の内容保護と再試行)、[REQ-020](../../product-requirements/cross-cutting.md#req-020windows-11でのインストール不要利用)、[DES-001](../architecture.md#des-001リファレンスボードの全体設計)。
+- 関連要求・要件・設計：[DEM-004](../../product-demands/cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)、[REQ-003](../../product-requirements/collection/REQ-003-batch-import-errors.md#req-003複数取込と失敗通知)、[REQ-011](../../product-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)、[REQ-016](../../product-requirements/cross-cutting/REQ-016-save-failure-recovery.md#req-016保存失敗時の内容保護と再試行)、[REQ-020](../../product-requirements/cross-cutting/REQ-020-portable-windows-app.md#req-020windows-11でのインストール不要利用)、[DES-001](../architecture/DES-001-system-architecture.md#des-001リファレンスボードの全体設計)。
 
 ## 背景・制約
 
@@ -36,7 +36,7 @@ TypeScriptの単体・結合はVitest、Rustは標準テスト機構と`cargo te
 
 実アプリE2EはWebdriverIO＋`@wdio/tauri-service`を使用し、外部`tauri-driver`＋Edge WebDriverでWindows上のTauriアプリへ接続する。初期対象のWindowsに適合し、embedded方式に必要なWebDriverのアプリ内組込みを増やさず、ドライバー管理を利用できるため、この方式を選ぶ。
 
-採用対象は基盤と接続方式である。実装への導入や自動化の成立、試験合格を決定したものではない。現在の利用箇所とテスト層の責務は[技術スタック](../architecture.md#技術スタック)と[自動テスト基盤の利用境界](../architecture.md#自動テスト基盤の利用境界)を管理元とする。
+採用対象は基盤と接続方式である。実装への導入や自動化の成立、試験合格を決定したものではない。現在の利用箇所とテスト層の責務は[技術スタック](../architecture/DES-001-system-architecture.md#技術スタック)と[自動テスト基盤の利用境界](../architecture/DES-001-system-architecture.md#自動テスト基盤の利用境界)を管理元とする。
 
 ## 影響・利点・不利益・リスク
 
@@ -54,7 +54,7 @@ TypeScriptの単体・結合はVitest、Rustは標準テスト機構と`cargo te
 
 ## 未決条件
 
-実装担当が導入時に互換バージョンを固定し、Tauri serviceの外部接続APIとEdge WebDriverの整合を確認する。検証担当が実アプリ接続、Canvasの操作・観測、OS境界の自動化範囲と実機確認の分担を具体化する。具体的ケース・環境・データ・手順・実行時期はその担当へ引き継ぐ。[全体設計の引継ぎ](../architecture.md#未決事項引継ぎ)を参照する。性能・配布等の上流未決条件は既存要件を正本とし、基盤選定で解消済みにしない。
+実装担当が導入時に互換バージョンを固定し、Tauri serviceの外部接続APIとEdge WebDriverの整合を確認する。検証担当が実アプリ接続、Canvasの操作・観測、OS境界の自動化範囲と実機確認の分担を具体化する。具体的ケース・環境・データ・手順・実行時期はその担当へ引き継ぐ。[全体設計の引継ぎ](../architecture/DES-001-system-architecture.md#未決事項引継ぎ)を参照する。性能・配布等の上流未決条件は既存要件を正本とし、基盤選定で解消済みにしない。
 
 ## 置換関係
 

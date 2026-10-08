@@ -23,10 +23,10 @@ description: 設定とボード編集の保存を分け、別PCの標準フォ�
 
 ## 理由・根拠
 
-取得経路は既存文書の要約であり、対話原文の逐語引用ではない。[ADR-005の決定と理由](../../product-design/architecture-decisions/2026-09-26-ADR-005-save-recovery-policy.md#決定と理由)に設定だけの独立保存を選んだ回答、[PC側アプリ設定の契約](../../product-design/screen-design/persistence.md#pc側アプリ設定の契約)にPC設定の具体化、[フォント差読込と保存原本](../../product-design/project-persistence.md#フォント差読込と保存原本)に端末差を扱う契約がある。利用者の結果と保存内部の分離についての見直し理由は[ADR-005](../../product-design/architecture-decisions/2026-09-26-ADR-005-save-recovery-policy.md#上流見直しの経緯)で扱う。ユーザーの未回答の理由は補作しない。
+取得経路は既存文書の要約であり、対話原文の逐語引用ではない。[ADR-005の決定と理由](../../product-design/architecture-decisions/2026-09-26-ADR-005-save-recovery-policy.md#決定と理由)に設定だけの独立保存を選んだ回答、[PC側アプリ設定の契約](../../product-design/screen-design/DES-007-persistence-screen.md#pc側アプリ設定の契約)にPC設定の具体化、[フォント差読込と保存原本](../../product-design/functional-design/DES-009-project-persistence-recovery.md#フォント差読込と保存原本)に端末差を扱う契約がある。利用者の結果と保存内部の分離についての見直し理由は[ADR-005](../../product-design/architecture-decisions/2026-09-26-ADR-005-save-recovery-policy.md#上流見直しの経緯)で扱う。ユーザーの未回答の理由は補作しない。
 
 ## 関連要求
 
-- [DEM-003](../organization.md#dem-003画像の関係や気づきを自分なりに整理する)
-- [DEM-004](../cross-cutting.md#dem-004蓄積内容を保ち後日再開する)
-- [DEM-005](../cross-cutting.md#dem-005別pcでも蓄積内容を使い続ける)
+- [DEM-003](../organization/DEM-003-organize-image-insights.md#dem-003画像の関係や気づきを自分なりに整理する)
+- [DEM-004](../cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)
+- [DEM-005](../cross-cutting/DEM-005-continue-on-another-pc.md#dem-005別pcでも蓄積内容を使い続ける)

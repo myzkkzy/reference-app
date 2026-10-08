@@ -16,7 +16,7 @@ description: "初版と将来の対応OSの判断に関する対話の決定と�
 
 Windowsを初版の対象とする。macOS・Linuxは初版では不要とし、将来対応を希望する。
 
-[構想](../../product-ideas/reference-board.md)のOSを限定せず使いたい意向について、初版と将来の対象を具体化した判断であり、要求本文全体への合意ではない。
+[構想](../../product-ideas/reference-board/IDEA-001-reference-board.md)のOSを限定せず使いたい意向について、初版と将来の対象を具体化した判断であり、要求本文全体への合意ではない。
 
 ## 理由・根拠
 
@@ -26,6 +26,6 @@ Windows以外に必要なOSと初版から必要かを親エージェントが�
 
 ## 関連要求
 
-- [DEM-004：蓄積内容を保ち後日再開する（共通環境制約の管理元）](../cross-cutting.md#dem-004蓄積内容を保ち後日再開する)
-- [DEM-005：別PCでも蓄積内容を使い続ける](../cross-cutting.md#dem-005別pcでも蓄積内容を使い続ける)
-- [DEM-006：他の制作者とリファレンスを確認し考えや方向性をすり合わせる](../cross-cutting.md#dem-006他の制作者とリファレンスを確認し考えや方向性をすり合わせる)
+- [DEM-004：蓄積内容を保ち後日再開する（共通環境制約の管理元）](../cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)
+- [DEM-005：別PCでも蓄積内容を使い続ける](../cross-cutting/DEM-005-continue-on-another-pc.md#dem-005別pcでも蓄積内容を使い続ける)
+- [DEM-006：他の制作者とリファレンスを確認し考えや方向性をすり合わせる](../cross-cutting/DEM-006-share-reference-insights.md#dem-006他の制作者とリファレンスを確認し考えや方向性をすり合わせる)

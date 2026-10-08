@@ -20,9 +20,9 @@ REQ-004とREQ-006・008～010の反映範囲は、最大1600%のボード表示�
 
 ## 理由・根拠
 
-取得経路は既存文書の要約であり、対話原文の逐語引用ではない。[選択・枠・入力の確定方針](../../product-design/board-state.md#選択枠入力の確定方針)には画像・ボード倍率の指定、[数値・表示・フォント契約](../../product-design/data-design/board-state.md#数値表示フォント契約)と[要件担当への変更案](../../product-design/screen-design/board.md#要件担当への変更案)には保存倍率・編集位置・寸法の具体化が記載されている。具体化に伴う上流見直しの技術的理由は[ADR-007](../../product-design/architecture-decisions/2026-09-26-ADR-007-board-coordinates-and-groups.md#上流見直しの経緯)で扱う。既存文書にない判断理由は補作しない。
+取得経路は既存文書の要約であり、対話原文の逐語引用ではない。[選択・枠・入力の確定方針](../../product-design/functional-design/DES-002-board-editing-state.md#選択枠入力の確定方針)には画像・ボード倍率の指定、[数値・表示・フォント契約](../../product-design/data-design/DES-004-board-data-model.md#数値表示フォント契約)と[要件担当への変更案](../../product-design/screen-design/DES-006-board-screen.md#要件担当への変更案)には保存倍率・編集位置・寸法の具体化が記載されている。具体化に伴う上流見直しの技術的理由は[ADR-007](../../product-design/architecture-decisions/2026-09-26-ADR-007-board-coordinates-and-groups.md#上流見直しの経緯)で扱う。既存文書にない判断理由は補作しない。
 
 ## 関連要求
 
-- [DEM-002](../comparison.md#dem-002多くの画像を見渡し全体と細部を比較する)
-- [DEM-003](../organization.md#dem-003画像の関係や気づきを自分なりに整理する)
+- [DEM-002](../comparison/DEM-002-compare-image-overviews.md#dem-002多くの画像を見渡し全体と細部を比較する)
+- [DEM-003](../organization/DEM-003-organize-image-insights.md#dem-003画像の関係や気づきを自分なりに整理する)

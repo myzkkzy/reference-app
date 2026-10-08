@@ -9,7 +9,7 @@ description: ZIP内の構造化データにSQLiteを採用し、確定状態か�
 - 状態：採用（構造化データの保存技術と保存用DB生成の範囲）。設定・復旧等の追加動作の要件合意を含まない。
 - 作成日・決定日：2026-09-29。
 - 決定者・根拠：ユーザーが本チャットで「sqlite とする方針で設計検討」を指定し、文書整備計画の実行を依頼した。保存時のDB生成は既存のTypeScript正本とスナップショット境界を維持する設計担当の技術選定。
-- 関連：[REQ-011](../../product-requirements/cross-cutting.md#req-011保存内容の復元)、[REQ-014](../../product-requirements/cross-cutting.md#req-014手動保存)、[REQ-016](../../product-requirements/cross-cutting.md#req-016保存失敗時の内容保護と再試行)、[REQ-018](../../product-requirements/cross-cutting.md#req-018原本に依存しない継続)、[REQ-019](../../product-requirements/cross-cutting.md#req-019利用者の別pcへの引継ぎ)、[DES-008](../data-design/project-file.md)、[DES-009](../project-persistence.md)。
+- 関連：[REQ-011](../../product-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)、[REQ-014](../../product-requirements/cross-cutting/REQ-014-manual-save.md#req-014手動保存)、[REQ-016](../../product-requirements/cross-cutting/REQ-016-save-failure-recovery.md#req-016保存失敗時の内容保護と再試行)、[REQ-018](../../product-requirements/cross-cutting/REQ-018-source-independent-resumption.md#req-018原本に依存しない継続)、[REQ-019](../../product-requirements/cross-cutting/REQ-019-cross-pc-transfer.md#req-019利用者の別pcへの引継ぎ)、[DES-008](../data-design/DES-008-project-file-data.md)、[DES-009](../functional-design/DES-009-project-persistence-recovery.md)。
 
 ## 背景・制約と比較
 
@@ -46,7 +46,7 @@ DB内の参照検査とSQLでの内容確認が可能になる。一方、外部
 
 ## 未決条件と置換関係
 
-SQLiteという形式選択自体に未決はない。上流への設定・復旧動作の反映、ライブラリ選定と、具体化済みの資源上限・置換手順の検証は[DES-009の引継ぎ](../project-persistence.md#未決事項引継ぎ)へ集約する。採用は詳細設計完了・試験合格を意味しない。
+SQLiteという形式選択自体に未決はない。上流への設定・復旧動作の反映、ライブラリ選定と、具体化済みの資源上限・置換手順の検証は[DES-009の引継ぎ](../functional-design/DES-009-project-persistence-recovery.md#未決事項引継ぎ)へ集約する。採用は詳細設計完了・試験合格を意味しない。
 
 - 置換元・置換先：なし。ADR-004のZIP・PNG採用を補完する。
 

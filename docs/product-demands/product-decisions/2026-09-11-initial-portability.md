@@ -24,4 +24,4 @@ description: "別PCへの持ち運びを初期対象とする判断に関する�
 
 ## 関連要求
 
-- [DEM-005：別PCでも蓄積内容を使い続ける](../cross-cutting.md#dem-005別pcでも蓄積内容を使い続ける)
+- [DEM-005：別PCでも蓄積内容を使い続ける](../cross-cutting/DEM-005-continue-on-another-pc.md#dem-005別pcでも蓄積内容を使い続ける)

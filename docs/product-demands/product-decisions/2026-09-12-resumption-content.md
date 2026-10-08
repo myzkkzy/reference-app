@@ -30,5 +30,5 @@ description: "後日再開と別PCへの持ち運び対象の判断に関する�
 
 ## 関連要求
 
-- [DEM-004：蓄積内容を保ち後日再開する](../cross-cutting.md#dem-004蓄積内容を保ち後日再開する)
-- [DEM-005：別PCでも蓄積内容を使い続ける](../cross-cutting.md#dem-005別pcでも蓄積内容を使い続ける)
+- [DEM-004：蓄積内容を保ち後日再開する](../cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)
+- [DEM-005：別PCでも蓄積内容を使い続ける](../cross-cutting/DEM-005-continue-on-another-pc.md#dem-005別pcでも蓄積内容を使い続ける)

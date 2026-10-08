@@ -9,7 +9,7 @@ description: 既存設計の画像変換・表示資源予算・読込制限と�
 - 作成日：2026-10-06
 - 決定日：未決
 - 判断権限：ユーザーの計画実行指示に基づく既存の初期設計を設計担当の技術提案として整理する。元の判断日・未記録の候補比較・試験結果は補作しない。
-- 関連要求・要件・設計：[DEM-001](../../product-demands/collection.md#dem-001比較したい参考画像を継続して蓄積する)、[DEM-002](../../product-demands/comparison.md#dem-002多くの画像を見渡し全体と細部を比較する)、[利用上限の共通要件](../../product-requirements/cross-cutting.md#画像とプロジェクトの利用上限)、[DES-008](../data-design/project-file.md#読込保存の資源上限)、[DES-009](../project-persistence.md#画像処理資源管理)、[利用上限のPDR](../../product-demands/product-decisions/2026-10-06-image-and-project-limits.md#決定内容)。
+- 関連要求・要件・設計：[DEM-001](../../product-demands/collection/DEM-001-collect-reference-images.md#dem-001比較したい参考画像を継続して蓄積する)、[DEM-002](../../product-demands/comparison/DEM-002-compare-image-overviews.md#dem-002多くの画像を見渡し全体と細部を比較する)、[利用上限の共通要件](../../product-requirements/cross-cutting/REQ-029-image-and-project-limits.md#画像とプロジェクトの利用上限)、[DES-008](../data-design/DES-008-project-file-data.md#読込保存の資源上限)、[DES-009](../functional-design/DES-009-project-persistence-recovery.md#画像処理資源管理)、[利用上限のPDR](../../product-demands/product-decisions/2026-10-06-image-and-project-limits.md#決定内容)。
 
 ## 背景・制約と上流見直しの経緯
 
@@ -31,7 +31,7 @@ description: 既存設計の画像変換・表示資源予算・読込制限と�
 
 ## 未決条件
 
-利用上限と保護の要件反映は記載済み。変更後要件のレビュー、各上限と予算の成立、性能・資源不足・タイムアウト・キャッシュ解放後の再表示を実装／検証担当が確認する。[DES-009の未決事項・引継ぎ](../project-persistence.md#未決事項引継ぎ)に従い、必要な上流判断・反映と成立確認まで提案を維持する。
+利用上限と保護の要件反映は記載済み。変更後要件のレビュー、各上限と予算の成立、性能・資源不足・タイムアウト・キャッシュ解放後の再表示を実装／検証担当が確認する。[DES-009の未決事項・引継ぎ](../functional-design/DES-009-project-persistence-recovery.md#未決事項引継ぎ)に従い、必要な上流判断・反映と成立確認まで提案を維持する。
 
 ## 置換関係
 

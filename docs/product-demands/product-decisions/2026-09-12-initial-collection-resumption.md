@@ -22,5 +22,5 @@ description: "収集と後日再開を初期必須とする判断に関する対
 
 ## 関連要求
 
-- [DEM-001：比較したい参考画像を継続して蓄積する](../collection.md#dem-001比較したい参考画像を継続して蓄積する)
-- [DEM-004：蓄積内容を保ち後日再開する](../cross-cutting.md#dem-004蓄積内容を保ち後日再開する)
+- [DEM-001：比較したい参考画像を継続して蓄積する](../collection/DEM-001-collect-reference-images.md#dem-001比較したい参考画像を継続して蓄積する)
+- [DEM-004：蓄積内容を保ち後日再開する](../cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)

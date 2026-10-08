@@ -1,0 +1,23 @@
+# cross-cutting：文書案内
+
+- [REQ-011：保存内容の復元](REQ-011-restore-saved-content.md) - 「保存内容の復元」の振る舞い・受入条件・確認事項を定める。
+- [REQ-012：30秒ごとの自動保存](REQ-012-periodic-autosave.md) - 「30秒ごとの自動保存」の振る舞い・受入条件・確認事項を定める。
+- [REQ-013：自動保存設定](REQ-013-autosave-settings.md) - 「自動保存設定」の振る舞い・受入条件・確認事項を定める。
+- [REQ-014：手動保存](REQ-014-manual-save.md) - 「手動保存」の振る舞い・受入条件・確認事項を定める。
+- [REQ-015：保存状態の識別](REQ-015-save-status.md) - 「保存状態の識別」の振る舞い・受入条件・確認事項を定める。
+- [REQ-016：保存失敗時の内容保護と再試行](REQ-016-save-failure-recovery.md) - 「保存失敗時の内容保護と再試行」の振る舞い・受入条件・確認事項を定める。
+- [REQ-017：未保存での終了](REQ-017-exit-with-unsaved-changes.md) - 「未保存での終了」の振る舞い・受入条件・確認事項を定める。
+- [REQ-018：原本に依存しない継続](REQ-018-source-independent-resumption.md) - 「原本に依存しない継続」の振る舞い・受入条件・確認事項を定める。
+- [REQ-019：利用者の別PCへの引継ぎ](REQ-019-cross-pc-transfer.md) - 「利用者の別PCへの引継ぎ」の振る舞い・受入条件・確認事項を定める。
+- [REQ-020：Windows 11でのインストール不要利用](REQ-020-portable-windows-app.md) - 「Windows 11でのインストール不要利用」の振る舞い・受入条件・確認事項を定める。
+- [REQ-021：通常時の操作反応](REQ-021-normal-operation-latency.md) - 「通常時の操作反応」の振る舞い・受入条件・確認事項を定める。
+- [REQ-022：通常時の細部表示](REQ-022-normal-detail-display.md) - 「通常時の細部表示」の振る舞い・受入条件・確認事項を定める。
+- [REQ-023：保存中の操作反応](REQ-023-saving-operation-latency.md) - 「保存中の操作反応」の振る舞い・受入条件・確認事項を定める。
+- [REQ-024：保存中の細部表示](REQ-024-saving-detail-display.md) - 「保存中の細部表示」の振る舞い・受入条件・確認事項を定める。
+- [REQ-025：保存済み500枚の再開性能](REQ-025-saved-project-open-performance.md) - 「保存済み500枚の再開性能」の振る舞い・受入条件・確認事項を定める。
+- [REQ-026：ローカル500枚の初回取込性能](REQ-026-batch-import-performance.md) - 「ローカル500枚の初回取込性能」の振る舞い・受入条件・確認事項を定める。
+- [REQ-029：画像とプロジェクトの利用上限](REQ-029-image-and-project-limits.md) - 「画像とプロジェクトの利用上限」の適用範囲・条件・既存の判断根拠を定める。
+- [REQ-030：設定の共通ルール](REQ-030-shared-settings.md) - 「設定の共通ルール」の適用範囲・条件・既存の判断根拠を定める。
+- [REQ-031：フォント差による再開調整の共通ルール](REQ-031-font-resumption-adjustments.md) - 「フォント差による再開調整の共通ルール」の適用範囲・条件・既存の判断根拠を定める。
+- [REQ-032：同一ファイル利用と保存再試行の共通ルール](REQ-032-file-lock-and-save-retry.md) - 「同一ファイル利用と保存再試行の共通ルール」の適用範囲・条件・既存の判断根拠を定める。
+- [REQ-033：性能の共通評価条件](REQ-033-performance-evaluation-conditions.md) - 「性能の共通評価条件」の適用範囲・条件・既存の判断根拠を定める。

@@ -20,9 +20,9 @@ REQ-011～017・019へ、同じPCの別プロセスで同じファイルを二�
 
 ## 理由・根拠
 
-取得経路は既存文書の要約であり、直接の対話や逐語引用ではない。[ADR-011の判断権限と背景](../../product-design/architecture-decisions/2026-10-05-ADR-011-project-lock-and-retry.md)に二重オープン拒否・明示再試行・不一致時別名保存の指定と計画実行依頼が記載されている。[要件担当への変更案](../../product-design/project-persistence.md#要件担当への変更案)には利用者が確認できる結果への展開がある。mutex・記録照合の選択理由と見直しの技術的経緯は[ADR-011](../../product-design/architecture-decisions/2026-10-05-ADR-011-project-lock-and-retry.md#上流見直しの経緯)に残す。未記載の理由は補作しない。
+取得経路は既存文書の要約であり、直接の対話や逐語引用ではない。[ADR-011の判断権限と背景](../../product-design/architecture-decisions/2026-10-05-ADR-011-project-lock-and-retry.md)に二重オープン拒否・明示再試行・不一致時別名保存の指定と計画実行依頼が記載されている。[要件担当への変更案](../../product-design/functional-design/DES-009-project-persistence-recovery.md#要件担当への変更案)には利用者が確認できる結果への展開がある。mutex・記録照合の選択理由と見直しの技術的経緯は[ADR-011](../../product-design/architecture-decisions/2026-10-05-ADR-011-project-lock-and-retry.md#上流見直しの経緯)に残す。未記載の理由は補作しない。
 
 ## 関連要求
 
-- [DEM-004](../cross-cutting.md#dem-004蓄積内容を保ち後日再開する)
-- [DEM-005](../cross-cutting.md#dem-005別pcでも蓄積内容を使い続ける)
+- [DEM-004](../cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)
+- [DEM-005](../cross-cutting/DEM-005-continue-on-another-pc.md#dem-005別pcでも蓄積内容を使い続ける)

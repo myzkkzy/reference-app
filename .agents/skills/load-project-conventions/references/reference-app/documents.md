@@ -4,52 +4,54 @@
 
 | 成果物 | ルート基準の保存先 |
 | --- | --- |
-| アイデア候補一覧 | docs/product-ideas/index.md |
-| 構想 | docs/product-ideas/<idea-slug>.md |
-| 要求索引・横断要求 | docs/product-demands/index.md、cross-cutting.md |
-| テーマ別要求 | docs/product-demands/<topic>.md |
-| 要件索引・横断要件 | docs/product-requirements/index.md、cross-cutting.md |
-| テーマ別要件 | docs/product-requirements/<topic>.md |
-| 設計索引・全体設計 | docs/product-design/index.md、architecture.md |
-| テーマ別・共通設計 | docs/product-design/<topic>.md |
-| データ設計索引・全体・テーマ別設計 | docs/product-design/data-design/index.md、overview.md、<topic>.md |
-| 画面設計索引・全体・テーマ別設計 | docs/product-design/screen-design/index.md、overview.md、<topic>.md |
+| 各工程の全体索引 | docs/product-ideas/index.md、docs/product-demands/index.md、docs/product-requirements/index.md、docs/product-design/index.md |
+| 各分類の索引 | 各工程の分類ディレクトリ内の index.md |
+| 構想 | docs/product-ideas/<category>/IDEA-<番号>-<content-slug>.md |
+| 要求 | docs/product-demands/<category>/DEM-<番号>-<content-slug>.md |
+| 要件 | docs/product-requirements/<category>/REQ-<番号>-<content-slug>.md |
+| 全体設計 | docs/product-design/architecture/DES-<番号>-<content-slug>.md |
+| 機能・共通設計 | docs/product-design/functional-design/DES-<番号>-<content-slug>.md |
+| データ設計 | docs/product-design/data-design/DES-<番号>-<content-slug>.md |
+| 画面設計 | docs/product-design/screen-design/DES-<番号>-<content-slug>.md |
+| テスト方針 | docs/product-design/test-strategy/DES-<番号>-<content-slug>.md |
 | 画面遷移図・画面構成図 | docs/product-design/screen-design/diagrams/<topic>-transition.drawio.svg、<screen>-layout.drawio.svg |
-| テスト方針 | docs/product-design/test-strategy.md |
 
-- 表で省略した後半のファイルは、その行の同じディレクトリに置く。
-- テーマ・slugは意味の分かる英小文字のkebab-caseとする。
-- テーマ文書は各工程のルート直下に置く。ただしデータ設計・画面設計の詳細は専用ディレクトリに置く。工程間で同じ分類・ファイル名を強制しない。
-- 一つのテーマ文書に関連する複数IDをまとめる。データ設計・画面設計には専用の下位索引を設け、それ以外のテーマ別索引や階層は作らない。
-- 要求本文はテーマ文書または横断文書、共通事項は一か所を管理元とする。
-- 共通事項は cross-cutting.md または適切なテーマ文書を管理元とする。分割先も工程ルート直下に置き、全体索引から参照する。
-- 要求と要件の対応表は要件の全体索引に一元化する。テーマ本文や共通事項へ重複配置しない。
-- 引継ぎは該当本文の節を正本とし、別台帳を作らない。
+- アイデア・要求・要件・設計は1項目1ファイルとし、ファイル名は `<工程>-<番号>-<content-slug>.md` とし、本文IDに簡潔な英語の内容名を付ける。主見出しは `# ID：名称` とする。
+- 工程は既存の大文字接頭辞IDEA・DEM・REQ・DES、番号はゼロ埋め3桁以上を使う。内容名（content-slug）は内容を簡潔に表す英語とし、小文字の単語・数字をハイフンでつなぐ。日本語・空白・アンダースコアは使わない。例：`REQ-001-add-image-path.md`。
+- 表記修正だけではファイル名を変えない。扱う内容が変わる場合は内容名と参照リンクを同期して更新し、工程IDと番号を維持する。本文の主見出しには内容名を追加しない。
+- 分類名は意味の分かる英小文字のkebab-caseとする。現在の要求・要件はcollection、comparison、organization、cross-cuttingに分類する。工程間で分類名の一致を強制しない。
+- 分類の変更やファイルの移動でもIDを維持する。複数REQに対応するDESも1 DESにつき1ファイルとし、対応するREQごとに分割しない。
+- 各工程の全体索引と、存在する各分類のindex.mdを更新する。未作成文書・空分類を追加しない。
+- 共通事項も独立した1項目として同じID体系で採番し、本文を一か所で管理して他の項目から参照する。要求の共通環境条件・引継ぎ方針はDEM-004を管理元とする。
+- 文書ごとの背景・文脈・確認事項・引継ぎは該当ID本文に置く。複数項目の共通説明は管理元のID本文を参照する。
+- 要求と要件の対応表は要件の全体索引、要件と設計の対応表は設計の全体索引へ一元化する。
+- PDR・ADRは判断記録の規則に従い、現在の日付付きファイル名と専用ディレクトリを維持する。
 
 ## ID
 
 | 対象単位 | 接頭辞 | 開始値 |
 | --- | --- | --- |
+| アイデア | IDEA | 001 |
 | 要求 | DEM | 001 |
 | 要件 | REQ | 001 |
 | 設計 | DES | 001 |
 | ADR | ADR | 001 |
 
-- 各体系はプロジェクト全体の連番とし、日付ごとにリセットしない。
+- 各体系は分類をまたぐプロジェクト全体の連番とし、日付ごとにリセットしない。番号は001からゼロ埋め3桁以上で表す。
 - 既存・廃止IDを確認し、編集・移動で維持する。廃止IDを再利用しない。
 - 分割・統合では本文に新旧ID関係を残す。要求では「関連要求」に記載する。
 - 廃止は理由・後継を本文に残す。廃止要件の再導入は新IDと元IDの関係を記載する。
 - 全体設計・テスト方針にもDESを付ける。索引・ADRにはDESを重ねて付けない。
-- アイデア、PDR、索引にはDEM/REQを採番しない。
+- アイデアにはIDEA、要求にはDEM、要件にはREQ、設計にはDESを採番する。PDR・索引にはこれらのIDを採番しない。
 - 要求担当はREQを採番しない。存在しない上流IDを作らない。
 
 ## 一覧と対応表
 
-- 要求・要件一覧の列は「ID・名前・短い説明・詳細」とし、本文該当節へ直接リンクする。
+- 要求・要件一覧の列は「ID・名前・短い説明・詳細」とし、各IDの本文ファイルへ直接リンクする。
 - 全体の要求一覧は全DEM、全体の要件一覧は横断分を含む全REQを掲載する。
 - 要求の全体索引は一覧と存在する関連文書への参照に限定する。
 - 要件の全体索引は全要件一覧、全対象DEMの対応表、存在する関連文書への参照に限定する。
-- 設計索引は全DESの設計一覧、全対象REQの対応表、存在する関連文書と下位索引へのリンクに限定する。データ設計・画面設計の下位索引は説明付き文書リンクのみとし、一覧・対応表を複製しない。
+- 設計索引は全DESの設計一覧、全対象REQの対応表、存在する関連文書と下位索引へのリンクに限定する。すべての分類索引は説明付き文書リンクのみとし、全ID一覧・対応表・状態・本文を複製しない。
 - 画面図は対応するDES本文の添付資料とし、図だけにDESや新しい画面IDを付けない。画面設計本文から相対パスで画像として埋め込み、下位索引は画面設計本文へ案内する。
 - 索引に背景、責務、対象範囲、未決、合意履歴、引継ぎの詳細を記載しない。
 - DEMとREQ、REQとDESは多対多で対応付け、今回の全対象上流IDを追跡する。
@@ -58,7 +60,7 @@
 - 未対応理由は本文に置く。具体化・対応済みは合意・試験合格と区別する。
 - 対象外要求は要件本文の「要求担当への確認」にDEM-ID・リンク・除外理由を残す。
 - 対象外の記録のためにREQを作らない。
-- 着想の候補一覧は案名、説明、由来、検討状況、判断理由、詳細リンクを持つ。
+- 着想の候補一覧はID、案名、説明、由来、検討状況、判断理由、詳細リンクを持つ。
 - 着想の状態と判断理由は一覧、構想の詳細は個別文書を管理元とする。
 
 ## 文書の表記

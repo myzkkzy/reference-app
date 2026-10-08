@@ -24,7 +24,7 @@ DEM-001〜005、利用者による別PCでの継続利用、独立したメモ�
 
 ## 関連要求
 
-- [DEM-006（廃止）](../cross-cutting.md#dem-006他の制作者とリファレンスを確認し考えや方向性をすり合わせる)
-- [DEM-003](../organization.md#dem-003画像の関係や気づきを自分なりに整理する)
-- [DEM-004](../cross-cutting.md#dem-004蓄積内容を保ち後日再開する)
-- [DEM-005](../cross-cutting.md#dem-005別pcでも蓄積内容を使い続ける)
+- [DEM-006（廃止）](../cross-cutting/DEM-006-share-reference-insights.md#dem-006他の制作者とリファレンスを確認し考えや方向性をすり合わせる)
+- [DEM-003](../organization/DEM-003-organize-image-insights.md#dem-003画像の関係や気づきを自分なりに整理する)
+- [DEM-004](../cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)
+- [DEM-005](../cross-cutting/DEM-005-continue-on-another-pc.md#dem-005別pcでも蓄積内容を使い続ける)

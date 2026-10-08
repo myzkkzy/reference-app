@@ -10,7 +10,7 @@ description: 画像ボードとメニューなどの表示をPixiJSに統一す�
 - 作成日：2026-09-25
 - 決定日：未特定（2026-09-25に記録）
 - 決定者・判断権限の根拠：ユーザーが対話でWebGLによる画像表示を希望し、UI方式として「ほぼ全てPixiJS」を選択した。これは表示方式の採用であり、すべての入力をCanvas内で完結させる決定ではない。
-- 関連要求・要件・設計：[DEM-002](../../product-demands/comparison.md#dem-002多くの画像を見渡し全体と細部を比較する)、[DEM-003](../../product-demands/organization.md#dem-003画像の関係や気づきを自分なりに整理する)、[REQ-004](../../product-requirements/comparison.md#req-004全体と細部の表示)、[REQ-006](../../product-requirements/organization.md#req-006画像の移動回転拡縮)、[REQ-010](../../product-requirements/organization.md#req-010独立メモの編集と配置)、[REQ-021](../../product-requirements/cross-cutting.md#req-021通常時の操作反応)、[REQ-022](../../product-requirements/cross-cutting.md#req-022通常時の細部表示)、[REQ-023](../../product-requirements/cross-cutting.md#req-023保存中の操作反応)、[REQ-024](../../product-requirements/cross-cutting.md#req-024保存中の細部表示)、[REQ-025](../../product-requirements/cross-cutting.md#req-025保存済み500枚の再開性能)、[REQ-026](../../product-requirements/cross-cutting.md#req-026ローカル500枚の初回取込性能)、[DES-001：全体設計](../architecture.md#des-001リファレンスボードの全体設計)。
+- 関連要求・要件・設計：[DEM-002](../../product-demands/comparison/DEM-002-compare-image-overviews.md#dem-002多くの画像を見渡し全体と細部を比較する)、[DEM-003](../../product-demands/organization/DEM-003-organize-image-insights.md#dem-003画像の関係や気づきを自分なりに整理する)、[REQ-004](../../product-requirements/comparison/REQ-004-board-overview-and-detail.md#req-004全体と細部の表示)、[REQ-006](../../product-requirements/organization/REQ-006-image-transform.md#req-006画像の移動回転拡縮)、[REQ-010](../../product-requirements/organization/REQ-010-independent-notes.md#req-010独立メモの編集と配置)、[REQ-021](../../product-requirements/cross-cutting/REQ-021-normal-operation-latency.md#req-021通常時の操作反応)、[REQ-022](../../product-requirements/cross-cutting/REQ-022-normal-detail-display.md#req-022通常時の細部表示)、[REQ-023](../../product-requirements/cross-cutting/REQ-023-saving-operation-latency.md#req-023保存中の操作反応)、[REQ-024](../../product-requirements/cross-cutting/REQ-024-saving-detail-display.md#req-024保存中の細部表示)、[REQ-025](../../product-requirements/cross-cutting/REQ-025-saved-project-open-performance.md#req-025保存済み500枚の再開性能)、[REQ-026](../../product-requirements/cross-cutting/REQ-026-batch-import-performance.md#req-026ローカル500枚の初回取込性能)、[DES-001：全体設計](../architecture/DES-001-system-architecture.md#des-001リファレンスボードの全体設計)。
 
 ## 背景・制約
 
@@ -43,7 +43,7 @@ TypeScript＋Vite上でPixiJS v8を採用し、WebGLレンダラーで画像ボ�
 ## 未決条件
 
 - メニューやダイアログの具体的な画面構成、キーボード操作、フォーカスと支援技術への対応は設計本文で定める。
-- [REQ-004](../../product-requirements/comparison.md#req-004全体と細部の表示)の倍率限界と[性能の共通評価条件](../../product-requirements/cross-cutting.md#性能の共通評価条件)を適用するREQ-021～026の評価条件・合否は、それぞれの要件本文で定めた手順に従う。実装・検証担当が確認する。
+- [REQ-004](../../product-requirements/comparison/REQ-004-board-overview-and-detail.md#req-004全体と細部の表示)の倍率限界と[性能の共通評価条件](../../product-requirements/cross-cutting/REQ-033-performance-evaluation-conditions.md#性能の共通評価条件)を適用するREQ-021～026の評価条件・合否は、それぞれの要件本文で定めた手順に従う。実装・検証担当が確認する。
 
 ## 置換関係
 

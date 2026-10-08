@@ -10,7 +10,7 @@ description: Windows 11初期版の実行基盤にTauri 2とRustを採用し、�
 - 作成日：2026-09-25
 - 決定日：2026-09-25
 - 決定者・判断権限の根拠：ユーザーが対話で「A案 Tauri を採用する方針で ADR を記述してほしい」と明示した。採用は実行基盤の方針であり、条件付き要件の未決事項を確定したものではない。
-- 関連要求・要件・設計：[DEM-004](../../product-demands/cross-cutting.md#dem-004蓄積内容を保ち後日再開する)、[DEM-005](../../product-demands/cross-cutting.md#dem-005別pcでも蓄積内容を使い続ける)、[REQ-001](../../product-requirements/collection.md#req-001画像の追加経路)、[REQ-005](../../product-requirements/comparison.md#req-005制作中の参照維持)、[REQ-020](../../product-requirements/cross-cutting.md#req-020windows-11でのインストール不要利用)、[REQ-021](../../product-requirements/cross-cutting.md#req-021通常時の操作反応)、[REQ-022](../../product-requirements/cross-cutting.md#req-022通常時の細部表示)、[REQ-023](../../product-requirements/cross-cutting.md#req-023保存中の操作反応)、[REQ-024](../../product-requirements/cross-cutting.md#req-024保存中の細部表示)、[REQ-025](../../product-requirements/cross-cutting.md#req-025保存済み500枚の再開性能)、[REQ-026](../../product-requirements/cross-cutting.md#req-026ローカル500枚の初回取込性能)、[DES-001：全体設計](../architecture.md#des-001リファレンスボードの全体設計)。
+- 関連要求・要件・設計：[DEM-004](../../product-demands/cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)、[DEM-005](../../product-demands/cross-cutting/DEM-005-continue-on-another-pc.md#dem-005別pcでも蓄積内容を使い続ける)、[REQ-001](../../product-requirements/collection/REQ-001-add-image-path.md#req-001画像の追加経路)、[REQ-005](../../product-requirements/comparison/REQ-005-keep-references-visible.md#req-005制作中の参照維持)、[REQ-020](../../product-requirements/cross-cutting/REQ-020-portable-windows-app.md#req-020windows-11でのインストール不要利用)、[REQ-021](../../product-requirements/cross-cutting/REQ-021-normal-operation-latency.md#req-021通常時の操作反応)、[REQ-022](../../product-requirements/cross-cutting/REQ-022-normal-detail-display.md#req-022通常時の細部表示)、[REQ-023](../../product-requirements/cross-cutting/REQ-023-saving-operation-latency.md#req-023保存中の操作反応)、[REQ-024](../../product-requirements/cross-cutting/REQ-024-saving-detail-display.md#req-024保存中の細部表示)、[REQ-025](../../product-requirements/cross-cutting/REQ-025-saved-project-open-performance.md#req-025保存済み500枚の再開性能)、[REQ-026](../../product-requirements/cross-cutting/REQ-026-batch-import-performance.md#req-026ローカル500枚の初回取込性能)、[DES-001：全体設計](../architecture/DES-001-system-architecture.md#des-001リファレンスボードの全体設計)。
 
 ## 背景・制約
 
@@ -30,10 +30,10 @@ A案を採用する。デスクトップ窓とOS機能との接続をTauri 2、�
 
 ## 影響・利点・不利益・リスク
 
-- Windows 11ではWebView2を使用する。Tauri公式はWindows 11にWebView2がプリインストールされると説明するが、[REQ-020](../../product-requirements/cross-cutting.md#req-020windows-11でのインストール不要利用)で未合意のエディション・リリース範囲すべての動作を保証する根拠にはならない。
+- Windows 11ではWebView2を使用する。Tauri公式はWindows 11にWebView2がプリインストールされると説明するが、[REQ-020](../../product-requirements/cross-cutting/REQ-020-portable-windows-app.md#req-020windows-11でのインストール不要利用)で未合意のエディション・リリース範囲すべての動作を保証する根拠にはならない。
 - インストーラーなしの配布候補としてTauriの`build --no-bundle`を使える。実際の配布物と起動可否は未確認である。
 - WindowsでHTML5ドラッグ＆ドロップを利用する場合、Tauri公式設定は`dragDropEnabled: false`を要求する。ローカルファイルとブラウザ画像の両経路で、必要なデータが受け取れるかは未確認である。
-- 常に手前に表示するAPIはある。制作アプリの操作中にも参照が維持されるかは[REQ-005](../../product-requirements/comparison.md#req-005制作中の参照維持)に沿って確認が必要である。
+- 常に手前に表示するAPIはある。制作アプリの操作中にも参照が維持されるかは[REQ-005](../../product-requirements/comparison/REQ-005-keep-references-visible.md#req-005制作中の参照維持)に沿って確認が必要である。
 - macOS・Linuxへの展開時はWebViewの実装が異なるため、その時点で描画・入力・配布を再評価する。
 
 ## 根拠資料・試作結果
@@ -43,8 +43,8 @@ A案を採用する。デスクトップ窓とOS機能との接続をTauri 2、�
 
 ## 未決条件
 
-- [REQ-020](../../product-requirements/cross-cutting.md#req-020windows-11でのインストール不要利用)の対応エディション・リリース範囲と検証環境は、要件本文の条件に従い設計・検証段階で確定する。ユーザーの合意まで受入判定しない。
-- [REQ-001](../../product-requirements/collection.md#req-001画像の追加経路)の各ドラッグ＆ドロップ経路、[REQ-005](../../product-requirements/comparison.md#req-005制作中の参照維持)、[性能の共通評価条件](../../product-requirements/cross-cutting.md#性能の共通評価条件)を適用するREQ-021～026は、実装・検証担当による確認が必要。方式の採用と試験合格は別である。
+- [REQ-020](../../product-requirements/cross-cutting/REQ-020-portable-windows-app.md#req-020windows-11でのインストール不要利用)の対応エディション・リリース範囲と検証環境は、要件本文の条件に従い設計・検証段階で確定する。ユーザーの合意まで受入判定しない。
+- [REQ-001](../../product-requirements/collection/REQ-001-add-image-path.md#req-001画像の追加経路)の各ドラッグ＆ドロップ経路、[REQ-005](../../product-requirements/comparison/REQ-005-keep-references-visible.md#req-005制作中の参照維持)、[性能の共通評価条件](../../product-requirements/cross-cutting/REQ-033-performance-evaluation-conditions.md#性能の共通評価条件)を適用するREQ-021～026は、実装・検証担当による確認が必要。方式の採用と試験合格は別である。
 
 ## 置換関係
 

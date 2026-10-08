@@ -10,11 +10,11 @@ description: TypeScriptとRustの整形・静的検査・型検査を分担す�
 - 作成日：2026-09-29
 - 決定日：2026-09-29
 - 決定者・判断権限の根拠：ユーザーによるPrettier＋ESLint／typescript-eslintの選択と、計画実装指示を受け、設計担当が開発基盤の方式を記録する。要求・要件の合意状態や受入条件は変更しない。
-- 関連要求・要件・設計：[DEM-004](../../product-demands/cross-cutting.md#dem-004蓄積内容を保ち後日再開する)、[REQ-016](../../product-requirements/cross-cutting.md#req-016保存失敗時の内容保護と再試行)、[DES-001](../architecture.md#des-001リファレンスボードの全体設計)。静的検査はこれらの品質を支える開発手段であり、受入条件の充足を保証しない。
+- 関連要求・要件・設計：[DEM-004](../../product-demands/cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)、[REQ-016](../../product-requirements/cross-cutting/REQ-016-save-failure-recovery.md#req-016保存失敗時の内容保護と再試行)、[DES-001](../architecture/DES-001-system-architecture.md#des-001リファレンスボードの全体設計)。静的検査はこれらの品質を支える開発手段であり、受入条件の充足を保証しない。
 
 ## 背景・制約
 
-TypeScriptとRustを併用する構成に対し、書式の統一、コード品質の検査、型の整合確認を明確に分担する。利用者の実行環境へ開発ツールのインストールを要求しない。現在の構成と利用箇所は[技術スタック](../architecture.md#技術スタック)を参照する。
+TypeScriptとRustを併用する構成に対し、書式の統一、コード品質の検査、型の整合確認を明確に分担する。利用者の実行環境へ開発ツールのインストールを要求しない。現在の構成と利用箇所は[技術スタック](../architecture/DES-001-system-architecture.md#技術スタック)を参照する。
 
 ## 選択肢と判断基準
 
@@ -48,7 +48,7 @@ RustはrustfmtとClippyを使用する。TypeScriptは`tsc --noEmit`で型検査
 
 ## 未決条件
 
-実装担当が導入時に互換バージョンを固定し、対象ファイル・除外対象・品質規則・型検査範囲を設定する。検査の実行環境・時期は実装・検証担当へ引き継ぐ。導入後の結果を確認するまで検査済みとしない。[全体設計の引継ぎ](../architecture.md#未決事項引継ぎ)を参照する。
+実装担当が導入時に互換バージョンを固定し、対象ファイル・除外対象・品質規則・型検査範囲を設定する。検査の実行環境・時期は実装・検証担当へ引き継ぐ。導入後の結果を確認するまで検査済みとしない。[全体設計の引継ぎ](../architecture/DES-001-system-architecture.md#未決事項引継ぎ)を参照する。
 
 ## 置換関係
 

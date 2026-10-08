@@ -10,7 +10,7 @@ description: ボードを独自の単一ZIPファイルで保存・移送し、�
 - 作成日：2026-09-26
 - 決定日：2026-09-26
 - 決定者・判断権限の根拠：ユーザーが本チャットで独自の単一ファイル、ZIPによる内部ディレクトリの格納、取込時の内部画像形式への統一を指定した。PNGは「取り扱いやすい形式」という依頼に基づく設計担当の選定。要件の対応形式や先頭コマ・ページの範囲は変更しない。
-- 関連要求・要件・設計：[REQ-002](../../product-requirements/collection.md#req-002静止画形式と複数フレームの扱い)、[REQ-011](../../product-requirements/cross-cutting.md#req-011保存内容の復元)、[REQ-018](../../product-requirements/cross-cutting.md#req-018原本に依存しない継続)、[REQ-019](../../product-requirements/cross-cutting.md#req-019利用者の別pcへの引継ぎ)、[DES-001](../architecture.md#des-001リファレンスボードの全体設計)。
+- 関連要求・要件・設計：[REQ-002](../../product-requirements/collection/REQ-002-static-image-formats.md#req-002静止画形式と複数フレームの扱い)、[REQ-011](../../product-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)、[REQ-018](../../product-requirements/cross-cutting/REQ-018-source-independent-resumption.md#req-018原本に依存しない継続)、[REQ-019](../../product-requirements/cross-cutting/REQ-019-cross-pc-transfer.md#req-019利用者の別pcへの引継ぎ)、[DES-001](../architecture/DES-001-system-architecture.md#des-001リファレンスボードの全体設計)。
 
 ## 背景・制約
 
@@ -28,7 +28,7 @@ description: ボードを独自の単一ZIPファイルで保存・移送し、�
 
 ## 決定と理由
 
-ボード情報と画像を含む内部ディレクトリをZIPに格納し、独自形式の1ファイルとして保存・移送する。画像は取込時に静止画PNGへ統一する。アニメーションの先頭1コマ、TIFFの先頭ページという対象範囲はREQ-002に従う。計画反映により元寸法維持の方針を更新し、長辺3840px・短辺2160pxを超える場合だけ縦横比を維持して縮小する。上限以下は拡大・縮小しない。sRGB・各色8ビットへ変換し、向き情報は無視して引き継がない。原本は変更せず、取込後の本PNGと俯瞰用縮小画像を分ける。保存先の操作と保存中の保護は[DES-001の保存設計](../architecture.md#保存と復旧の設計方針)を参照する。
+ボード情報と画像を含む内部ディレクトリをZIPに格納し、独自形式の1ファイルとして保存・移送する。画像は取込時に静止画PNGへ統一する。アニメーションの先頭1コマ、TIFFの先頭ページという対象範囲はREQ-002に従う。計画反映により元寸法維持の方針を更新し、長辺3840px・短辺2160pxを超える場合だけ縦横比を維持して縮小する。上限以下は拡大・縮小しない。sRGB・各色8ビットへ変換し、向き情報は無視して引き継がない。原本は変更せず、取込後の本PNGと俯瞰用縮小画像を分ける。保存先の操作と保存中の保護は[DES-001の保存設計](../architecture/DES-001-system-architecture.md#保存と復旧の設計方針)を参照する。
 
 ## 影響・利点・不利益・リスク
 
@@ -42,7 +42,7 @@ description: ボードを独自の単一ZIPファイルで保存・移送し、�
 
 ## 未決条件
 
-拡張子・内部構造・形式版を[DES-008](../data-design/project-file.md)、SQLite選定を[ADR-010](2026-09-29-ADR-010-sqlite-project-storage.md)で具体化した。色・階調・向き・4K縮小・資源上限を[DES-009](../project-persistence.md#画像処理資源管理)へ反映。変換ライブラリ等の具体的選定と成立検証は残る。初版は縮小キャッシュを保存せず再生成する。実装・検証担当は性能と対応形式の成立を確認する。採用は方式選択を意味し、詳細設計完了や試験合格を意味しない。
+拡張子・内部構造・形式版を[DES-008](../data-design/DES-008-project-file-data.md)、SQLite選定を[ADR-010](2026-09-29-ADR-010-sqlite-project-storage.md)で具体化した。色・階調・向き・4K縮小・資源上限を[DES-009](../functional-design/DES-009-project-persistence-recovery.md#画像処理資源管理)へ反映。変換ライブラリ等の具体的選定と成立検証は残る。初版は縮小キャッシュを保存せず再生成する。実装・検証担当は性能と対応形式の成立を確認する。採用は方式選択を意味し、詳細設計完了や試験合格を意味しない。
 
 ## 置換関係
 

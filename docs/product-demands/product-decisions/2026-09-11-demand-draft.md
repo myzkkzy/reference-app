@@ -10,7 +10,7 @@ description: "要求ドラフト作成への移行に関する対話の決定と
 
 ## 背景
 
-[構想文書](../../product-ideas/reference-board.md)と[候補一覧](../../product-ideas/index.md)を入力とし、ユーザーの課題・期待成果が具体化したことを選定理由として引き継いだ。元資料の要求定義への移行は未指定という記載は、作成依頼前の記録である。
+[構想文書](../../product-ideas/reference-board/IDEA-001-reference-board.md)と[候補一覧](../../product-ideas/index.md)を入力とし、ユーザーの課題・期待成果が具体化したことを選定理由として引き継いだ。元資料の要求定義への移行は未指定という記載は、作成依頼前の記録である。
 
 ## 決定内容
 
@@ -24,8 +24,8 @@ description: "要求ドラフト作成への移行に関する対話の決定と
 
 ## 関連要求
 
-- [DEM-001：比較したい参考画像を継続して蓄積する](../collection.md#dem-001比較したい参考画像を継続して蓄積する)
-- [DEM-002：多くの画像を見渡し全体と細部を比較する](../comparison.md#dem-002多くの画像を見渡し全体と細部を比較する)
-- [DEM-003：画像の関係や気づきを自分なりに整理する](../organization.md#dem-003画像の関係や気づきを自分なりに整理する)
-- [DEM-004：蓄積内容を保ち後日再開する](../cross-cutting.md#dem-004蓄積内容を保ち後日再開する)
-- [DEM-005：別PCでも蓄積内容を使い続ける](../cross-cutting.md#dem-005別pcでも蓄積内容を使い続ける)
+- [DEM-001：比較したい参考画像を継続して蓄積する](../collection/DEM-001-collect-reference-images.md#dem-001比較したい参考画像を継続して蓄積する)
+- [DEM-002：多くの画像を見渡し全体と細部を比較する](../comparison/DEM-002-compare-image-overviews.md#dem-002多くの画像を見渡し全体と細部を比較する)
+- [DEM-003：画像の関係や気づきを自分なりに整理する](../organization/DEM-003-organize-image-insights.md#dem-003画像の関係や気づきを自分なりに整理する)
+- [DEM-004：蓄積内容を保ち後日再開する](../cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)
+- [DEM-005：別PCでも蓄積内容を使い続ける](../cross-cutting/DEM-005-continue-on-another-pc.md#dem-005別pcでも蓄積内容を使い続ける)

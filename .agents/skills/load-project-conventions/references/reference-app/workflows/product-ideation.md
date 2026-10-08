@@ -13,12 +13,14 @@ PDR・ADRを扱う場合は[判断記録](../decisions.md)も読む。
 | 経験・興味・未決の確認 | [interview-user](../../../../interview-user/SKILL.md) |
 | 発散・深掘り・構想の記述 | [generate-ideas](../../../../generate-ideas/SKILL.md) |
 | 有望案の比較 | [evaluate-and-record-decisions：選択肢の比較](../../../../evaluate-and-record-decisions/SKILL.md) |
+| 新規アイデアの採番 | [manage-product-documents：文書IDの採番](../../../../manage-product-documents/SKILL.md) |
 | 候補一覧と検討状況の反映 | [manage-product-documents：文書一覧の更新](../../../../manage-product-documents/SKILL.md) |
 | 要求定義への引継ぎ | [manage-product-documents：作業引継ぎの整理](../../../../manage-product-documents/SKILL.md) |
 | 保存後の参照確認 | [manage-product-documents：文書リンクの検査](../../../../manage-product-documents/SKILL.md) |
 
 上から順に全操作を実施する必要はない。依頼の範囲と不足に応じて選ぶ。
 操作間では本文リンク、入力の確認時点、適用規則、未決と進行範囲を渡す。
+保存時は文書規則に従い、分類内へ1項目1ファイル・IDと英語の内容名を組み合わせた名前で配置し、工程索引と分類索引を同期する。
 選択したスキルのSKILL.mdを読み、表に示す操作の手順だけを参照する。
 同じスキルの他操作を自動実行しない。使用しない手順は読み込まない。
 

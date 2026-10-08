@@ -26,6 +26,6 @@ description: "インストール不要の提供形態を初期必須とする判
 
 ## 関連要求
 
-- [DEM-004：蓄積内容を保ち後日再開する（共通提供形態の管理元）](../cross-cutting.md#dem-004蓄積内容を保ち後日再開する)
-- [DEM-005：別PCでも蓄積内容を使い続ける](../cross-cutting.md#dem-005別pcでも蓄積内容を使い続ける)
-- [DEM-006：他の制作者とリファレンスを確認し考えや方向性をすり合わせる](../cross-cutting.md#dem-006他の制作者とリファレンスを確認し考えや方向性をすり合わせる)
+- [DEM-004：蓄積内容を保ち後日再開する（共通提供形態の管理元）](../cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)
+- [DEM-005：別PCでも蓄積内容を使い続ける](../cross-cutting/DEM-005-continue-on-another-pc.md#dem-005別pcでも蓄積内容を使い続ける)
+- [DEM-006：他の制作者とリファレンスを確認し考えや方向性をすり合わせる](../cross-cutting/DEM-006-share-reference-insights.md#dem-006他の制作者とリファレンスを確認し考えや方向性をすり合わせる)

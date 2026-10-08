@@ -10,7 +10,7 @@ description: "グループ・文章コメントを初期対象とする判断に
 
 ## 背景
 
-ユーザーは画像の配置やグループ分けを考える作業として重視している（[構想](../../product-ideas/reference-board.md)）。
+ユーザーは画像の配置やグループ分けを考える作業として重視している（[構想](../../product-ideas/reference-board/IDEA-001-reference-board.md)）。
 
 ## 決定内容
 
@@ -24,4 +24,4 @@ description: "グループ・文章コメントを初期対象とする判断に
 
 ## 関連要求
 
-- [DEM-003：画像の関係や気づきを自分なりに整理する](../organization.md#dem-003画像の関係や気づきを自分なりに整理する)
+- [DEM-003：画像の関係や気づきを自分なりに整理する](../organization/DEM-003-organize-image-insights.md#dem-003画像の関係や気づきを自分なりに整理する)

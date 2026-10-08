@@ -24,6 +24,6 @@ description: "初期評価の範囲に関する対話の決定と根拠を記録
 
 ## 関連要求
 
-- [DEM-001：比較したい参考画像を継続して蓄積する](../collection.md#dem-001比較したい参考画像を継続して蓄積する)
-- [DEM-002：多くの画像を見渡し全体と細部を比較する](../comparison.md#dem-002多くの画像を見渡し全体と細部を比較する)
-- [DEM-003：画像の関係や気づきを自分なりに整理する](../organization.md#dem-003画像の関係や気づきを自分なりに整理する)
+- [DEM-001：比較したい参考画像を継続して蓄積する](../collection/DEM-001-collect-reference-images.md#dem-001比較したい参考画像を継続して蓄積する)
+- [DEM-002：多くの画像を見渡し全体と細部を比較する](../comparison/DEM-002-compare-image-overviews.md#dem-002多くの画像を見渡し全体と細部を比較する)
+- [DEM-003：画像の関係や気づきを自分なりに整理する](../organization/DEM-003-organize-image-insights.md#dem-003画像の関係や気づきを自分なりに整理する)
