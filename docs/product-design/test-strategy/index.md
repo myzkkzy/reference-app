@@ -1,0 +1,3 @@
+# test-strategy：文書案内
+
+- [DES-013：詳細設計の成立確認と検証への引継ぎ](DES-013-design-validation-handoff.md) - 要件差分、IPC契約の観測点、小規模成立確認と製品評価の判定対象を整理する。

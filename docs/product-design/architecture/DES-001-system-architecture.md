@@ -22,13 +22,13 @@ description: リファレンスボードの技術スタック、責務、処理�
 
 | 要件・合意状況 | 本書で扱う範囲 |
 | --- | --- |
-| [REQ-001：画像の追加経路](../../product-requirements/collection/REQ-001-add-image-path.md#req-001画像の追加経路)・合意済み、[REQ-002：静止画形式](../../product-requirements/collection/REQ-002-static-image-formats.md#req-002静止画形式と複数フレームの扱い)・合意済み、[REQ-003：複数取込と失敗通知](../../product-requirements/collection/REQ-003-batch-import-errors.md#req-003複数取込と失敗通知)・合意済み | ローカル・ブラウザ入力とRustによる取込、成功分と失敗分の返却境界。形式別処理の詳細は未設計。 |
+| [REQ-001：画像の追加経路](../../product-requirements/collection/REQ-001-add-image-path.md#req-001画像の追加経路)・合意済み、[REQ-002：静止画形式](../../product-requirements/collection/REQ-002-static-image-formats.md#req-002静止画形式と複数フレームの扱い)・合意済み、[REQ-003：複数取込と失敗通知](../../product-requirements/collection/REQ-003-batch-import-errors.md#req-003複数取込と失敗通知)・合意済み | ローカル・ブラウザ入力とRustによる取込、成功分と失敗分の返却境界。形式別処理・初期配置は[DES-010](../functional-design/DES-010-image-import-pipeline.md)へ具体化。成立は未検証。 |
 | [REQ-004：全体と細部の表示](../../product-requirements/comparison/REQ-004-board-overview-and-detail.md#req-004全体と細部の表示)・条件付き合意、[REQ-005：制作中の参照維持](../../product-requirements/comparison/REQ-005-keep-references-visible.md#req-005制作中の参照維持)・合意済み | PixiJSによるボード描画とTauriウィンドウの前面表示。倍率範囲・再開・全体fitの契約はDES-004へ具体化済み。実機での成立は未確認。 |
 | [REQ-006～010：画像・メモ・グループの整理](../../product-requirements/organization/REQ-006-image-transform.md#req-006画像の移動回転拡縮)・REQ-006・010は条件付き合意、REQ-007～009は合意済み | ボード状態と描画の責務を分ける。共通データ構造、更新・取り消しの境界は[DES-002](../functional-design/DES-002-board-editing-state.md#des-002ボードの編集状態とグループ構造)で扱う。 |
-| [REQ-010：独立メモ](../../product-requirements/organization/REQ-010-independent-notes.md#req-010独立メモの編集と配置)・条件付き合意 | メモをPixiJSで表示する方針。編集入力方式は未確定。本文10,000拡張書記素クラスタの上限と編集境界はDES-002へ反映。 |
+| [REQ-010：独立メモ](../../product-requirements/organization/REQ-010-independent-notes.md#req-010独立メモの編集と配置)・条件付き合意 | メモをPixiJSで表示する方針。編集中のtextarea併用はユーザー選択済み。実機品質は未検証。本文10,000拡張書記素クラスタの上限と編集境界はDES-002へ反映。 |
 | [REQ-011：保存内容の復元](../../product-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)・ドラフト、[REQ-012：自動保存](../../product-requirements/cross-cutting/REQ-012-periodic-autosave.md#req-01230秒ごとの自動保存)・ドラフト、[REQ-014：手動保存](../../product-requirements/cross-cutting/REQ-014-manual-save.md#req-014手動保存)・ドラフト、[REQ-015：保存状態](../../product-requirements/cross-cutting/REQ-015-save-status.md#req-015保存状態の識別)・ドラフト、[REQ-016：保存失敗](../../product-requirements/cross-cutting/REQ-016-save-failure-recovery.md#req-016保存失敗時の内容保護と再試行)・ドラフト | 編集状態と保存処理を分離し、保存競合と失敗時の保護を扱う境界。独自ZIP形式を採用。詳細スキーマと保存契約はDES-008・009を参照。 |
 | [REQ-017：未保存での終了](../../product-requirements/cross-cutting/REQ-017-exit-with-unsaved-changes.md#req-017未保存での終了)・ドラフト、[REQ-019：別PCへの引継ぎ](../../product-requirements/cross-cutting/REQ-019-cross-pc-transfer.md#req-019利用者の別pcへの引継ぎ)・ドラフト | 終了・保存内容の切替前に未保存状態と利用者の選択を扱う境界。移送は本ZIPファイル単体。画面遷移はDES-007、保存ゲートはDES-009を参照。 |
-| [REQ-020：インストール不要利用](../../product-requirements/cross-cutting/REQ-020-portable-windows-app.md#req-020windows-11でのインストール不要利用)・条件付き合意 | Tauri配布とWebView2依存。対応エディション・リリース範囲は未合意。 |
+| [REQ-020：インストール不要利用](../../product-requirements/cross-cutting/REQ-020-portable-windows-app.md#req-020windows-11でのインストール不要利用)・条件付き合意 | Tauri配布とWebView2依存。対象はHome・x64・サポート中通常リリース、固定WebView2を常に同梱するユーザー選択をDES-012へ反映。要件本文への反映・レビューは残る。 |
 | [REQ-021：通常時の操作反応](../../product-requirements/cross-cutting/REQ-021-normal-operation-latency.md#req-021通常時の操作反応)、[REQ-022：通常時の細部表示](../../product-requirements/cross-cutting/REQ-022-normal-detail-display.md#req-022通常時の細部表示)、[REQ-023：保存中の操作反応](../../product-requirements/cross-cutting/REQ-023-saving-operation-latency.md#req-023保存中の操作反応)、[REQ-024：保存中の細部表示](../../product-requirements/cross-cutting/REQ-024-saving-detail-display.md#req-024保存中の細部表示)、[REQ-025：500枚の再開](../../product-requirements/cross-cutting/REQ-025-saved-project-open-performance.md#req-025保存済み500枚の再開性能)、[REQ-026：500枚の取込](../../product-requirements/cross-cutting/REQ-026-batch-import-performance.md#req-026ローカル500枚の初回取込性能)・いずれも条件付き合意 | 非同期処理、画像の段階的表示と描画資源管理の方針。評価条件と達成状況は未確定。 |
 
 本書は上記要件の技術構成に関わる部分だけを扱う。機能全体の振る舞い、業務ルール、受入条件は各要件本文を正本とする。
@@ -51,14 +51,15 @@ flowchart LR
     app -.->|"前面表示による参照維持"| paint
 ```
 
-WindowsのWebView2を表示実行環境として使う。[ADR-001](../architecture-decisions/2026-09-25-ADR-001-tauri-desktop-runtime.md)の採用は、全Windows 11環境での起動保証を意味しない。ブラウザ・ファイルからの入力経路と制作アプリとの重なりは実機で確認する。
+WindowsのWebView2を表示実行環境として使う。[ADR-001](../architecture-decisions/2026-09-25-ADR-001-tauri-desktop-runtime.md)の採用は、全Windows 11環境での起動保証を意味しない。同梱固定版と対象範囲は[DES-012](DES-012-portable-runtime-distribution.md)へ具体化した。ブラウザ・ファイルからの入力経路と制作アプリとの重なりは実機で確認する。
 
 ## 内部構成図
 
 ```mermaid
 flowchart TB
     subgraph front["WebView2内：TypeScript・Viteで構築"]
-        input["入力境界：ドロップ・貼付・ファイル選択結果"]
+        input["入力境界：HTML5ドロップ・貼付・OS選択トークン"]
+        jsonWorker["画面側Worker：保存JSON生成・候補JSON解析"]
         board["プロジェクト状態：ボード・設定・表示位置"]
         canvas["PixiJS v8 WebGL：ボード描画"]
         ui["PixiJS・@pixi/ui：固定UI・通知"]
@@ -72,7 +73,9 @@ flowchart TB
     subgraph native["Tauri 2／Rust"]
         bridge["Tauri IPC境界"]
         importer["画像取込・読取結果"]
-        storage["保存・読込処理：SQLite変換・検証とZIP"]
+        storage["保存キュー・読込候補検証"]
+        saver["専用保存スレッド：SQLite・ZIP・置換"]
+        storage <--> saver
         window["ウィンドウ・OS連携"]
         bridge --> importer
         bridge --> storage
@@ -80,18 +83,24 @@ flowchart TB
     end
     input <--> bridge
     save <--> bridge
+    board -->|"不変の保存状態"| jsonWorker
+    jsonWorker -->|"UTF-8 JSONバイナリ供給"| bridge
+    bridge -->|"候補JSONバイナリ"| jsonWorker
+    jsonWorker -->|"準備済み候補"| board
+    importer <--> imageWorker["専用画像プロセス：MagickWand・同梱コーデック"]
     importer -->|"成功画像・失敗理由"| board
-    storage <--> disk["ローカル保存内容：独自ZIP形式"]
+    saver <--> disk["ローカル保存内容：独自ZIP形式"]
     window <--> os["ファイルダイアログ・ウィンドウ制御"]
 ```
 
 | 構成要素 | 責務・所有する状態 | 依存・主要契約 |
 | --- | --- | --- |
-| 入力境界 | ローカルファイル、ブラウザ画像のドラッグ・貼付、ファイル選択結果を受ける | 入力ごとの差異を取込要求へ変換。WindowsのHTML5ドラッグ＆ドロップにはTauriの`dragDropEnabled: false`を使う。両経路の画像データ受渡しは未確認。 |
+| 入力境界 | ローカルファイル、ブラウザ画像のドラッグ・貼付、ファイル選択結果を受ける | Windowsの`dragDropEnabled: false`でHTML5へ統一し、File／Blobをイベント中に保持。画像データは最大1MiB・全体1チャンクで転送し、OS選択はRustの入力トークンを使う。契約はDES-010・011、実機成立は未検証。 |
 | ボード状態 | 表示・編集対象の画像、配置、メモ、グループ、保存済みとの差分を保持する | 描画と保存要求へ一貫した内容を渡す。共通の論理構造と更新単位は[DES-002](../functional-design/DES-002-board-editing-state.md#des-002ボードの編集状態とグループ構造)を管理元とする。 |
-| PixiJS v8 WebGL、`@pixi/ui` | ボードと画面固定UIを描画し、操作結果・通知・保存状態を示す | ボードのパン・ズームとメニュー位置を分離。メモ入力の`textarea`併用はADR-003の提案であり採用構成には含めない。 |
-| Tauri IPC境界 | WebView2とRust間で取込・保存・ウィンドウ操作の要求と結果を仲介する | 要求に対応する結果・失敗を返す。画像はセッション・画像ID・解像度で要求しPNGバイナリで返す。要求集約・取消・遅延応答はDES-009。具体的コマンド名は実装で割り当てる。 |
-| Rustの取込処理 | 画像の読取・形式判定と取込結果の生成を担う | 正常分を残し、失敗対象と理由を画面へ返す。6形式・先頭コマ/ページの処理方法は後続設計で具体化。 |
+| PixiJS v8 WebGL、`@pixi/ui` | ボードと画面固定UIを描画し、操作結果・通知・保存状態を示す | ボードのパン・ズームとメニュー位置を分離。メモ入力の`textarea`併用はユーザー選択済みとして設計構成へ反映。ADR-003は上流レビュー・実機成立待ちの提案を維持する。 |
+| Tauri IPC境界 | WebView2とRust間で取込・保存・ウィンドウ操作の要求と結果を仲介する | protocolVersion=1。継続処理はacceptedとChannel、PNGはバイナリResponse、保存対象と候補はWorkerで扱うUTF-8 JSON。22コマンドの定義元一覧は[DES-011](../functional-design/DES-011-ipc-contracts.md)、通信形式・トークン寿命は[DES-014](../functional-design/DES-014-ipc-common-protocol.md)。照会・受領確認は[get_request_status](../functional-design/DES-038-ipc-get-request-status.md#get_request_status)・[acknowledge_requests](../functional-design/DES-039-ipc-acknowledge-requests.md#acknowledge_requests)の個別契約を参照する。キュー・採用・ゲートはDES-009、方式の根拠はADR-016。 |
+| 画面側Worker | 保存対象のJSON生成、読込候補JSONの解析と準備を担う | 固定状態は後続編集で書き換えず、メイン画面で全体を同期JSON化しない。保存供給は[provide_save_snapshot](../functional-design/DES-027-ipc-provide-save-snapshot.md#provide_save_snapshot)、候補取得は[open_project](../functional-design/DES-031-ipc-open-project.md#open_project)。受渡しのコピー量と固定・描画への影響はDES-013で成立確認する。 |
+| Rustの取込処理 | 画像の読取・形式判定と取込結果の生成を担う | 正常分を残し、失敗対象と理由を画面へ返す。6形式・先頭コマ/ページ・ICC・初期配置はDES-010へ具体化。 |
 | Rustの保存・読込処理 | 保存内容の書込・読込、失敗の通知を担う | 完了した保存が古い処理に上書きされないようにし、失敗時に直前の成功内容を保護する。保存・移送は独自ZIP形式。設定独立保存・復旧用保持はDES-009へ具体化。ADR-005は提案を維持。 |
 | Tauriのウィンドウ・OS連携 | ファイルダイアログ、前面表示、終了時のウィンドウイベントを扱う | 保存状態や利用者の選択を尊重し、未保存変更がある終了・切替を無条件に進めない。 |
 
@@ -149,6 +158,9 @@ flowchart LR
 | フロントエンド | PixiJS v8（WebGL）、`@pixi/ui` | ボードと画面固定UI | 画像・メモ・選択表示・通知等を描画し、適合するUI部品を利用する。 |
 | バックエンド | Rust | ローカルアプリ内のネイティブ処理 | 画像取込、ファイル読書き、保存・復元を担う。クラウドサーバーは置かない。 |
 | 実行基盤・連携 | Tauri 2、WebView2、Tauri IPC | Windows 11上のアプリ実行とフロントエンド／Rust境界 | Web画面の実行、要求と結果の受渡し、ウィンドウ・OS連携を担う。 |
+| 画像処理 | 同梱ImageMagick 7 Q16・MagickWand・必要コーデック・Little CMS | 専用画像ワーカー | 形式・色・縮小・PNGの共通処理。選定案はADR-013、資源制限と契約はDES-010。 |
+| 保存ライブラリ | rusqlite bundled・limits・hooks、zip | 専用保存スレッドと読込検証 | 保存専用SQLiteとZIP64、防御設定。選定案はADR-014、通信契約の定義元一覧はDES-011。 |
+| 文字計数 | unicode-segmenter、unicode-segmentation | TypeScript・Rust | Unicode 17の拡張書記素クラスタを共通コーパスで照合。DES-002。 |
 | フォーマッター | Prettier | 開発時のTypeScript・Web関連ファイル・Markdown等 | 対応するソース・文書の書式を統一する。 |
 | フォーマッター | rustfmt（`cargo fmt`） | 開発時のRustコード | Rustコードの書式を統一する。 |
 | リンター | ESLint＋typescript-eslint | 開発時のTypeScriptコード | コード品質と誤りにつながる記述を静的検査する。 |
@@ -161,14 +173,14 @@ flowchart LR
 | ビルド | Cargo、Tauri CLI | Rustとアプリ全体のビルド | Rustをビルドし、Web資材を組み合わせてデスクトップアプリを構築する。 |
 | 保存形式 | 独自ZIP、SQLite、内部PNG | プロジェクトの保存・移送 | Rustが確定状態から保存専用DBを生成する。設定・表示位置を含む構造化データとPNGを単一ZIPへ保持。SQLiteの選定根拠は[ADR-010](../architecture-decisions/2026-09-29-ADR-010-sqlite-project-storage.md)。 |
 
-画像処理・資源管理・バイナリ画像転送・読込制限をDES-008・009へ具体化した。画像処理・ZIP操作ライブラリの選定、具体的コマンド名、メモ入力方式は残る。
+画像処理・資源管理・バイナリ画像転送・読込制限をDES-008・009へ具体化した。画像処理はDES-010・ADR-013、IPCはDES-011・[ADR-016](../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)、保存ライブラリはADR-014、メモ入力はDES-002・ADR-003へ具体化。具体的依存ビルドと方式成立・性能は未検証。
 
 ## 品質・配布方針
 
 | 項目 | 方針と要件参照 | 未確認事項 |
 | --- | --- | --- |
-| 実行環境・配布 | アプリ・追加実行環境のインストール不要を目指す（REQ-020） | インストーラーなしビルドの配布物、対象Windows 11エディション・リリース範囲、WebView2での起動条件。 |
-| 操作性・メモ入力 | ボードと固定UIを分離し、メモ表示と入力を扱う（REQ-004、010） | キーボード操作、フォーカス、支援技術、WebGL実行環境。入力方式はADR-003を参照し、本文上限10,000文字、折返し・改行・可変幅・自動高さを反映。計数単位はDES-002に具体化済み。入力方式と実機成立は未確定。 |
+| 実行環境・配布 | アプリ・追加実行環境のインストール不要を目指す（REQ-020） | Home・x64・サポート中通常リリースと固定WebView2をDES-012へ反映。実配布物生成・実機起動、上流条件反映とレビュー待ち。 |
+| 操作性・メモ入力 | ボードと固定UIを分離し、メモ表示と入力を扱う（REQ-004、010） | キーボード操作、フォーカス、支援技術、WebGL実行環境。入力方式はADR-003を参照し、本文上限10,000文字、折返し・改行・可変幅・自動高さを反映。計数単位はDES-002に具体化済み。入力方式はtextarea併用を選択済み。実機成立は未検証。 |
 | 画像取込 | 入力を取込要求へ変換し、結果を表示・通知する（REQ-001～003） | ローカルとブラウザのドラッグ・コピー、6形式と先頭コマ／ページの成立。 |
 | 保存・再開 | 編集と保存処理を分離し、保存結果を状態表示へ反映する（REQ-011～016） | 保存順序・置換・復旧の詳細契約と失敗時の保護。関連する判断はADR-004・005を参照する。 |
 | 操作・表示性能 | 描画範囲とテクスチャ資源を管理し、保存・取込がUI操作を妨げない構造とする（REQ-021～026） | 性能達成の実測はない。[性能の共通評価条件](../../product-requirements/cross-cutting/REQ-033-performance-evaluation-conditions.md#性能の共通評価条件)の未決を維持する。 |
@@ -222,9 +234,9 @@ flowchart LR
 | 区分 | 担当・確定時期・解消条件・進行範囲 |
 | --- | --- |
 | 要件反映・レビュー | 要件担当が今回の数値／操作境界／保存排他差分を実装引継ぎ前に本文・受入条件へ反映する。個別回答と要件全体への合意は区別。設計はドラフトで反映可能 |
-| 入力方式 | 設計担当がADR-003を実装前に比較・選定する。複数行・IME・文章内履歴・標準フォント同等表示の評価を実装／検証へ引継ぐ。方式未選定の範囲を引継ぎ可能としない |
-| ライブラリ選定 | 設計担当が画像変換・色変換・縮小、SQLiteバインディング／防御設定、大容量ZIPを公式資料で選定し必要なADRを実装前に記録。既定予算・上限は維持 |
-| 配布環境 | Windows11の対象範囲・WebView2は要件担当と設計担当が配布前に確定。実機起動・フォーカスは検証担当 |
+| 入力方式 | textarea併用の選択をADR-003へ反映した。複数行・IME・文章内履歴・標準フォント同等表示の評価を実装／検証へ引継ぐ。要件レビュー・実機評価の未完範囲を引継ぎ可能としない |
+| ライブラリ選定 | ImageMagick・MagickWandはADR-013、rusqlite bundled・防御設定・zipはADR-014へ記録済み。具体的ビルドとAPI・資源・性能成立は実装／検証へ引継ぐ。既定予算・上限は維持 |
+| 配布環境 | Home・x64・サポート中通常リリース・固定WebView2をDES-012・ADR-015へ反映。要件担当が本文・受入条件へ反映・レビューし、実機起動・フォーカスは検証担当 |
 | 評価準備・実証 | 検証担当が既存要件の環境・データ・Canvas観測・障害注入・手順を具体化し受入前に実証。設計側は判定対象と観測点を渡す |
 
 ### 今回の設計レビュー
@@ -235,7 +247,7 @@ flowchart LR
 
 - 対象要件・受入条件への対応：技術構成と境界を記載した範囲は一部対応。今回の編集・表示・文字・スナップ・保存排他の契約はDES-002～009へ反映済み。上流本文・受入条件への具体的差分は該当DESの引継ぎ節に記載した。
 - 主要構造・データ/インターフェース契約・正常異常処理：責務と主要経路を示した。保存コンテナーは独自ZIPに決定。内部スキーマと保存・読込の主要契約はDES-008・009へ具体化。資源上限は具体化。変更要件レビューと性能・障害検証等は同書の未決事項。
-- 図・本文・ADRの整合：実行時の技術と責務を3図および技術スタックで対応付け、開発・検証基盤の利用箇所を追加した。判断の状態・理由は関連ADRを参照する。メモ入力の振る舞い、復旧・再試行・排他、編集履歴の今回決定した契約は具体化済み。メモ入力方式の選定と要件反映、未選定ライブラリ、実機での成立は本文と引継ぎに残す。
+- 図・本文・ADRの整合：実行時の技術と責務を3図および技術スタックで対応付け、開発・検証基盤の利用箇所を追加した。判断の状態・理由は関連ADRを参照する。メモ入力の振る舞い、復旧・再試行・排他、編集履歴の今回決定した契約は具体化済み。メモ入力・ライブラリの方式選択を反映した。要件反映・レビューと具体的ビルド・実機での成立は本文と引継ぎに残す。
 - テスト方針・観測方法・引継ぎ：検証観点と未決条件を記載した。試作、計測、具体的な試験計画と実行は未実施。
 - レビュー判断：ドラフト。ADRの採用、要件合意、設計完了、試験合格はそれぞれ異なる。
 
@@ -246,3 +258,15 @@ flowchart LR
 ## 共通要件の対応と引継ぎ
 
 独立採番した[REQ-029](../../product-requirements/cross-cutting/REQ-029-image-and-project-limits.md)、[REQ-033](../../product-requirements/cross-cutting/REQ-033-performance-evaluation-conditions.md)は、既存の共通条件を管理する本文として参照する。既存設計との対応は一部対応とし、本文・受入条件との個別照合と既存の技術・実機検証の残件を引き継ぐ。文書の再配置によって設計完了・要件合意・ADR採用・試験合格へ状態を変更しない。
+
+## 今回の詳細設計の反映と引継ぎ
+
+今回のユーザー選択と計画実行指示を要約し、次の正本へ反映した。全体設計はドラフト、通信契約を決定したDES-011と分割先DES-014～039は評価待ちとして管理する。要件全体の合意・ADR一括採用・製品試験合格を認定しない。
+
+- [DES-010](../functional-design/DES-010-image-import-pipeline.md)：入力取得、URL自動取得、ImageMagick、ICC、初期長辺320、グリッド・衝突回避。
+- [DES-011](../functional-design/DES-011-ipc-contracts.md)：IPCの責務・導出方針と定義元一覧。22コマンド・14通知はDES-018～039、通信・状態DTO・複合型・エラー・寿命はDES-014～017へ分割した。契約は決定済み、実IPCと性能は評価待ち。
+- [DES-012](DES-012-portable-runtime-distribution.md)：Home・x64・固定WebView2、同梱資材・パス解決・更新台帳。
+- DES-002・005・006：textareaと描画・文字計数、ダーク固定、中ボタンパンとキー入力先。
+- [DES-013](../test-strategy/DES-013-design-validation-handoff.md)：全対象要件との照合、受入条件変更案と小規模成立確認・製品評価への引継ぎ。
+
+残件は上流本文への差分反映と変更後レビュー、具体的依存ビルドと配布台帳の固定、入力／表示／画像／保存／配布の小規模成立確認、既存条件による性能・障害実証。選択済み方式を未回答として扱わない。今回変更しない画面図の過去の表示検証結果と、今回の文書整合確認を区別する。

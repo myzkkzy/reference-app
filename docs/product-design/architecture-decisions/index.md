@@ -14,6 +14,10 @@
 | ADR-010 | プロジェクト内部データへのSQLite採用 | 採用 | [ADR-010](2026-09-29-ADR-010-sqlite-project-storage.md) |
 | ADR-011 | プロジェクトの排他所有と中断保存の明示再試行 | 提案 | [ADR-011](2026-10-05-ADR-011-project-lock-and-retry.md) |
 | ADR-012 | 画像処理の資源予算とプロジェクト利用制限 | 提案 | [ADR-012](2026-10-06-ADR-012-image-resource-limits.md) |
+| ADR-013 | ImageMagickを同梱する画像変換ワーカー | 提案 | [ADR-013](2026-10-08-ADR-013-imagemagick-worker.md) |
+| ADR-014 | rusqliteとzipによる非同期保存の実行分離 | 提案 | [ADR-014](2026-10-08-ADR-014-rusqlite-zip-libraries.md) |
+| ADR-015 | 固定WebView2を同梱するHome・x64配布 | 提案 | [ADR-015](2026-10-08-ADR-015-fixed-webview2-distribution.md) |
+| ADR-016 | HTML5入力と生バイナリ・ChannelによるIPCの終結管理 | 提案 | [ADR-016](2026-10-09-ADR-016-ipc-transport-lifecycle.md) |
 
 ## 文書から探す
 
@@ -32,3 +36,11 @@
 
 - [プロジェクトの排他所有と中断保存の明示再試行](2026-10-05-ADR-011-project-lock-and-retry.md) - パスとファイル実体の名前付きmutexを保持し、記録照合後に中断保存を終結する方式の提案。
 - [画像処理の資源予算とプロジェクト利用制限](2026-10-06-ADR-012-image-resource-limits.md) - 既存設計の画像変換・表示資源予算・読込制限と、要件へ利用上限を反映した技術的経緯を記録する。
+
+- [ImageMagickを同梱する画像変換ワーカー](2026-10-08-ADR-013-imagemagick-worker.md) - MagickWandによる6形式・色変換と専用プロセス分離の選定理由と成立確認の条件を記録する。
+
+- [rusqliteとzipによる非同期保存の実行分離](2026-10-08-ADR-014-rusqlite-zip-libraries.md) - 保存専用SQLiteとZIPを同期ライブラリで生成し、専用保存スレッドから非同期に結果を返す方式を記録する。
+
+- [固定WebView2を同梱するHome・x64配布](2026-10-08-ADR-015-fixed-webview2-distribution.md) - インストール不要利用に向けた固定WebView2同梱の理由と対応範囲・保守・実機確認の条件を記録する。
+
+- [HTML5入力と生バイナリ・ChannelによるIPCの終結管理](2026-10-09-ADR-016-ipc-transport-lifecycle.md) - 用途別トークン、分割転送、保存・候補のWorker処理、Channelと照会・受領確認の理由と評価条件。

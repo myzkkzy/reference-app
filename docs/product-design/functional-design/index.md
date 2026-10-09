@@ -2,3 +2,34 @@
 
 - [DES-002：ボードの編集状態とグループ構造](DES-002-board-editing-state.md) - ボードの編集更新単位、編集履歴、ドラッグ中の保存境界を示すドラフト。
 - [DES-009：プロジェクトの保存・読込・復旧設計](DES-009-project-persistence-recovery.md) - SQLiteを含むプロジェクトの保存単位、要求結果契約、読込検証、失敗保護と後続への引継ぎを定義するドラフト。
+
+- [DES-010：画像取込と初期配置の詳細設計](DES-010-image-import-pipeline.md) - HTML5入力とチャンク転送、画像変換ワーカー、部分成功、初期サイズと衝突回避配置を具体化するドラフト。
+
+- [DES-011：画面とRustのIPC契約](DES-011-ipc-contracts.md) - IPCの責務分担と導出方針、22コマンド・4共通契約の定義元を案内する評価待ちの設計。
+
+- [DES-014：IPCの共通通信・資源寿命](DES-014-ipc-common-protocol.md) - 通信形式、共通型・ヘッダー、要求記録とトークン・画像参照の寿命を定義する。
+- [DES-015：IPCの状態DTO](DES-015-ipc-state-dtos.md) - ボード、画像、メモ、グループ、設定、表示、画像メタデータの通信項目を定義する。
+- [DES-016：IPCの入出力複合型](DES-016-ipc-composite-types.md) - 入力・取込・保存・候補・遷移・要求照会で用いる複合型の通信項目を定義する。
+- [DES-017：IPCのエラー契約](DES-017-ipc-error-contracts.md) - 失敗包絡、段階・理由コード、保護位置と共通failed通知を定義する。
+- [DES-018：空セッションの初期化のIPC契約](DES-018-ipc-initialize-session.md) - initialize_sessionの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-019：OS入力・保存先選択のIPC契約](DES-019-ipc-select-inputs.md) - select_inputsの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-020：画像取込のIPC契約](DES-020-ipc-import-images.md) - import_imagesの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-021：画像チャンク転送のIPC契約](DES-021-ipc-upload-import-chunk.md) - upload_import_chunkの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-022：入力取得の終結のIPC契約](DES-022-ipc-finish-import-input.md) - finish_import_inputの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-023：表示用PNG取得のIPC契約](DES-023-ipc-get-image.md) - get_imageの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-024：画面・履歴の画像参照同期のIPC契約](DES-024-ipc-sync-asset-refs.md) - sync_asset_refsの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-025：取込配置・表示の終結のIPC契約](DES-025-ipc-complete-import.md) - complete_importの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-026：保存要求受付のIPC契約](DES-026-ipc-save-project.md) - save_projectの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-027：保存対象供給のIPC契約](DES-027-ipc-provide-save-snapshot.md) - provide_save_snapshotの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-028：中断保存の照合・後続保存のIPC契約](DES-028-ipc-retry-save.md) - retry_saveの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-029：終了・切替の開始のIPC契約](DES-029-ipc-begin-transition.md) - begin_transitionの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-030：戻る・閉じる・終了の確定のIPC契約](DES-030-ipc-end-transition.md) - end_transitionの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-031：読込候補の生成のIPC契約](DES-031-ipc-open-project.md) - open_projectの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-032：候補採用のIPC契約](DES-032-ipc-adopt-project.md) - adopt_projectの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-033：読込候補の破棄のIPC契約](DES-033-ipc-discard-project-candidate.md) - discard_project_candidateの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-034：新規初回保存のIPC契約](DES-034-ipc-create-project.md) - create_projectの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-035：中断候補探索のIPC契約](DES-035-ipc-scan-recovery-candidates.md) - scan_recovery_candidatesの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-036：未使用トークンの解放のIPC契約](DES-036-ipc-release-tokens.md) - release_tokensの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-037：取消可能な要求の取消のIPC契約](DES-037-ipc-cancel-request.md) - cancel_requestの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-038：要求状態照会のIPC契約](DES-038-ipc-get-request-status.md) - get_request_statusの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-039：終端結果の受領確認のIPC契約](DES-039-ipc-acknowledge-requests.md) - acknowledge_requestsの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
