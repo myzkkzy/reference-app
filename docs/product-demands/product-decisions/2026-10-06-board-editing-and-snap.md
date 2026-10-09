@@ -23,7 +23,7 @@ description: 既存文書に記載された編集確定・履歴・グループ�
 
 ## 理由・根拠
 
-取得経路は既存文書の要約であり、元の対話を直接取得した逐語引用ではない。[選択・枠・入力の確定方針](../../product-design/functional-design/DES-002-board-editing-state.md#選択枠入力の確定方針)にセッション内の決定事項の要約、[ADR-006](../../product-design/architecture-decisions/2026-09-26-ADR-006-session-edit-history.md#決定と理由)に基本編集の履歴と確定済み状態の保存を選んだ経緯が記載されている。[スナップの操作契約](../../product-design/screen-design/DES-006-board-screen.md#グリッドとスナップの操作契約)は実行指示に基づく具体化である。技術的な確定単位・入力方式・座標と吸着境界の見直しはADR-003・006・007で扱う。未回答の選択理由は補作しない。
+取得経路は既存文書の要約であり、元の対話を直接取得した逐語引用ではない。[選択・枠・入力の確定方針](../../product-design/functional-design/organization/DES-002-board-editing-state.md#選択枠入力の確定方針)にセッション内の決定事項の要約、[ADR-006](../../product-design/architecture-decisions/2026-09-26-ADR-006-session-edit-history.md#決定と理由)に基本編集の履歴と確定済み状態の保存を選んだ経緯が記載されている。[スナップの操作契約](../../product-design/screen-design/DES-006-board-screen.md#グリッドとスナップの操作契約)は実行指示に基づく具体化である。技術的な確定単位・入力方式・座標と吸着境界の見直しはADR-003・006・007で扱う。未回答の選択理由は補作しない。
 
 ## 関連要求
 

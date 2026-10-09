@@ -10,7 +10,7 @@ description: 画像・メモ・グループの基本編集を取り消すため�
 - 作成日：2026-09-26
 - 決定日：ADR採用日は未決。ユーザーの編集履歴に関する方針回答は2026-09-26、ドラッグ中の自動保存対象の選択は2026-09-27。
 - 決定者・判断権限の根拠：ユーザーが本チャットで基本編集全体の取り消し、ボードを開いている間だけの履歴保持、入力中と編集終了後のメモの取り消し単位を選択した。REQ-007の画像削除直後を超えるため、要件担当による要件反映とその合意が残る。
-- 関連要求・要件・設計：[DEM-003](../../product-demands/organization/DEM-003-organize-image-insights.md#dem-003画像の関係や気づきを自分なりに整理する)、[REQ-006](../../product-requirements/organization/REQ-006-image-transform.md#req-006画像の移動回転拡縮)、[REQ-007](../../product-requirements/organization/REQ-007-image-deletion.md#req-007画像の削除)、[REQ-008](../../product-requirements/organization/REQ-008-group-membership.md#req-008グループへの所属と解除)、[REQ-009](../../product-requirements/organization/REQ-009-group-movement.md#req-009グループの一括移動)、[REQ-010](../../product-requirements/organization/REQ-010-independent-notes.md#req-010独立メモの編集と配置)、[DES-002](../functional-design/DES-002-board-editing-state.md#des-002ボードの編集状態とグループ構造)。
+- 関連要求・要件・設計：[DEM-003](../../product-demands/organization/DEM-003-organize-image-insights.md#dem-003画像の関係や気づきを自分なりに整理する)、[REQ-006](../../product-requirements/functional-requirements/organization/REQ-006-image-transform.md#req-006画像の移動回転拡縮)、[REQ-007](../../product-requirements/functional-requirements/organization/REQ-007-image-deletion.md#req-007画像の削除)、[REQ-008](../../product-requirements/functional-requirements/organization/REQ-008-group-membership.md#req-008グループへの所属と解除)、[REQ-009](../../product-requirements/functional-requirements/organization/REQ-009-group-movement.md#req-009グループの一括移動)、[REQ-010](../../product-requirements/functional-requirements/organization/REQ-010-independent-notes.md#req-010独立メモの編集と配置)、[DES-002](../functional-design/organization/DES-002-board-editing-state.md#des-002ボードの編集状態とグループ構造)。
 
 ## 背景・制約
 
@@ -32,9 +32,9 @@ description: 画像・メモ・グループの基本編集を取り消すため�
 
 提案：画像の追加・削除・移動・回転・拡縮、メモの作成・削除・移動・文章編集、グループの作成・所属変更・除外・解除・一括移動を共通の編集履歴で扱う。移動・回転・拡縮のドラッグ開始から終了までを1操作とし、グループ操作に関係する全要素を一括で戻す。メモ入力中は文章内の細かな取り消しを使い、編集終了または保存対象として本文を確定するごとにボード履歴を区切る。途中保存があれば最後の区切りへ戻す。書込失敗でも確定した履歴境界を戻さない。
 
-履歴はボードを開いている間に保持する。保存しても消さず、ボードを閉じると破棄し、ZIPへは含めない。画面のパン・ズーム、重なり順を変えない選択変更、保存処理そのものは編集履歴の対象にしない。選択時の前面化は保存・Undo対象とし、続く移動と一操作にする。実際の状態と更新境界は[DES-002](../functional-design/DES-002-board-editing-state.md#更新単位と編集履歴)を正本とする。
+履歴はボードを開いている間に保持する。保存しても消さず、ボードを閉じると破棄し、ZIPへは含めない。画面のパン・ズーム、重なり順を変えない選択変更、保存処理そのものは編集履歴の対象にしない。選択時の前面化は保存・Undo対象とし、続く移動と一操作にする。実際の状態と更新境界は[DES-002](../functional-design/organization/DES-002-board-editing-state.md#更新単位と編集履歴)を正本とする。
 
-ユーザーはドラッグ中の自動保存について「確定済み状態を保存」を選択した。固定周期でそれまでに確定した未保存変更を保存し、操作途中の配置は保存対象に含めない。ドラッグ終了時に結果を1操作として確定する。これはREQ-012の固定周期と、ドラッグを1操作とする更新境界を両立するための選択である。保存中に次周期を迎える場合を含む具体的な規則は[DES-002：ドラッグ中の自動保存](../functional-design/DES-002-board-editing-state.md#ドラッグ中の自動保存)を正本とする。ADR全体は、取り消し範囲の要件反映が残るため提案を維持する。
+ユーザーはドラッグ中の自動保存について「確定済み状態を保存」を選択した。固定周期でそれまでに確定した未保存変更を保存し、操作途中の配置は保存対象に含めない。ドラッグ終了時に結果を1操作として確定する。これはREQ-012の固定周期と、ドラッグを1操作とする更新境界を両立するための選択である。保存中に次周期を迎える場合を含む具体的な規則は[DES-002：ドラッグ中の自動保存](../functional-design/organization/DES-002-board-editing-state.md#ドラッグ中の自動保存)を正本とする。ADR全体は、取り消し範囲の要件反映が残るため提案を維持する。
 
 ## 影響・利点・不利益・リスク
 
@@ -43,14 +43,14 @@ description: 画像・メモ・グループの基本編集を取り消すため�
 ## 根拠資料・試作結果
 
 - 本チャットのユーザーの回答の要約：「基本編集をまとめて取り消せる」「開いている間だけ保持」「入力中は細かく、終了後はまとめる」。
-- [REQ-007](../../product-requirements/organization/REQ-007-image-deletion.md#req-007画像の削除)の現行受入条件を確認。現行要件で確定している取り消しは画像削除直後まで。
+- [REQ-007](../../product-requirements/functional-requirements/organization/REQ-007-image-deletion.md#req-007画像の削除)の現行受入条件を確認。現行要件で確定している取り消しは画像削除直後まで。
 - 本チャットのユーザーの回答（選択肢ラベルの引用）：「確定済み状態を保存 (Recommended)」。提示した説明は、ドラッグ前までの未保存変更を時刻どおり保存し、ドラッグ結果は終了後の保存対象にするという内容だった。
-- 追加の確認では、[REQ-012](../../product-requirements/cross-cutting/REQ-012-periodic-autosave.md#req-01230秒ごとの自動保存)の固定周期・無変更時の省略・保存中の次周期の扱いとDES-002の状態分離を確認した。
+- 追加の確認では、[REQ-012](../../product-requirements/functional-requirements/cross-cutting/REQ-012-periodic-autosave.md#req-01230秒ごとの自動保存)の固定周期・無変更時の省略・保存中の次周期の扱いとDES-002の状態分離を確認した。
 - 試作・メモリ計測・操作試験は未実施。
 
 ## 未決条件
 
-基本編集の取り消し範囲・操作単位・保持期間は要件本文と受入条件へ反映済み。残る境界条件を具体化し、変更後本文をレビューする。会話の反映指示を受け、履歴既定100・Redo・次回適用と、ドラッグ中の手動保存も確定済み内容を保存し操作継続する方針を反映した。前面化・ドラッグ・保存・取消の組合せ、文章内Undoの保存越えとボードUndo非切替はDES-002へ具体化済み。メモ本文入力中の保存境界をDES-002・DES-009へ反映した。保存対象の確定入力を反映して編集を継続し、IME変換中の部分は除外する。取消の基準は直近に確定した本文とする。配置ドラッグ中の自動保存対象は今回のユーザーの選択で確定した。基本編集の取り消しは要件へ反映済み。変更後要件のレビュー・変更要件のレビュー・ADR採用は別に判断する。引継ぎの正本は[DES-002](../functional-design/DES-002-board-editing-state.md#未決事項引継ぎ)とする。
+基本編集の取り消し範囲・操作単位・保持期間は要件本文と受入条件へ反映済み。残る境界条件を具体化し、変更後本文をレビューする。会話の反映指示を受け、履歴既定100・Redo・次回適用と、ドラッグ中の手動保存も確定済み内容を保存し操作継続する方針を反映した。前面化・ドラッグ・保存・取消の組合せ、文章内Undoの保存越えとボードUndo非切替はDES-002へ具体化済み。メモ本文入力中の保存境界をDES-002・DES-009へ反映した。保存対象の確定入力を反映して編集を継続し、IME変換中の部分は除外する。取消の基準は直近に確定した本文とする。配置ドラッグ中の自動保存対象は今回のユーザーの選択で確定した。基本編集の取り消しは要件へ反映済み。変更後要件のレビュー・変更要件のレビュー・ADR採用は別に判断する。引継ぎの正本は[DES-002](../functional-design/organization/DES-002-board-editing-state.md#未決事項引継ぎ)とする。
 
 ## 置換関係
 
@@ -59,12 +59,12 @@ description: 画像・メモ・グループの基本編集を取り消すため�
 
 ## 今回の具体化と状態
 
-セッション決定の計画実行指示を反映。提案中のADRの詳細を更新したため、採用済み判断の置換ではない。現在の本文契約は[DES-002](../functional-design/DES-002-board-editing-state.md)・[DES-006](../screen-design/DES-006-board-screen.md)。要件担当の差分反映・レビュー、入力・操作・障害の成立確認を待ち、提案状態を維持する。旧回答の理由と出典は保持する。
+セッション決定の計画実行指示を反映。提案中のADRの詳細を更新したため、採用済み判断の置換ではない。現在の本文契約は[DES-002](../functional-design/organization/DES-002-board-editing-state.md)・[DES-006](../screen-design/DES-006-board-screen.md)。要件担当の差分反映・レビュー、入力・操作・障害の成立確認を待ち、提案状態を維持する。旧回答の理由と出典は保持する。
 
 ## 上流見直しの経緯
 
 - 理由：画像削除直後の取り消しから基本編集全体へ広げ、前面化と移動を一操作にしつつ、保存・取消・文章内Undoの境界を保つ必要が生じた。
 - 対象・変更案：REQ-006～010と編集履歴の共通ルールへ、保存後もボード利用期間中保持するUndo／Redo、選択と移動の同時確定、履歴上限と次回適用、本文確定と文章内履歴の分離を反映する。
 - プロダクト判断：[編集・履歴・スナップのPDR](../../product-demands/product-decisions/2026-10-06-board-editing-and-snap.md#決定内容)。取得経路は本ADRと既存設計の回答・計画指示の要約であり、元の対話日を新たに推定しない。
-- 発端・技術根拠：[DES-002の更新単位と編集履歴](../functional-design/DES-002-board-editing-state.md#更新単位と編集履歴)、[メモ編集の入力契約](../functional-design/DES-002-board-editing-state.md#メモ編集の入力契約)。入力方式はADR-003、重なり順と枠の構造はADR-007で扱う。
+- 発端・技術根拠：[DES-002の更新単位と編集履歴](../functional-design/organization/DES-002-board-editing-state.md#更新単位と編集履歴)、[メモ編集の入力契約](../functional-design/organization/DES-002-board-editing-state.md#メモ編集の入力契約)。入力方式はADR-003、重なり順と枠の構造はADR-007で扱う。
 - 判断状況：現行要件の反映範囲と変更後本文の合意を区別する。変更後REQのレビュー・実機確認・ADR採用は未完了であり、提案状態を維持する。

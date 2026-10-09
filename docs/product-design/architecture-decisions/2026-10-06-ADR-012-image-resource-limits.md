@@ -9,7 +9,7 @@ description: 既存設計の画像変換・表示資源予算・読込制限と�
 - 作成日：2026-10-06
 - 決定日：未決
 - 判断権限：ユーザーの計画実行指示に基づく既存の初期設計を設計担当の技術提案として整理する。元の判断日・未記録の候補比較・試験結果は補作しない。
-- 関連要求・要件・設計：[DEM-001](../../product-demands/collection/DEM-001-collect-reference-images.md#dem-001比較したい参考画像を継続して蓄積する)、[DEM-002](../../product-demands/comparison/DEM-002-compare-image-overviews.md#dem-002多くの画像を見渡し全体と細部を比較する)、[利用上限の共通要件](../../product-requirements/cross-cutting/REQ-029-image-and-project-limits.md#画像とプロジェクトの利用上限)、[DES-008](../data-design/DES-008-project-file-data.md#読込保存の資源上限)、[DES-009](../functional-design/DES-009-project-persistence-recovery.md#画像処理資源管理)、[利用上限のPDR](../../product-demands/product-decisions/2026-10-06-image-and-project-limits.md#決定内容)。
+- 関連要求・要件・設計：[DEM-001](../../product-demands/collection/DEM-001-collect-reference-images.md#dem-001比較したい参考画像を継続して蓄積する)、[DEM-002](../../product-demands/comparison/DEM-002-compare-image-overviews.md#dem-002多くの画像を見渡し全体と細部を比較する)、[利用上限の共通要件](../../product-requirements/non-functional-requirements/cross-cutting/REQ-029-image-and-project-limits.md#画像とプロジェクトの利用上限)、[DES-040](../non-functional-design/cross-cutting/DES-040-project-resource-validation.md#読込保存の資源上限)、[DES-042](../non-functional-design/cross-cutting/DES-042-rendering-performance-and-resources.md#表示資源の初期予算)、[利用上限のPDR](../../product-demands/product-decisions/2026-10-06-image-and-project-limits.md#決定内容)。
 
 ## 背景・制約と上流見直しの経緯
 
@@ -19,7 +19,7 @@ description: 既存設計の画像変換・表示資源予算・読込制限と�
 
 既存設計値の記録であり、過去の候補比較記録は確認できない。正常内容と編集を保護し、表示キャッシュ解放でUndo・保存用画像を失わず、既存性能目標を黙って緩めないことを判断基準とする。
 
-画像変換は専用プロセス1つで同時1枚、コミットメモリ2GiB以下とする。CPU表示キャッシュ256MiB、GPUテクスチャ推定512MiB、画面側読込・デコード同時2件と、縮小版・本画像の段階表示を使う。利用者向けの容量・並列数設定は初版に加えない。入力の寸法・画素数・サイズ、DB・エントリー数・展開容量を検証し、超過した候補を部分採用しない。具体的な予算・処理・検証契約はDES-008・009を正本とする。
+画像変換は専用プロセス1つで同時1枚、コミットメモリ2GiB以下とする。CPU表示キャッシュ256MiB、GPUテクスチャ推定512MiB、画面側読込・デコード同時2件と、縮小版・本画像の段階表示を使う。利用者向けの容量・並列数設定は初版に加えない。入力の寸法・画素数・サイズ、DB・エントリー数・展開容量を検証し、超過した候補を部分採用しない。具体的な資源上限は[DES-040](../non-functional-design/cross-cutting/DES-040-project-resource-validation.md)、表示予算は[DES-042](../non-functional-design/cross-cutting/DES-042-rendering-performance-and-resources.md)、変換資源は[DES-043](../non-functional-design/collection/DES-043-image-conversion-resource-controls.md)、変換手順は[DES-010](../functional-design/collection/DES-010-image-import-pipeline.md)、作業領域は[DES-046](../functional-design/cross-cutting/DES-046-image-workspace-management.md)を正本とする。
 
 ## 影響・利点・不利益・リスク
 
@@ -31,7 +31,7 @@ description: 既存設計の画像変換・表示資源予算・読込制限と�
 
 ## 未決条件
 
-利用上限と保護の要件反映は記載済み。変更後要件のレビュー、各上限と予算の成立、性能・資源不足・タイムアウト・キャッシュ解放後の再表示を実装／検証担当が確認する。[DES-009の未決事項・引継ぎ](../functional-design/DES-009-project-persistence-recovery.md#未決事項引継ぎ)に従い、必要な上流判断・反映と成立確認まで提案を維持する。
+利用上限と保護の要件反映は記載済み。変更後要件のレビュー、各上限と予算の成立、性能・資源不足・タイムアウト・キャッシュ解放後の再表示を実装／検証担当が確認する。[DES-009の未決事項・引継ぎ](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md#未決事項引継ぎ)に従い、必要な上流判断・反映と成立確認まで提案を維持する。
 
 ## 置換関係
 

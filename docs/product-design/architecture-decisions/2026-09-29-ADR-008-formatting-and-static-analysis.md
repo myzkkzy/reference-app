@@ -10,7 +10,7 @@ description: TypeScriptとRustの整形・静的検査・型検査を分担す�
 - 作成日：2026-09-29
 - 決定日：2026-09-29
 - 決定者・判断権限の根拠：ユーザーによるPrettier＋ESLint／typescript-eslintの選択と、計画実装指示を受け、設計担当が開発基盤の方式を記録する。要求・要件の合意状態や受入条件は変更しない。
-- 関連要求・要件・設計：[DEM-004](../../product-demands/cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)、[REQ-016](../../product-requirements/cross-cutting/REQ-016-save-failure-recovery.md#req-016保存失敗時の内容保護と再試行)、[DES-001](../architecture/DES-001-system-architecture.md#des-001リファレンスボードの全体設計)。静的検査はこれらの品質を支える開発手段であり、受入条件の充足を保証しない。
+- 関連要求・要件・設計：[DEM-004](../../product-demands/cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)、[REQ-016](../../product-requirements/functional-requirements/cross-cutting/REQ-016-save-failure-recovery.md#req-016保存失敗時の内容保護と再試行)、[DES-001](../architecture/DES-001-system-architecture.md#des-001リファレンスボードの全体設計)。静的検査はこれらの品質を支える開発手段であり、受入条件の充足を保証しない。
 
 ## 背景・制約
 

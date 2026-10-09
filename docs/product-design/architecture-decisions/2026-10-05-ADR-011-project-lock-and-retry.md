@@ -10,7 +10,7 @@ description: パスとファイル実体の名前付きmutexを保持し、記�
 - 作成日：2026-10-05
 - 決定日：未決（方式の設計反映は2026-10-05、採用日は未確定）
 - 判断権限：利用者の二重オープン拒否・失敗後明示再試行・不一致時別名保存の指定と計画実行依頼を根拠に設計担当が具体化。要件差分反映・レビュー待ちのため提案に留める。
-- 関連：[DEM-004](../../product-demands/cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)、[REQ-011～019](../../product-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)、[DES-009](../functional-design/DES-009-project-persistence-recovery.md)、[DES-008](../data-design/DES-008-project-file-data.md)、[ADR-005](2026-09-26-ADR-005-save-recovery-policy.md)。
+- 関連：[DEM-004](../../product-demands/cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)、[REQ-011～019](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)、[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)、[DES-008](../data-design/DES-008-project-file-data.md)、[ADR-005](2026-09-26-ADR-005-save-recovery-policy.md)。
 
 ## 背景・制約
 
@@ -34,7 +34,7 @@ ZIP置換でファイル実体IDが変わり、パスだけではハードリン
 
 ## 根拠・確認日・試作
 
-確認した一次資料：[CreateMutexExW](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createmutexexw)、[WaitForSingleObject](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)、[FILE_ID_INFO](https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-file_id_info)。所有スレッド・名前空間・最終パス等の追加根拠と具体契約は[DES-009](../functional-design/DES-009-project-persistence-recovery.md#同一ファイルの排他契約)に集約する。保存APIの既存選定と記録の成功境界は変更しない。試作・障害試験は未実施。
+確認した一次資料：[CreateMutexExW](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createmutexexw)、[WaitForSingleObject](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)、[FILE_ID_INFO](https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-file_id_info)。所有スレッド・名前空間・最終パス等の追加根拠と具体契約は[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md#同一ファイルの排他契約)に集約する。保存APIの既存選定と記録の成功境界は変更しない。試作・障害試験は未実施。
 
 ## 未決条件・引継ぎ
 
@@ -50,5 +50,5 @@ ZIP置換でファイル実体IDが変わり、パスだけではハードリン
 - 理由：パスだけでは別名・ハードリンク、実体だけではZIP置換後を保護できない。置換以降の障害で最新編集を通常上書きすると中断内容と直前成功内容の境界を失う。
 - 対象・変更案：REQ-011～017・019へ同一実体の二重オープン拒否、別ファイル同時利用、所有の継続、置換後失敗での追加書込停止・明示再試行、不一致時の別名保存、後続編集の保持を反映する。
 - プロダクト判断：[同一ファイル利用と再試行のPDR](../../product-demands/product-decisions/2026-10-06-project-lock-and-save-retry.md#決定内容)。本ADRに記載された指定・計画実行依頼の要約であり、設計反映日からユーザーの判断日を推定しない。
-- 発端・技術根拠：[DES-009の同一ファイルの排他契約](../functional-design/DES-009-project-persistence-recovery.md#同一ファイルの排他契約)と[置換以降の失敗と再試行](../functional-design/DES-009-project-persistence-recovery.md#置換以降の失敗と再試行)。パス＋実体mutexと記録照合の比較理由は本ADRの既存記載を維持する。
+- 発端・技術根拠：[DES-009の同一ファイルの排他契約](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md#同一ファイルの排他契約)と[置換以降の失敗と再試行](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md#置換以降の失敗と再試行)。パス＋実体mutexと記録照合の比較理由は本ADRの既存記載を維持する。
 - 判断状況：要件への反映は記載済み。変更後要件のレビュー、名前別名・置換・強制終了・障害時照合の成立確認と方式採用は別に残り、提案状態を維持する。

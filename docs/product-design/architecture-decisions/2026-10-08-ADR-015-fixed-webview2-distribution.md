@@ -10,7 +10,7 @@ description: インストール不要利用に向けた固定WebView2同梱の�
 - 作成日：2026-10-08
 - 決定日：未決
 - 判断権限・出典：ユーザーの対話回答と計画実行指示の要約。Homeのみ、x64のみ、常に同梱WebView2の選択を記録。フォルダーZIPとパス解決は設計案。
-- 関連：[REQ-020](../../product-requirements/cross-cutting/REQ-020-portable-windows-app.md)、[DES-012](../architecture/DES-012-portable-runtime-distribution.md)、[ADR-001](2026-09-25-ADR-001-tauri-desktop-runtime.md)。
+- 関連：[REQ-020](../../product-requirements/non-functional-requirements/cross-cutting/REQ-020-portable-windows-app.md)、[DES-012](../non-functional-design/cross-cutting/DES-012-portable-runtime-distribution.md)、[ADR-001](2026-09-25-ADR-001-tauri-desktop-runtime.md)。
 
 ## 背景・比較・選定
 

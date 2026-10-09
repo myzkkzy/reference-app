@@ -8,8 +8,8 @@ description: 画像取込・選択・配置・グループ・メモ・参照維�
 
 - 設計状態：ドラフト。セッション決定の振る舞いを反映済み。キー割当て・中ボタンパンはユーザー選択済み。配置・文言は設計案で、要件反映・操作性実証待ち。
 - 目的・範囲：収集・比較・整理の主要操作を具体化する。
-- 入力確認日：2026-09-28。参照要件：[REQ-001](../../product-requirements/collection/REQ-001-add-image-path.md#req-001画像の追加経路)、[REQ-002](../../product-requirements/collection/REQ-002-static-image-formats.md#req-002静止画形式と複数フレームの扱い)、[REQ-003](../../product-requirements/collection/REQ-003-batch-import-errors.md#req-003複数取込と失敗通知)、[REQ-004](../../product-requirements/comparison/REQ-004-board-overview-and-detail.md#req-004全体と細部の表示)、[REQ-005](../../product-requirements/comparison/REQ-005-keep-references-visible.md#req-005制作中の参照維持)、[REQ-006](../../product-requirements/organization/REQ-006-image-transform.md#req-006画像の移動回転拡縮)、[REQ-007](../../product-requirements/organization/REQ-007-image-deletion.md#req-007画像の削除)、[REQ-008](../../product-requirements/organization/REQ-008-group-membership.md#req-008グループへの所属と解除)、[REQ-009](../../product-requirements/organization/REQ-009-group-movement.md#req-009グループの一括移動)、[REQ-010](../../product-requirements/organization/REQ-010-independent-notes.md#req-010独立メモの編集と配置)、[REQ-015](../../product-requirements/cross-cutting/REQ-015-save-status.md#req-015保存状態の識別)、[REQ-016](../../product-requirements/cross-cutting/REQ-016-save-failure-recovery.md#req-016保存失敗時の内容保護と再試行)、[REQ-021](../../product-requirements/cross-cutting/REQ-021-normal-operation-latency.md#req-021通常時の操作反応)、[REQ-022](../../product-requirements/cross-cutting/REQ-022-normal-detail-display.md#req-022通常時の細部表示)、[REQ-023](../../product-requirements/cross-cutting/REQ-023-saving-operation-latency.md#req-023保存中の操作反応)、[REQ-024](../../product-requirements/cross-cutting/REQ-024-saving-detail-display.md#req-024保存中の細部表示)、[REQ-026](../../product-requirements/cross-cutting/REQ-026-batch-import-performance.md#req-026ローカル500枚の初回取込性能)。REQ-004・006・010・021～024・026は条件付き合意、015・016は更新でドラフト、その他は合意済み。
-- 依存設計：[DES-005](DES-005-screen-overview.md#des-005全体画面設計)、[DES-002](../functional-design/DES-002-board-editing-state.md#des-002ボードの編集状態とグループ構造)、[DES-004](../data-design/DES-004-board-data-model.md#des-004ボードのデータ設計)。
+- 入力確認日：2026-09-28。参照要件：[REQ-001](../../product-requirements/functional-requirements/collection/REQ-001-add-image-path.md#req-001画像の追加経路)、[REQ-002](../../product-requirements/functional-requirements/collection/REQ-002-static-image-formats.md#req-002静止画形式と複数フレームの扱い)、[REQ-003](../../product-requirements/functional-requirements/collection/REQ-003-batch-import-errors.md#req-003複数取込と失敗通知)、[REQ-004](../../product-requirements/functional-requirements/comparison/REQ-004-board-overview-and-detail.md#req-004全体と細部の表示)、[REQ-005](../../product-requirements/functional-requirements/comparison/REQ-005-keep-references-visible.md#req-005制作中の参照維持)、[REQ-006](../../product-requirements/functional-requirements/organization/REQ-006-image-transform.md#req-006画像の移動回転拡縮)、[REQ-007](../../product-requirements/functional-requirements/organization/REQ-007-image-deletion.md#req-007画像の削除)、[REQ-008](../../product-requirements/functional-requirements/organization/REQ-008-group-membership.md#req-008グループへの所属と解除)、[REQ-009](../../product-requirements/functional-requirements/organization/REQ-009-group-movement.md#req-009グループの一括移動)、[REQ-010](../../product-requirements/functional-requirements/organization/REQ-010-independent-notes.md#req-010独立メモの編集と配置)、[REQ-015](../../product-requirements/functional-requirements/cross-cutting/REQ-015-save-status.md#req-015保存状態の識別)、[REQ-016](../../product-requirements/functional-requirements/cross-cutting/REQ-016-save-failure-recovery.md#req-016保存失敗時の内容保護と再試行)、[REQ-021](../../product-requirements/non-functional-requirements/cross-cutting/REQ-021-normal-operation-latency.md#req-021通常時の操作反応)、[REQ-022](../../product-requirements/non-functional-requirements/cross-cutting/REQ-022-normal-detail-display.md#req-022通常時の細部表示)、[REQ-023](../../product-requirements/non-functional-requirements/cross-cutting/REQ-023-saving-operation-latency.md#req-023保存中の操作反応)、[REQ-024](../../product-requirements/non-functional-requirements/cross-cutting/REQ-024-saving-detail-display.md#req-024保存中の細部表示)、[REQ-026](../../product-requirements/non-functional-requirements/cross-cutting/REQ-026-batch-import-performance.md#req-026ローカル500枚の初回取込性能)。REQ-004・006・010・021～024・026は条件付き合意、015・016は更新でドラフト、その他は合意済み。
+- 依存設計：[DES-005](DES-005-screen-overview.md#des-005全体画面設計)、[DES-002](../functional-design/organization/DES-002-board-editing-state.md#des-002ボードの編集状態とグループ構造)、[DES-004](../data-design/DES-004-board-data-model.md#des-004ボードのデータ設計)。
 - 分割元・先：DES-001・002の表示操作から独立。従来の保存・失敗通知の詳細を[DES-007](DES-007-persistence-screen.md#des-007保存再開引継ぎの画面設計)へ分割した。
 
 更新内容：画像資源制限と編集方針の反映後、REQ-001～004・006～017・019はドラフト。REQ-005・018は合意済み、REQ-020～026は条件付き合意。以下に残る過去の参照状態は入力時点の記録で、現在状態の正本は要件本文とする。
@@ -32,7 +32,7 @@ description: 画像取込・選択・配置・グループ・メモ・参照維�
 
 上部「画像を追加」でOSファイルダイアログを開き、単一・複数選択を受け付ける。取消は無変更。ローカルファイルまたは対象ブラウザ画像をボードへドロップし、画像コピー後はボードにフォーカスがあるときCtrl+Vで貼り付ける。ブラウザの対応範囲はREQ-001に従い、URL入力欄は設けない。
 
-取込中は「画像を追加中」と処理件数を通知欄に表示する。ドロップはその位置、ファイル選択・貼付は表示中央を基準に、グリッドで初期長辺最大320px（100%倍率）・小画像は拡大なしとし、既存画像・メモ・グループ枠を避けて配置する。入力取得・URLフォールバック・変換・間隔・配置探索は[DES-010](../functional-design/DES-010-image-import-pipeline.md)を正本とする。成功分は表示して操作可能とし、全対象の表示・操作可能化または失敗確定で取込完了とする。失敗分は「対象名／対応していない形式・読み取れない内容・アクセスできない等の理由」を一覧に残す。原因を特定できない場合は推測せず「読取に失敗」とする。全件失敗は追加せず、部分成功では成功分を取り消さない。対象を選び直して追加する操作で回復する。
+取込中は「画像を追加中」と処理件数を通知欄に表示する。ドロップはその位置、ファイル選択・貼付は表示中央を基準に、グリッドで初期長辺最大320px（100%倍率）・小画像は拡大なしとし、既存画像・メモ・グループ枠を避けて配置する。入力取得・URLフォールバック・変換・間隔・配置探索は[DES-010](../functional-design/collection/DES-010-image-import-pipeline.md)を正本とする。成功分は表示して操作可能とし、全対象の表示・操作可能化または失敗確定で取込完了とする。失敗分は「対象名／対応していない形式・読み取れない内容・アクセスできない等の理由」を一覧に残す。原因を特定できない場合は推測せず「読取に失敗」とする。全件失敗は追加せず、部分成功では成功分を取り消さない。対象を選び直して追加する操作で回復する。
 
 JPEG・PNG・WebP・GIF・TIFF・BMPを対象に、GIF・WebPは先頭コマ、TIFFは先頭ページを表示する。複数ページTIFFは対象名と「先頭ページのみ追加、残りは未取込」を通知する。保存と取込は別の状態表示とし、REQ-026の完了に自動保存完了を含めない。
 
@@ -54,7 +54,7 @@ JPEG・PNG・WebP・GIF・TIFF・BMPを対象に、GIF・WebPは先頭コマ、T
 | パン・ズーム | マウス中ボタン＋ドラッグでパン、ホイールでカーソル位置中心ズーム、下部の±と「全体表示」でも操作 | 画像拡縮と別操作。保存中も利用可能。最大1600%、最小はグループ枠を含む全体を収める倍率。空ボードは手動100～1600%、非空の下限・再開時例外と技術下限はDES-004。全体表示は24 CSSpx余白・最大100%。固定の用紙境界を設けない |
 | 制作中の参照維持 | 上部「前面表示」を有効にし、ウィンドウサイズと表示位置を調整して制作アプリへ戻る | フォーカスを奪い返さず画像を維持。有効／無効を表示。対象制作アプリでの成立は未検証 |
 
-ドラッグ中は一時表示と「配置操作中」を示し、保存済み表示と混同させない。確定・中止・無変更終了と自動保存の境界は[DES-002](../functional-design/DES-002-board-editing-state.md#ドラッグ中の自動保存)を正本とする。メモの未確定入力は「メモ編集中」と表示する。メモ入力中の手動・定期保存はIME変換中部分を除く入力済み文章を確定して保存し、入力を継続できる。編集取消は直近の保存対象確定文章まで戻す。未確定部分は未保存と表示する。ドラッグ中の手動保存は確定済み内容を対象として受け付け、途中配置を除いて保存し、ドラッグを継続する。前面化と移動は解放時に1操作で確定し、保存途中は両方とも開始前とする（DES-002）。取込中の終了・切替は取込完了を待ち、待機取消は取込を中止せずボードへ戻る。保存の状態と確認は[DES-007](DES-007-persistence-screen.md)へ接続する。
+ドラッグ中は一時表示と「配置操作中」を示し、保存済み表示と混同させない。確定・中止・無変更終了と自動保存の境界は[DES-002](../functional-design/organization/DES-002-board-editing-state.md#ドラッグ中の自動保存)を正本とする。メモの未確定入力は「メモ編集中」と表示する。メモ入力中の手動・定期保存はIME変換中部分を除く入力済み文章を確定して保存し、入力を継続できる。編集取消は直近の保存対象確定文章まで戻す。未確定部分は未保存と表示する。ドラッグ中の手動保存は確定済み内容を対象として受け付け、途中配置を除いて保存し、ドラッグを継続する。前面化と移動は解放時に1操作で確定し、保存途中は両方とも開始前とする（DES-002）。取込中の終了・切替は取込完了を待ち、待機取消は取込を中止せずボードへ戻る。保存の状態と確認は[DES-007](DES-007-persistence-screen.md)へ接続する。
 
 ## 保存状態と異常通知
 
@@ -88,7 +88,7 @@ JPEG・PNG・WebP・GIF・TIFF・BMPを対象に、GIF・WebPは先頭コマ、T
 
 メモごとの文字サイズをコンテキスト欄で12・14・16・18・24・32から選択（初期16）、行高は1.5倍固定。文字サイズ・幅の変更中も全文高さと所属枠拡大をプレビューし、一操作で保存・Undo対象にする。編集開始時の100%への拡大・最小パンを編集終了後も維持する。
 
-「編集を完了」「編集を取消」を入力欄の下に置き、長文では入力欄内だけをスクロールしてカーソル位置を表示する。本文の全文高はボードで保持し、編集用スクロールを保存しない。完了／取消の専用キーを設けない。ボード側文章外クリック、別アプリ切替、IME・貼付け・上限時の本文／選択保持は[DES-002](../functional-design/DES-002-board-editing-state.md#メモ編集の入力契約)に従う。文字数を現在数／10,000として表示する案。別PCフォント差の枠拡大・通知なし座標補正は[DES-009](../functional-design/DES-009-project-persistence-recovery.md#フォント差読込と保存原本)に従う。
+「編集を完了」「編集を取消」を入力欄の下に置き、長文では入力欄内だけをスクロールしてカーソル位置を表示する。本文の全文高はボードで保持し、編集用スクロールを保存しない。完了／取消の専用キーを設けない。ボード側文章外クリック、別アプリ切替、IME・貼付け・上限時の本文／選択保持は[DES-002](../functional-design/organization/DES-002-board-editing-state.md#メモ編集の入力契約)に従う。文字数を現在数／10,000として表示する案。別PCフォント差の枠拡大・通知なし座標補正は[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md#フォント差読込と保存原本)に従う。
 
 ## 要件担当への変更案
 
@@ -100,7 +100,7 @@ JPEG・PNG・WebP・GIF・TIFF・BMPを対象に、GIF・WebPは先頭コマ、T
 
 ## 共通要件の対応と引継ぎ
 
-独立採番した[REQ-027](../../product-requirements/organization/REQ-027-edit-history-and-stacking.md)、[REQ-028](../../product-requirements/organization/REQ-028-placement-grid-and-snapping.md)、[REQ-029](../../product-requirements/cross-cutting/REQ-029-image-and-project-limits.md)、[REQ-030](../../product-requirements/cross-cutting/REQ-030-shared-settings.md)は、既存の共通条件を管理する本文として参照する。既存設計との対応は一部対応とし、本文・受入条件との個別照合と既存の技術・実機検証の残件を引き継ぐ。文書の再配置によって設計完了・要件合意・ADR採用・試験合格へ状態を変更しない。
+独立採番した[REQ-027](../../product-requirements/functional-requirements/organization/REQ-027-edit-history-and-stacking.md)、[REQ-028](../../product-requirements/functional-requirements/organization/REQ-028-placement-grid-and-snapping.md)、[REQ-029](../../product-requirements/non-functional-requirements/cross-cutting/REQ-029-image-and-project-limits.md)、[REQ-030](../../product-requirements/functional-requirements/cross-cutting/REQ-030-shared-settings.md)は、既存の共通条件を管理する本文として参照する。既存設計との対応は一部対応とし、本文・受入条件との個別照合と既存の技術・実機検証の残件を引き継ぐ。文書の再配置によって設計完了・要件合意・ADR採用・試験合格へ状態を変更しない。
 
 ## キー操作の確定範囲
 

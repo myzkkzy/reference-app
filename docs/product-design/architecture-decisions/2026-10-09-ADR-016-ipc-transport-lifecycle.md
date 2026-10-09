@@ -10,7 +10,7 @@ description: HTML5入力、用途別トークン、生バイナリ転送とChann
 - 作成日：2026-10-09
 - 決定日：未決
 - 決定者・判断権限の根拠：ユーザーのIPC詳細設計計画実行指示とHTML5統一の選択。物理名・補助型・終結と所有移管は設計担当の具体化。個別方式の選択を要件全体の合意・ADR採用・製品試験合格へ置き換えない。
-- 関連：[REQ-001](../../product-requirements/collection/REQ-001-add-image-path.md)、[REQ-003](../../product-requirements/collection/REQ-003-batch-import-errors.md)、[REQ-011](../../product-requirements/cross-cutting/REQ-011-restore-saved-content.md)、[REQ-014](../../product-requirements/cross-cutting/REQ-014-manual-save.md)、[REQ-017](../../product-requirements/cross-cutting/REQ-017-exit-with-unsaved-changes.md)、[REQ-023](../../product-requirements/cross-cutting/REQ-023-saving-operation-latency.md)、[REQ-024](../../product-requirements/cross-cutting/REQ-024-saving-detail-display.md)、[REQ-029](../../product-requirements/cross-cutting/REQ-029-image-and-project-limits.md)、[REQ-032](../../product-requirements/cross-cutting/REQ-032-file-lock-and-save-retry.md)、[DES-009](../functional-design/DES-009-project-persistence-recovery.md)、[DES-010](../functional-design/DES-010-image-import-pipeline.md)、[DES-011](../functional-design/DES-011-ipc-contracts.md)。
+- 関連：[REQ-001](../../product-requirements/functional-requirements/collection/REQ-001-add-image-path.md)、[REQ-003](../../product-requirements/functional-requirements/collection/REQ-003-batch-import-errors.md)、[REQ-011](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md)、[REQ-014](../../product-requirements/functional-requirements/cross-cutting/REQ-014-manual-save.md)、[REQ-017](../../product-requirements/functional-requirements/cross-cutting/REQ-017-exit-with-unsaved-changes.md)、[REQ-023](../../product-requirements/non-functional-requirements/cross-cutting/REQ-023-saving-operation-latency.md)、[REQ-024](../../product-requirements/non-functional-requirements/cross-cutting/REQ-024-saving-detail-display.md)、[REQ-029](../../product-requirements/non-functional-requirements/cross-cutting/REQ-029-image-and-project-limits.md)、[REQ-032](../../product-requirements/functional-requirements/cross-cutting/REQ-032-file-lock-and-save-retry.md)、[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)、[DES-010](../functional-design/collection/DES-010-image-import-pipeline.md)、[DES-011](../interface/DES-011-ipc-contracts.md)。
 
 ## 背景・制約
 
@@ -38,7 +38,7 @@ HTML5イベント中にFile／Blobを保持し、メタデータを先に受付�
 
 継続処理はacceptedとTauri Channelを使い、画面はinvoke前に要求を登録する。単一PNG取得・候補生成はPromiseのバイナリResponseを使う。状態の固定後は不変に保持し、保存対象のUTF-8 JSON生成と候補解析はWorkerに分離する。
 
-トークンをWebView・セッション・用途へ結び付け、候補は採用・破棄・戻るまで保持する。要求記録は終端受領確認まで保持し、通知先着・欠落・重複と古いセッションを照合する。中断終結と後続保存は別transactionIdとし、元の失敗要求を書き換えない。詳細定義は[DES-011の定義元一覧](../functional-design/DES-011-ipc-contracts.md)で案内するコマンド文書と[共通通信・資源寿命](../functional-design/DES-014-ipc-common-protocol.md)・[エラー契約](../functional-design/DES-017-ipc-error-contracts.md)を正本とし、本ADRへパラメータを複製しない。
+トークンをWebView・セッション・用途へ結び付け、候補は採用・破棄・戻るまで保持する。要求記録は終端受領確認まで保持し、通知先着・欠落・重複と古いセッションを照合する。中断終結と後続保存は別transactionIdとし、元の失敗要求を書き換えない。詳細定義は[DES-011の定義元一覧](../interface/DES-011-ipc-contracts.md)で案内するコマンド文書と[共通通信・資源寿命](../interface/DES-014-ipc-common-protocol.md)・[エラー契約](../interface/DES-017-ipc-error-contracts.md)を正本とし、本ADRへパラメータを複製しない。
 
 ## 影響・利点・不利益・リスク
 

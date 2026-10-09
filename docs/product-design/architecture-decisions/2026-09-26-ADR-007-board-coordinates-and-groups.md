@@ -10,7 +10,7 @@ description: 画像とメモのボード座標、最大一つのグループ所�
 - 作成日：2026-09-26
 - 決定日：未決。ユーザーの重なり順・グループ枠に関する方針回答は2026-09-26。
 - 決定者・判断権限の根拠：ユーザーが本チャットで要素ごとの重なり順と内容に合わせたグループ枠を選択した。座標をボード基準で保持し、所属IDを要素に持たせる方式は設計担当の選定。枠の新しい操作・表示仕様は要件へ反映済みである。
-- 関連要求・要件・設計：[DEM-003](../../product-demands/organization/DEM-003-organize-image-insights.md#dem-003画像の関係や気づきを自分なりに整理する)、[REQ-006](../../product-requirements/organization/REQ-006-image-transform.md#req-006画像の移動回転拡縮)、[REQ-008](../../product-requirements/organization/REQ-008-group-membership.md#req-008グループへの所属と解除)、[REQ-009](../../product-requirements/organization/REQ-009-group-movement.md#req-009グループの一括移動)、[REQ-010](../../product-requirements/organization/REQ-010-independent-notes.md#req-010独立メモの編集と配置)、[REQ-011](../../product-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)、[DES-002](../functional-design/DES-002-board-editing-state.md#des-002ボードの編集状態とグループ構造)。
+- 関連要求・要件・設計：[DEM-003](../../product-demands/organization/DEM-003-organize-image-insights.md#dem-003画像の関係や気づきを自分なりに整理する)、[REQ-006](../../product-requirements/functional-requirements/organization/REQ-006-image-transform.md#req-006画像の移動回転拡縮)、[REQ-008](../../product-requirements/functional-requirements/organization/REQ-008-group-membership.md#req-008グループへの所属と解除)、[REQ-009](../../product-requirements/functional-requirements/organization/REQ-009-group-movement.md#req-009グループの一括移動)、[REQ-010](../../product-requirements/functional-requirements/organization/REQ-010-independent-notes.md#req-010独立メモの編集と配置)、[REQ-011](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)、[DES-002](../functional-design/organization/DES-002-board-editing-state.md#des-002ボードの編集状態とグループ構造)。
 
 ## 背景・制約
 
@@ -38,12 +38,12 @@ description: 画像とメモのボード座標、最大一つのグループ所�
 ## 根拠資料・試作結果
 
 - 本チャットのユーザーの回答の要約：「要素ごとの重なり順」「内容に合わせて自動調整し、空になったら直前の枠を残す」。
-- [REQ-008](../../product-requirements/organization/REQ-008-group-membership.md#req-008グループへの所属と解除)、[REQ-009](../../product-requirements/organization/REQ-009-group-movement.md#req-009グループの一括移動)、[REQ-011](../../product-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)を確認。
+- [REQ-008](../../product-requirements/functional-requirements/organization/REQ-008-group-membership.md#req-008グループへの所属と解除)、[REQ-009](../../product-requirements/functional-requirements/organization/REQ-009-group-movement.md#req-009グループの一括移動)、[REQ-011](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)を確認。
 - 試作・性能計測・画面操作試験は未実施。
 
 ## 未決条件
 
-全グループの枠保持・手動変更・枠内への配置だけでは所属しないこと、選択時前面化・最前面最背面・通常維持と必要時拡大・明示fitを要件へ反映済み。残る境界を具体化し、変更後本文をレビューする。設計担当は枠・操作・数値契約をDES-004・006へ具体化済み。上流反映と実機成立確認を残す。要件へ反映済み。変更後要件のレビューとADR採用は別に判断し、提案状態を維持する。引継ぎの正本は[DES-002](../functional-design/DES-002-board-editing-state.md#未決事項引継ぎ)とする。
+全グループの枠保持・手動変更・枠内への配置だけでは所属しないこと、選択時前面化・最前面最背面・通常維持と必要時拡大・明示fitを要件へ反映済み。残る境界を具体化し、変更後本文をレビューする。設計担当は枠・操作・数値契約をDES-004・006へ具体化済み。上流反映と実機成立確認を残す。要件へ反映済み。変更後要件のレビューとADR採用は別に判断し、提案状態を維持する。引継ぎの正本は[DES-002](../functional-design/organization/DES-002-board-editing-state.md#未決事項引継ぎ)とする。
 
 ## 置換関係
 
@@ -52,7 +52,7 @@ description: 画像とメモのボード座標、最大一つのグループ所�
 
 ## 今回の具体化と状態
 
-セッション決定の計画実行指示を反映。提案中のADRの詳細を更新したため、採用済み判断の置換ではない。現在の本文契約は[DES-002](../functional-design/DES-002-board-editing-state.md)・[DES-006](../screen-design/DES-006-board-screen.md)。要件担当の差分反映・レビュー、入力・操作・障害の成立確認を待ち、提案状態を維持する。旧回答の理由と出典は保持する。
+セッション決定の計画実行指示を反映。提案中のADRの詳細を更新したため、採用済み判断の置換ではない。現在の本文契約は[DES-002](../functional-design/organization/DES-002-board-editing-state.md)・[DES-006](../screen-design/DES-006-board-screen.md)。要件担当の差分反映・レビュー、入力・操作・障害の成立確認を待ち、提案状態を維持する。旧回答の理由と出典は保持する。
 
 ## 上流見直しの経緯
 

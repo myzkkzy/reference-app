@@ -8,8 +8,8 @@ description: 画像・メモ・グループの属性、関連、多重度、座�
 
 - 設計状態：ドラフト
 - 目的・範囲：単一ボードの画像・メモ・グループの論理データ構造を管理する。物理形式・列型は[DES-008](DES-008-project-file-data.md)を正本とする。入力の追加確認日：2026-09-29。
-- 参照要件：[REQ-006～010](../../product-requirements/organization/REQ-006-image-transform.md#req-006画像の移動回転拡縮)、[REQ-011](../../product-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)、[REQ-018](../../product-requirements/cross-cutting/REQ-018-source-independent-resumption.md#req-018原本に依存しない継続)。状態と受入条件は各要件本文に従う。
-- 分割元：[DES-002](../functional-design/DES-002-board-editing-state.md#des-002ボードの編集状態とグループ構造)。データ構造の正本を本書へ移した。更新単位・編集履歴はDES-002を参照する。
+- 参照要件：[REQ-006～010](../../product-requirements/functional-requirements/organization/REQ-006-image-transform.md#req-006画像の移動回転拡縮)、[REQ-011](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)、[REQ-018](../../product-requirements/functional-requirements/cross-cutting/REQ-018-source-independent-resumption.md#req-018原本に依存しない継続)。状態と受入条件は各要件本文に従う。
+- 分割元：[DES-002](../functional-design/organization/DES-002-board-editing-state.md#des-002ボードの編集状態とグループ構造)。データ構造の正本を本書へ移した。更新単位・編集履歴はDES-002を参照する。
 - 依存設計：[DES-003](DES-003-data-overview.md#des-003全体データ設計)。
 - 関連ADR：[ADR-004](../architecture-decisions/2026-09-26-ADR-004-zip-board-storage.md)（採用）、[ADR-007](../architecture-decisions/2026-09-26-ADR-007-board-coordinates-and-groups.md)（提案）。
 
@@ -58,15 +58,15 @@ classDiagram
 
 | データ・項目                 | 意味と論理型                                   | 必須・初期値                   | 制約・根拠                                                                                                                                                                                                                    |
 | ---------------------------- | ---------------------------------------------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ボードの画像・メモ・グループ | IDで識別する要素の集合                         | 必須・空集合                   | [REQ-008](../../product-requirements/organization/REQ-008-group-membership.md#req-008グループへの所属と解除)、[REQ-011](../../product-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)                                                                   |
-| 画像ID・画像データ参照       | 画像要素と変換済みPNG実体の対応                | 画像ごとに必須                 | 元ファイル・元サイトへの依存なし。[REQ-018](../../product-requirements/cross-cutting/REQ-018-source-independent-resumption.md#req-018原本に依存しない継続)、[ADR-004](../architecture-decisions/2026-09-26-ADR-004-zip-board-storage.md)                                  |
-| 画像の配置                   | ボード座標の位置、回転角、縦横比共通の表示倍率 | 画像ごとに必須                 | ボード表示倍率とは独立。物理表現と座標基準はDES-008、画像倍率は1～1600%。[REQ-006](../../product-requirements/organization/REQ-006-image-transform.md#req-006画像の移動回転拡縮)                                                                                            |
-| メモID・本文・位置・幅・文字サイズ           | 独立したメモの文章、ボード座標と表示幅                 | メモごとに必須                 | 本文上限10,000拡張書記素クラスタ。幅320（120～4,096）、文字サイズ16（12・14・16・18・24・32）、行高は1.5倍。高さは全文から算出し保存しない。[REQ-010](../../product-requirements/organization/REQ-010-independent-notes.md#req-010独立メモの編集と配置)                                                                                                                    |
-| 所属グループID               | 画像・メモが参照する任意のグループID           | 任意・未所属                   | 各要素は最大1グループ。参照先は同じボードに存在する。[REQ-008](../../product-requirements/organization/REQ-008-group-membership.md#req-008グループへの所属と解除)                                                                                         |
-| グループID・枠         | グループの識別と保持する位置・大きさ     | ID・枠とも常に必須 | 要素が0件でも残る。空・非空とも枠を保存し、空になっても維持する。[REQ-008](../../product-requirements/organization/REQ-008-group-membership.md#req-008グループへの所属と解除)、[ADR-007](../architecture-decisions/2026-09-26-ADR-007-board-coordinates-and-groups.md) |
+| ボードの画像・メモ・グループ | IDで識別する要素の集合                         | 必須・空集合                   | [REQ-008](../../product-requirements/functional-requirements/organization/REQ-008-group-membership.md#req-008グループへの所属と解除)、[REQ-011](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)                                                                   |
+| 画像ID・画像データ参照       | 画像要素と変換済みPNG実体の対応                | 画像ごとに必須                 | 元ファイル・元サイトへの依存なし。[REQ-018](../../product-requirements/functional-requirements/cross-cutting/REQ-018-source-independent-resumption.md#req-018原本に依存しない継続)、[ADR-004](../architecture-decisions/2026-09-26-ADR-004-zip-board-storage.md)                                  |
+| 画像の配置                   | ボード座標の位置、回転角、縦横比共通の表示倍率 | 画像ごとに必須                 | ボード表示倍率とは独立。物理表現と座標基準はDES-008、画像倍率は1～1600%。[REQ-006](../../product-requirements/functional-requirements/organization/REQ-006-image-transform.md#req-006画像の移動回転拡縮)                                                                                            |
+| メモID・本文・位置・幅・文字サイズ           | 独立したメモの文章、ボード座標と表示幅                 | メモごとに必須                 | 本文上限10,000拡張書記素クラスタ。幅320（120～4,096）、文字サイズ16（12・14・16・18・24・32）、行高は1.5倍。高さは全文から算出し保存しない。[REQ-010](../../product-requirements/functional-requirements/organization/REQ-010-independent-notes.md#req-010独立メモの編集と配置)                                                                                                                    |
+| 所属グループID               | 画像・メモが参照する任意のグループID           | 任意・未所属                   | 各要素は最大1グループ。参照先は同じボードに存在する。[REQ-008](../../product-requirements/functional-requirements/organization/REQ-008-group-membership.md#req-008グループへの所属と解除)                                                                                         |
+| グループID・枠         | グループの識別と保持する位置・大きさ     | ID・枠とも常に必須 | 要素が0件でも残る。空・非空とも枠を保存し、空になっても維持する。[REQ-008](../../product-requirements/functional-requirements/organization/REQ-008-group-membership.md#req-008グループへの所属と解除)、[ADR-007](../architecture-decisions/2026-09-26-ADR-007-board-coordinates-and-groups.md) |
 | 要素の重なり順               | 画像・メモごとの表示順                         | 各要素に必須                   | グループ所属とは独立。最前面・最背面操作と選択時前面化を保存する。[ADR-007](../architecture-decisions/2026-09-26-ADR-007-board-coordinates-and-groups.md)                                                                                        |
 
-各要素IDは保存DB内で一意とし、編集・保存・復元・取り消しの間維持する。削除とその取り消しでは同じID・配置・所属・重なり順を復元する。存在しないグループまたは画像データへの参照、重複ID、不正な座標値を読込時に検出した場合は、破損したボードを現在の状態へ混ぜない。[REQ-011](../../product-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)の通知と現在のボード保護に従う。ID生成・数値表現・項目名は[DES-008](DES-008-project-file-data.md#項目定義)で定義する。
+各要素IDは保存DB内で一意とし、編集・保存・復元・取り消しの間維持する。削除とその取り消しでは同じID・配置・所属・重なり順を復元する。存在しないグループまたは画像データへの参照、重複ID、不正な座標値を読込時に検出した場合は、破損したボードを現在の状態へ混ぜない。[REQ-011](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)の通知と現在のボード保護に従う。ID生成・数値表現・項目名は[DES-008](DES-008-project-file-data.md#項目定義)で定義する。
 
 ## 座標・所属・グループ枠
 
@@ -77,7 +77,7 @@ classDiagram
 
 ## 保存対象と境界
 
-独自ZIPには、現在の画像・メモ・空グループを含むグループ、配置、所属、重なり順と参照先のPNG画像実体を含める。編集履歴、選択状態、ドラッグ途中の表示は保存しない。読込時の不整合は[DES-002の保存・復元方針](../functional-design/DES-002-board-editing-state.md#保存復元と異常時の扱い)に従う。形式識別・版・詳細スキーマは[DES-008](DES-008-project-file-data.md)、読込検証は[DES-009](../functional-design/DES-009-project-persistence-recovery.md)を参照する。
+独自ZIPには、現在の画像・メモ・空グループを含むグループ、配置、所属、重なり順と参照先のPNG画像実体を含める。編集履歴、選択状態、ドラッグ途中の表示は保存しない。読込時の不整合は[DES-002の保存・復元方針](../functional-design/organization/DES-002-board-editing-state.md#保存復元と異常時の扱い)に従う。形式識別・版・詳細スキーマは[DES-008](DES-008-project-file-data.md)、読込検証は[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)を参照する。
 
 ## 数値・表示・フォント契約
 
@@ -96,4 +96,4 @@ classDiagram
 
 ## 共通要件の対応と引継ぎ
 
-独立採番した[REQ-027](../../product-requirements/organization/REQ-027-edit-history-and-stacking.md)、[REQ-028](../../product-requirements/organization/REQ-028-placement-grid-and-snapping.md)、[REQ-029](../../product-requirements/cross-cutting/REQ-029-image-and-project-limits.md)、[REQ-030](../../product-requirements/cross-cutting/REQ-030-shared-settings.md)、[REQ-031](../../product-requirements/cross-cutting/REQ-031-font-resumption-adjustments.md)は、既存の共通条件を管理する本文として参照する。既存設計との対応は一部対応とし、本文・受入条件との個別照合と既存の技術・実機検証の残件を引き継ぐ。文書の再配置によって設計完了・要件合意・ADR採用・試験合格へ状態を変更しない。
+独立採番した[REQ-027](../../product-requirements/functional-requirements/organization/REQ-027-edit-history-and-stacking.md)、[REQ-028](../../product-requirements/functional-requirements/organization/REQ-028-placement-grid-and-snapping.md)、[REQ-029](../../product-requirements/non-functional-requirements/cross-cutting/REQ-029-image-and-project-limits.md)、[REQ-030](../../product-requirements/functional-requirements/cross-cutting/REQ-030-shared-settings.md)、[REQ-031](../../product-requirements/functional-requirements/cross-cutting/REQ-031-font-resumption-adjustments.md)は、既存の共通条件を管理する本文として参照する。既存設計との対応は一部対応とし、本文・受入条件との個別照合と既存の技術・実機検証の残件を引き継ぐ。文書の再配置によって設計完了・要件合意・ADR採用・試験合格へ状態を変更しない。

@@ -10,7 +10,7 @@ description: TypeScript・Rust・実Tauriアプリのテスト基盤と、採用
 - 作成日：2026-09-29
 - 決定日：2026-09-29
 - 決定者・判断権限の根拠：ユーザーによる計画実装指示を受け、設計担当が既存構成内のテスト基盤を採用する。既存の条件付き合意、受入条件、提案中の設計判断は変更しない。
-- 関連要求・要件・設計：[DEM-004](../../product-demands/cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)、[REQ-003](../../product-requirements/collection/REQ-003-batch-import-errors.md#req-003複数取込と失敗通知)、[REQ-011](../../product-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)、[REQ-016](../../product-requirements/cross-cutting/REQ-016-save-failure-recovery.md#req-016保存失敗時の内容保護と再試行)、[REQ-020](../../product-requirements/cross-cutting/REQ-020-portable-windows-app.md#req-020windows-11でのインストール不要利用)、[DES-001](../architecture/DES-001-system-architecture.md#des-001リファレンスボードの全体設計)。
+- 関連要求・要件・設計：[DEM-004](../../product-demands/cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)、[REQ-003](../../product-requirements/functional-requirements/collection/REQ-003-batch-import-errors.md#req-003複数取込と失敗通知)、[REQ-011](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)、[REQ-016](../../product-requirements/functional-requirements/cross-cutting/REQ-016-save-failure-recovery.md#req-016保存失敗時の内容保護と再試行)、[REQ-020](../../product-requirements/non-functional-requirements/cross-cutting/REQ-020-portable-windows-app.md#req-020windows-11でのインストール不要利用)、[DES-001](../architecture/DES-001-system-architecture.md#des-001リファレンスボードの全体設計)。
 
 ## 背景・制約
 

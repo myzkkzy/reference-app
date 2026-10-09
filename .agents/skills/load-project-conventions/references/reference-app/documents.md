@@ -5,27 +5,40 @@
 | 成果物 | ルート基準の保存先 |
 | --- | --- |
 | 各工程の全体索引 | docs/product-ideas/index.md、docs/product-demands/index.md、docs/product-requirements/index.md、docs/product-design/index.md |
-| 各分類の索引 | 各工程の分類ディレクトリ内の index.md |
+| 種別・領域の索引 | 各工程の種別・領域ディレクトリ内の index.md |
 | 構想 | docs/product-ideas/<category>/IDEA-<番号>-<content-slug>.md |
 | 要求 | docs/product-demands/<category>/DEM-<番号>-<content-slug>.md |
-| 要件 | docs/product-requirements/<category>/REQ-<番号>-<content-slug>.md |
+| 機能要件 | docs/product-requirements/functional-requirements/<domain>/REQ-<番号>-<content-slug>.md |
+| 非機能要件 | docs/product-requirements/non-functional-requirements/<domain>/REQ-<番号>-<content-slug>.md |
 | 全体設計 | docs/product-design/architecture/DES-<番号>-<content-slug>.md |
-| 機能・共通設計 | docs/product-design/functional-design/DES-<番号>-<content-slug>.md |
+| 機能設計 | docs/product-design/functional-design/<domain>/DES-<番号>-<content-slug>.md |
+| 非機能設計 | docs/product-design/non-functional-design/<domain>/DES-<番号>-<content-slug>.md |
 | データ設計 | docs/product-design/data-design/DES-<番号>-<content-slug>.md |
 | 画面設計 | docs/product-design/screen-design/DES-<番号>-<content-slug>.md |
+| インターフェース設計（IPC） | docs/product-design/interface/DES-<番号>-<content-slug>.md |
 | テスト方針 | docs/product-design/test-strategy/DES-<番号>-<content-slug>.md |
 | 画面遷移図・画面構成図 | docs/product-design/screen-design/diagrams/<topic>-transition.drawio.svg、<screen>-layout.drawio.svg |
 
 - アイデア・要求・要件・設計は1項目1ファイルとし、ファイル名は `<工程>-<番号>-<content-slug>.md` とし、本文IDに簡潔な英語の内容名を付ける。主見出しは `# ID：名称` とする。
 - 工程は既存の大文字接頭辞IDEA・DEM・REQ・DES、番号はゼロ埋め3桁以上を使う。内容名（content-slug）は内容を簡潔に表す英語とし、小文字の単語・数字をハイフンでつなぐ。日本語・空白・アンダースコアは使わない。例：`REQ-001-add-image-path.md`。
 - 表記修正だけではファイル名を変えない。扱う内容が変わる場合は内容名と参照リンクを同期して更新し、工程IDと番号を維持する。本文の主見出しには内容名を追加しない。
-- 分類名は意味の分かる英小文字のkebab-caseとする。現在の要求・要件はcollection、comparison、organization、cross-cuttingに分類する。工程間で分類名の一致を強制しない。
+- 分類名は意味の分かる英小文字のkebab-caseとする。現在の要求と、要件・機能設計・非機能設計の領域はcollection、comparison、organization、cross-cuttingを使う。既存要件の領域は維持し、工程間で領域の一致を強制しない。
 - 分類の変更やファイルの移動でもIDを維持する。複数REQに対応するDESも1 DESにつき1ファイルとし、対応するREQごとに分割しない。
 - 各工程の全体索引と、存在する各分類のindex.mdを更新する。未作成文書・空分類を追加しない。
 - 共通事項も独立した1項目として同じID体系で採番し、本文を一か所で管理して他の項目から参照する。要求の共通環境条件・引継ぎ方針はDEM-004を管理元とする。
 - 文書ごとの背景・文脈・確認事項・引継ぎは該当ID本文に置く。複数項目の共通説明は管理元のID本文を参照する。
 - 要求と要件の対応表は要件の全体索引、要件と設計の対応表は設計の全体索引へ一元化する。
 - PDR・ADRは判断記録の規則に従い、現在の日付付きファイル名と専用ディレクトリを維持する。
+
+### 要件・設計の分類と分割
+
+- 要件の配置は機能・非機能の種別を先に、領域を下に置く。操作・設定・通知・再試行は機能、性能・容量・復元保証は非機能とする。倍率・グリッド間隔・自動保存周期など操作や設定仕様を定める数値は機能に含め、数値の有無だけで分類しない。
+- 「種類：制約」は本文の意味を保持する表記であり、第三の配置先を設けない。制約が定める対象に応じて機能・非機能へ配置する。利用上限はREQ-029を管理元とし、画像作業先の操作はREQ-038、画像実体と復旧候補の保護はREQ-039から参照する。
+- 設計はarchitecture、data-design、screen-design、interface、functional-design、non-functional-designに分類し、architecture-decisionsとtest-strategyも維持する。functional-designとnon-functional-designだけに領域階層を設ける。
+- 構成・データ・画面・IPC文書にはそれぞれの構造・項目・配置・通信契約を残し、性能・資源・保証の詳細条件は非機能設計を正本として参照する。IPCの項目・型・応答・通知・資源寿命はinterfaceの契約を正本とし、移行のために契約を変更しない。
+- 本文と受入条件の双方で機能・非機能の混在を確認する。独立した品質条件は別ファイルへ抽出し、元の文書には操作・通知・回復手順と抽出先への参照を残す。変換手順など同じ機能の詳細は機能設計の管理元へ集約する。
+- 移動する既存文書はIDを維持し、分割で追加する文書には工程全体の未使用IDを採番する。新旧関係と正本を双方の本文に記載する。分割元の意味・数値・保証範囲・根拠・合意状況・未決事項を保持し、追加文書はドラフトとして根拠と未決事項を引き継ぐ。分割だけで合意や製品仕様を変更しない。
+- 工程索引に全ID一覧と上流対応表を集約し、種別・領域索引には説明付き下位索引・本文リンクを置く。工程→種別→領域→本文を辿れるようにし、空の領域や未作成文書の索引は作らない。
 
 ## ID
 
@@ -51,7 +64,7 @@
 - 全体の要求一覧は全DEM、全体の要件一覧は横断分を含む全REQを掲載する。
 - 要求の全体索引は一覧と存在する関連文書への参照に限定する。
 - 要件の全体索引は全要件一覧、全対象DEMの対応表、存在する関連文書への参照に限定する。
-- 設計索引は全DESの設計一覧、全対象REQの対応表、存在する関連文書と下位索引へのリンクに限定する。すべての分類索引は説明付き文書リンクのみとし、全ID一覧・対応表・状態・本文を複製しない。
+- 設計索引は全DESの設計一覧、全対象REQの対応表、存在する関連文書と下位索引へのリンクに限定する。種別・領域を含むすべての分類索引は説明付き下位索引・本文リンクのみとし、全ID一覧・対応表・状態・本文を複製しない。
 - 画面図は対応するDES本文の添付資料とし、図だけにDESや新しい画面IDを付けない。画面設計本文から相対パスで画像として埋め込み、下位索引は画面設計本文へ案内する。
 - 索引に背景、責務、対象範囲、未決、合意履歴、引継ぎの詳細を記載しない。
 - DEMとREQ、REQとDESは多対多で対応付け、今回の全対象上流IDを追跡する。

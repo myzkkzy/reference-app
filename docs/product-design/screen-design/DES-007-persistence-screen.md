@@ -8,8 +8,8 @@ description: 保存状態、自動保存設定、終了・読込時の保護と�
 
 - 設計状態：ドラフト。配置・文言は提案。ユーザーの回答・実行指示で保存の振る舞いを更新。製品動作は未検証。
 - 目的・範囲：保存と継続利用の操作・通知・遷移を具体化する。
-- 入力確認日：2026-09-30（保存統合・中断復元の計画を反映。従前画面案を更新）。参照要件：[REQ-011](../../product-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)、[REQ-012](../../product-requirements/cross-cutting/REQ-012-periodic-autosave.md#req-01230秒ごとの自動保存)、[REQ-013](../../product-requirements/cross-cutting/REQ-013-autosave-settings.md#req-013自動保存設定)、[REQ-014](../../product-requirements/cross-cutting/REQ-014-manual-save.md#req-014手動保存)、[REQ-015](../../product-requirements/cross-cutting/REQ-015-save-status.md#req-015保存状態の識別)、[REQ-016](../../product-requirements/cross-cutting/REQ-016-save-failure-recovery.md#req-016保存失敗時の内容保護と再試行)、[REQ-017](../../product-requirements/cross-cutting/REQ-017-exit-with-unsaved-changes.md#req-017未保存での終了)、[REQ-018](../../product-requirements/cross-cutting/REQ-018-source-independent-resumption.md#req-018原本に依存しない継続)、[REQ-019](../../product-requirements/cross-cutting/REQ-019-cross-pc-transfer.md#req-019利用者の別pcへの引継ぎ)、[REQ-020](../../product-requirements/cross-cutting/REQ-020-portable-windows-app.md#req-020windows-11でのインストール不要利用)、[REQ-023](../../product-requirements/cross-cutting/REQ-023-saving-operation-latency.md#req-023保存中の操作反応)、[REQ-024](../../product-requirements/cross-cutting/REQ-024-saving-detail-display.md#req-024保存中の細部表示)、[REQ-025](../../product-requirements/cross-cutting/REQ-025-saved-project-open-performance.md#req-025保存済み500枚の再開性能)。REQ-020・023～025は条件付き合意、011～017・019は更新でドラフト、018は合意済み。
-- 依存設計：[DES-001](../architecture/DES-001-system-architecture.md#保存と復旧の設計方針)、[DES-002](../functional-design/DES-002-board-editing-state.md#保存復元と異常時の扱い)、[DES-003](../data-design/DES-003-data-overview.md#des-003全体データ設計)、[DES-005](DES-005-screen-overview.md#des-005全体画面設計)。
+- 入力確認日：2026-09-30（保存統合・中断復元の計画を反映。従前画面案を更新）。参照要件：[REQ-011](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)、[REQ-012](../../product-requirements/functional-requirements/cross-cutting/REQ-012-periodic-autosave.md#req-01230秒ごとの自動保存)、[REQ-013](../../product-requirements/functional-requirements/cross-cutting/REQ-013-autosave-settings.md#req-013自動保存設定)、[REQ-014](../../product-requirements/functional-requirements/cross-cutting/REQ-014-manual-save.md#req-014手動保存)、[REQ-015](../../product-requirements/functional-requirements/cross-cutting/REQ-015-save-status.md#req-015保存状態の識別)、[REQ-016](../../product-requirements/functional-requirements/cross-cutting/REQ-016-save-failure-recovery.md#req-016保存失敗時の内容保護と再試行)、[REQ-017](../../product-requirements/functional-requirements/cross-cutting/REQ-017-exit-with-unsaved-changes.md#req-017未保存での終了)、[REQ-018](../../product-requirements/functional-requirements/cross-cutting/REQ-018-source-independent-resumption.md#req-018原本に依存しない継続)、[REQ-019](../../product-requirements/functional-requirements/cross-cutting/REQ-019-cross-pc-transfer.md#req-019利用者の別pcへの引継ぎ)、[REQ-020](../../product-requirements/non-functional-requirements/cross-cutting/REQ-020-portable-windows-app.md#req-020windows-11でのインストール不要利用)、[REQ-023](../../product-requirements/non-functional-requirements/cross-cutting/REQ-023-saving-operation-latency.md#req-023保存中の操作反応)、[REQ-024](../../product-requirements/non-functional-requirements/cross-cutting/REQ-024-saving-detail-display.md#req-024保存中の細部表示)、[REQ-025](../../product-requirements/non-functional-requirements/cross-cutting/REQ-025-saved-project-open-performance.md#req-025保存済み500枚の再開性能)。REQ-020・023～025は条件付き合意、011～017・019は更新でドラフト、018は合意済み。
+- 依存設計：[DES-001](../architecture/DES-001-system-architecture.md#保存と復旧の設計方針)、[DES-002](../functional-design/organization/DES-002-board-editing-state.md#保存復元と異常時の扱い)、[DES-003](../data-design/DES-003-data-overview.md#des-003全体データ設計)、[DES-005](DES-005-screen-overview.md#des-005全体画面設計)。
 - 分割元：DES-006の保存状態・異常通知を分離し、REQ-011～019の画面操作を追加具体化した。保存形式は採用済み[ADR-004](../architecture-decisions/2026-09-26-ADR-004-zip-board-storage.md)、直列化・復旧用保持は提案中[ADR-005](../architecture-decisions/2026-09-26-ADR-005-save-recovery-policy.md)を参照する。
 
 ## 保存と再開の遷移
@@ -41,7 +41,7 @@ description: 保存状態、自動保存設定、終了・読込時の保護と�
 
 「設定は自動で保存されます」「ボードの未保存編集は含みません」を示す。無効化後の追加手動保存は不要。設定保存中・成功・失敗を示し、失敗でも適用値を戻さず「設定を再試行」を利用できる。手動保存でも最新設定を保存できる。別プロジェクトを開くと、そのファイルの設定へ切り替える。
 
-無効化では定期保存の新規・保留要求だけを止め、設定保存・実行中保存・受付済み手動保存を止めない。有効化を起点に30秒周期を開始し、同じ値では起算点を変えない。保持無効化で既存復旧用を削除しない。有効時は設定・表示位置だけの保存でも毎回直前1世代を更新する。処理境界は[DES-009](../functional-design/DES-009-project-persistence-recovery.md#設定と表示状態の保存)に従う。
+無効化では定期保存の新規・保留要求だけを止め、設定保存・実行中保存・受付済み手動保存を止めない。有効化を起点に30秒周期を開始し、同じ値では起算点を変えない。保持無効化で既存復旧用を削除しない。有効時は設定・表示位置だけの保存でも毎回直前1世代を更新する。処理境界は[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md#設定と表示状態の保存)に従う。
 
 ### 新規作成と保存先未確立
 
@@ -59,7 +59,7 @@ description: 保存状態、自動保存設定、終了・読込時の保護と�
 
 保存は全対象を含み、成功かつ追加の未保存がない場合だけ終了する。失敗時は終了せず再試行・破棄・戻るを選べる。破棄は未保存分と保留要求だけに適用し、既に独立保存した設定は戻さない。保存待ち中の戻るは終了要求だけを取り消し、進行中保存は継続する。後着の成功で終了しない。
 
-戻るで設定保存を再開する。確認中に周期を迎えていれば、有効かつ未保存の場合に1回だけ定期保存し、次の予定時刻は元の周期を維持する。無効または変更なしなら追加の定期保存はしない。[保存ゲート](../functional-design/DES-009-project-persistence-recovery.md#終了切替の保存ゲート)を正本とする。
+戻るで設定保存を再開する。確認中に周期を迎えていれば、有効かつ未保存の場合に1回だけ定期保存し、次の予定時刻は元の周期を維持する。無効または変更なしなら追加の定期保存はしない。[保存ゲート](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md#終了切替の保存ゲート)を正本とする。
 
 ## 再開と保存内容の切替
 
@@ -86,7 +86,7 @@ description: 保存状態、自動保存設定、終了・読込時の保護と�
 
 計画反映。プロジェクトごとの自動保存・復旧用保持とは別のアプリ設定として「画像作業フォルダー」を扱う。既定はプロジェクトファイルの隣の専用フォルダー。代替先を指定でき、変更は次にプロジェクトを開くときから適用することを表示する。履歴上限も同じWindowsユーザーの全プロジェクトに共通するアプリ設定とし、既定100、変更は次回の新規作成・オープン・再オープンから適用する。現在の履歴は変更しない。Undo・Redo合計1～1,000、次節のPC設定契約で保存・失敗を扱う。キャッシュ容量・並列数は初版では設定項目にしない。
 
-書込不可・容量不足は対象場所と理由をモーダルで通知し、保存成功を示さず、自動で別の場所へ切り替えない。通知を閉じても現在の編集内容を保持する。正常終了時は不要キャッシュを削除し、復元候補の扱いは[DES-009](../functional-design/DES-009-project-persistence-recovery.md#作業ファイルと容量不足)に従う。既存図はプロジェクト設定を示すもので、アプリ設定画面の具体配置は下節と添付図を参照する。
+書込不可・容量不足は対象場所と理由をモーダルで通知し、保存成功を示さず、自動で別の場所へ切り替えない。通知を閉じても現在の編集内容を保持する。正常終了時は不要キャッシュを削除し、復元候補の扱いは[DES-046](../functional-design/cross-cutting/DES-046-image-workspace-management.md#作業先適用時点整理失敗通知)に従う。既存図はプロジェクト設定を示すもので、アプリ設定画面の具体配置は下節と添付図を参照する。
 
 ## 未決事項・引継ぎ
 
@@ -119,10 +119,10 @@ Rustが同一Windowsユーザーの `%LOCALAPPDATA%/reference-app/settings.json`
 
 置換以降の失敗は下部「保存失敗・未保存・再試行が必要」を維持する。「再試行」はまず記録と現物の照合を行い、通常の新規保存に直行しない。照合中は書込と追加再試行を無効にするが、編集・パン・ズームは継続する。中断成功の後に追加編集がある場合は「中断処理は完了／追加編集を保存中」とし、すべて保存済みと表示しない。再照合失敗なら対象・理由と再試行を残す。不一致・外部変更・削除は「元の保存先へ保存できません」「別名で保存」「編集へ戻る」を出し、既存ファイルを上書きしない。
 
-「開く」で別プロセスが所有する候補は「このファイルは別のプロセスで使用中です」と対象名を表示し、「選び直す」「戻る」を提供する。旧ボードと未保存内容は保持する。権限等で排他確認不能なら使用中と断定せず、その理由を通知する。別ファイル切替と同一セッション再オープンの保護は[DES-009](../functional-design/DES-009-project-persistence-recovery.md#同一ファイルの排他契約)に従う。
+「開く」で別プロセスが所有する候補は「このファイルは別のプロセスで使用中です」と対象名を表示し、「選び直す」「戻る」を提供する。旧ボードと未保存内容は保持する。権限等で排他確認不能なら使用中と断定せず、その理由を通知する。別ファイル切替と同一セッション再オープンの保護は[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md#同一ファイルの排他契約)に従う。
 
 グリッド・間隔・スナップ・回転刻みは「プロジェクト」タブに置き、即時適用・設定独立保存する。閉じても戻さず、失敗しても適用値維持。アプリ設定と違う寿命をラベルで示す。画面の異常受入条件案はDES-009の要件担当向け差分を参照する。
 
 ## 共通要件の対応と引継ぎ
 
-独立採番した[REQ-027](../../product-requirements/organization/REQ-027-edit-history-and-stacking.md)、[REQ-030](../../product-requirements/cross-cutting/REQ-030-shared-settings.md)、[REQ-031](../../product-requirements/cross-cutting/REQ-031-font-resumption-adjustments.md)、[REQ-032](../../product-requirements/cross-cutting/REQ-032-file-lock-and-save-retry.md)は、既存の共通条件を管理する本文として参照する。既存設計との対応は一部対応とし、本文・受入条件との個別照合と既存の技術・実機検証の残件を引き継ぐ。文書の再配置によって設計完了・要件合意・ADR採用・試験合格へ状態を変更しない。
+独立採番した[REQ-027](../../product-requirements/functional-requirements/organization/REQ-027-edit-history-and-stacking.md)、[REQ-030](../../product-requirements/functional-requirements/cross-cutting/REQ-030-shared-settings.md)、[REQ-031](../../product-requirements/functional-requirements/cross-cutting/REQ-031-font-resumption-adjustments.md)、[REQ-032](../../product-requirements/functional-requirements/cross-cutting/REQ-032-file-lock-and-save-retry.md)は、既存の共通条件を管理する本文として参照する。既存設計との対応は一部対応とし、本文・受入条件との個別照合と既存の技術・実機検証の残件を引き継ぐ。文書の再配置によって設計完了・要件合意・ADR採用・試験合格へ状態を変更しない。

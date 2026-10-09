@@ -20,7 +20,7 @@ description: 画像処理・資源管理・読込制限の計画指示と、利�
 
 ## 理由・根拠
 
-取得経路は既存文書の要約であり、原対話の逐語引用ではない。[画像とプロジェクトの利用上限](../../product-requirements/cross-cutting/REQ-029-image-and-project-limits.md#画像とプロジェクトの利用上限)に計画実行指示の要件反映範囲、[画像処理・資源管理](../../product-design/functional-design/DES-009-project-persistence-recovery.md#画像処理資源管理)と[読込保存の資源上限](../../product-design/data-design/DES-008-project-file-data.md#読込保存の資源上限)に初期設計値と失敗時の保護が記載されている。個々の数値への直接回答や未記載の選択理由は補作しない。技術的な予算・変換・読込検証の判断は[ADR-012](../../product-design/architecture-decisions/2026-10-06-ADR-012-image-resource-limits.md)で扱う。
+取得経路は既存文書の要約であり、原対話の逐語引用ではない。[画像とプロジェクトの利用上限](../../product-requirements/non-functional-requirements/cross-cutting/REQ-029-image-and-project-limits.md#画像とプロジェクトの利用上限)に計画実行指示の要件反映範囲、[画像処理・資源管理](../../product-design/non-functional-design/cross-cutting/DES-042-rendering-performance-and-resources.md#表示資源の初期予算)と[読込保存の資源上限](../../product-design/non-functional-design/cross-cutting/DES-040-project-resource-validation.md#読込保存の資源上限)に初期設計値と失敗時の保護が記載されている。個々の数値への直接回答や未記載の選択理由は補作しない。技術的な予算・変換・読込検証の判断は[ADR-012](../../product-design/architecture-decisions/2026-10-06-ADR-012-image-resource-limits.md)で扱う。
 
 ## 関連要求
 

@@ -10,7 +10,7 @@ description: 保存対象の固定とZIP置換方式、および直前1世代の
 - 作成日：2026-09-26
 - 決定日：2026-09-26（ユーザーの方針決定）。ADR採用日は未決。
 - 決定者・判断権限の根拠：ユーザーが本チャットで保存先の指定、直前1世代の保持、復旧用を開く選択肢を選び、保持の有効・無効をコンフィグ等で変更できるよう追加指定した。技術方式は設計担当の提案。ユーザーの回答と計画実行指示に基づき要件・設計へ反映した。変更要件のレビューと障害検証が残り、ADR全体は提案を維持する。
-- 関連要求・要件・設計：[REQ-012](../../product-requirements/cross-cutting/REQ-012-periodic-autosave.md#req-01230秒ごとの自動保存)、[REQ-014](../../product-requirements/cross-cutting/REQ-014-manual-save.md#req-014手動保存)、[REQ-015](../../product-requirements/cross-cutting/REQ-015-save-status.md#req-015保存状態の識別)、[REQ-016](../../product-requirements/cross-cutting/REQ-016-save-failure-recovery.md#req-016保存失敗時の内容保護と再試行)、[REQ-017](../../product-requirements/cross-cutting/REQ-017-exit-with-unsaved-changes.md#req-017未保存での終了)、[REQ-019](../../product-requirements/cross-cutting/REQ-019-cross-pc-transfer.md#req-019利用者の別pcへの引継ぎ)、[DES-001](../architecture/DES-001-system-architecture.md#des-001リファレンスボードの全体設計)、[ADR-004](2026-09-26-ADR-004-zip-board-storage.md)。
+- 関連要求・要件・設計：[REQ-012](../../product-requirements/functional-requirements/cross-cutting/REQ-012-periodic-autosave.md#req-01230秒ごとの自動保存)、[REQ-014](../../product-requirements/functional-requirements/cross-cutting/REQ-014-manual-save.md#req-014手動保存)、[REQ-015](../../product-requirements/functional-requirements/cross-cutting/REQ-015-save-status.md#req-015保存状態の識別)、[REQ-016](../../product-requirements/functional-requirements/cross-cutting/REQ-016-save-failure-recovery.md#req-016保存失敗時の内容保護と再試行)、[REQ-017](../../product-requirements/functional-requirements/cross-cutting/REQ-017-exit-with-unsaved-changes.md#req-017未保存での終了)、[REQ-019](../../product-requirements/functional-requirements/cross-cutting/REQ-019-cross-pc-transfer.md#req-019利用者の別pcへの引継ぎ)、[DES-001](../architecture/DES-001-system-architecture.md#des-001リファレンスボードの全体設計)、[ADR-004](2026-09-26-ADR-004-zip-board-storage.md)。
 
 ## 背景・制約
 
@@ -30,11 +30,11 @@ description: 保存対象の固定とZIP置換方式、および直前1世代の
 
 ユーザーの決定は、ボード作成時に保存先と名前を指定し、以降の手動・自動保存で同じファイルを使うこと、直前1世代の復旧用ファイルを本ファイルの隣に保持し、その保持を後から設定で有効・無効にできること。本ファイル破損時は通知し、正常な復旧用ファイルを開く選択肢を出す。開く時点では本ファイルを修復・上書きしない。
 
-設計上の初期値は、これまでのユーザーの保持選択を踏まえ「有効」とする。設定は保存成功後の継続保持を制御するもので、保存途中の保護を無効にするものではない。自動保存の有効・無効とも別の設定として扱う。ユーザーは設定だけの独立自動保存を選択した。直前成功のボード・表示位置に最新設定を組み合わせ、ボードの未保存編集を混ぜない。手動・定期・設定保存は同じキューで直列化し、両系統の成功番号を分ける。具体契約と要件差分は[DES-009](../functional-design/DES-009-project-persistence-recovery.md)で管理する。
+設計上の初期値は、これまでのユーザーの保持選択を踏まえ「有効」とする。設定は保存成功後の継続保持を制御するもので、保存途中の保護を無効にするものではない。自動保存の有効・無効とも別の設定として扱う。ユーザーは設定だけの独立自動保存を選択した。直前成功のボード・表示位置に最新設定を組み合わせ、ボードの未保存編集を混ぜない。手動・定期・設定保存は同じキューで直列化し、両系統の成功番号を分ける。具体契約と要件差分は[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)で管理する。
 
 ## 影響・利点・不利益・リスク
 
-ドラッグ中の自動保存対象は、ユーザーの選択に従って確定済み状態とする。固定周期で保存対象と更新番号を固定し、ドラッグ途中の配置や固定後の確定変更を混ぜない。保存中に次周期を迎えた場合は直列化し、先行保存の成功後に未保存の確定済み状態があれば最新内容を1回保存する。状態と処理の詳細は[DES-002](../functional-design/DES-002-board-editing-state.md#ドラッグ中の自動保存)、選択理由は[ADR-006](2026-09-26-ADR-006-session-edit-history.md#決定と理由)を参照する。
+ドラッグ中の自動保存対象は、ユーザーの選択に従って確定済み状態とする。固定周期で保存対象と更新番号を固定し、ドラッグ途中の配置や固定後の確定変更を混ぜない。保存中に次周期を迎えた場合は直列化し、先行保存の成功後に未保存の確定済み状態があれば最新内容を1回保存する。状態と処理の詳細は[DES-002](../functional-design/organization/DES-002-board-editing-state.md#ドラッグ中の自動保存)、選択理由は[ADR-006](2026-09-26-ADR-006-session-edit-history.md#決定と理由)を参照する。
 
 有効時は本ファイルに加えて復旧用1世代と保存中の独立退避・新ZIP・記録領域が必要。ユーザーの回答により、設定・表示位置だけの保存を含む全保存で復旧用を入れ替える。無効時も保存失敗・強制終了から正常内容を守る補助データを必要に応じて使う。Windowsのファイル置換に成功・失敗の分岐があるため、単にAPIを呼ぶだけで保護を保証した扱いにはしない。本ファイル単体で移送できる契約は維持する。
 
@@ -58,7 +58,7 @@ description: 保存対象の固定とZIP置換方式、および直前1世代の
 
 ## 未決条件
 
-操作・設定の要件反映は実施した。変更要件のレビュー、実機でのAPI失敗・強制終了・後片付け中断の検証、資源上限の成立確認、保存失敗後の再試行と別プロセスとの排他は具体化済み。実機検証・要件反映は[DES-009の未決事項・引継ぎ](../functional-design/DES-009-project-persistence-recovery.md#未決事項引継ぎ)を参照する。方式選定、文書反映、ADR採用、試験合格を別に判断する。
+操作・設定の要件反映は実施した。変更要件のレビュー、実機でのAPI失敗・強制終了・後片付け中断の検証、資源上限の成立確認、保存失敗後の再試行と別プロセスとの排他は具体化済み。実機検証・要件反映は[DES-009の未決事項・引継ぎ](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md#未決事項引継ぎ)を参照する。方式選定、文書反映、ADR採用、試験合格を別に判断する。
 
 ## 置換関係
 
@@ -67,12 +67,12 @@ description: 保存対象の固定とZIP置換方式、および直前1世代の
 
 ## 今回の具体化と状態
 
-セッション決定の計画実行指示を反映。提案中のADRの詳細を更新したため、採用済み判断の置換ではない。現在の本文契約は[DES-009](../functional-design/DES-009-project-persistence-recovery.md)。要件担当の差分反映・レビュー、入力・操作・障害の成立確認を待ち、提案状態を維持する。旧回答の理由と出典は保持する。
+セッション決定の計画実行指示を反映。提案中のADRの詳細を更新したため、採用済み判断の置換ではない。現在の本文契約は[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)。要件担当の差分反映・レビュー、入力・操作・障害の成立確認を待ち、提案状態を維持する。旧回答の理由と出典は保持する。
 
 ## 上流見直しの経緯
 
 - 理由：設定だけの独立保存、入力済みメモ・表示位置の保存、異なる端末のフォント調整を同じ保存処理に載せるには、最後の保存成功内容・未保存編集・設定の成功境界を分ける必要がある。調整した内容で読込原本を黙って上書きしない。
 - 対象・変更案：REQ-011～017・019へ設定の独立保存と失敗表示、確認中の保存停止、再開時の候補検証・フォント差補正・未保存扱いを反映する。原本分離・更新番号・保存キューと補正の実現方式は設計で管理する。
 - プロダクト判断：[設定とフォント差再開のPDR](../../product-demands/product-decisions/2026-10-06-project-settings-and-font-resumption.md#決定内容)。個別回答・計画実行指示と技術的な具体化を区別する。
-- 発端・技術根拠：[DES-007のPC設定契約](../screen-design/DES-007-persistence-screen.md#pc側アプリ設定の契約)、[DES-009のフォント差読込と保存原本](../functional-design/DES-009-project-persistence-recovery.md#フォント差読込と保存原本)。同一ファイルの排他と置換後再試行は[ADR-011](2026-10-05-ADR-011-project-lock-and-retry.md#上流見直しの経緯)で扱う。
+- 発端・技術根拠：[DES-007のPC設定契約](../screen-design/DES-007-persistence-screen.md#pc側アプリ設定の契約)、[DES-009のフォント差読込と保存原本](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md#フォント差読込と保存原本)。同一ファイルの排他と置換後再試行は[ADR-011](2026-10-05-ADR-011-project-lock-and-retry.md#上流見直しの経緯)で扱う。
 - 判断状況：既存文書から経緯を整理し、反映済みの要件と技術方式の採用を分ける。変更後要件のレビューと障害検証が残り、提案状態・既存の判断理由を維持する。

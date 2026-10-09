@@ -10,7 +10,7 @@ description: MagickWandによる6形式・色変換と専用プロセス分離�
 - 作成日：2026-10-08
 - 決定日：未決
 - 判断権限・出典：ユーザーの対話回答と詳細設計反映の実行指示を要約。MagickWand、Q16、Little CMS、フィルターの具体化は設計担当の案。
-- 関連：[REQ-002](../../product-requirements/collection/REQ-002-static-image-formats.md)、[REQ-003](../../product-requirements/collection/REQ-003-batch-import-errors.md)、[REQ-029](../../product-requirements/cross-cutting/REQ-029-image-and-project-limits.md)、[DES-010](../functional-design/DES-010-image-import-pipeline.md)、[ADR-012](2026-10-06-ADR-012-image-resource-limits.md)。
+- 関連：[REQ-002](../../product-requirements/functional-requirements/collection/REQ-002-static-image-formats.md)、[REQ-003](../../product-requirements/functional-requirements/collection/REQ-003-batch-import-errors.md)、[REQ-029](../../product-requirements/non-functional-requirements/cross-cutting/REQ-029-image-and-project-limits.md)、[DES-010](../functional-design/collection/DES-010-image-import-pipeline.md)、[ADR-012](2026-10-06-ADR-012-image-resource-limits.md)。
 
 ## 背景・比較
 

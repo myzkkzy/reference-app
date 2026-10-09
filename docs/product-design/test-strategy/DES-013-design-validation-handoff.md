@@ -9,7 +9,7 @@ description: 要件差分、IPC契約の観測点、小規模成立確認と製�
 - 設計状態：ドラフト。文書整備と引継ぎの方針。試作・具体的試験計画・製品試験は未実施。
 - 目的・範囲：方式の成立確認で先に確かめる事項、受入評価への対応と引継ぎ。具体的操作手順・固定画像ファイル・実測結果は検証担当が`docs/product-verification/`で管理し、本書は合否基準を追加・緩和しない。
 - 入力確認日：2026-10-09。ユーザーの詳細設計・IPC契約反映計画とHTML5入力を含む対話回答を要約。方式選択、要件全体の合意、ADR採用、設計完了、製品試験合格を区別する。
-- 参照要件：[要件一覧](../../product-requirements/index.md)のREQ-001～033。各本文・受入条件・状態を正本とする。特に[REQ-029](../../product-requirements/cross-cutting/REQ-029-image-and-project-limits.md)と[REQ-033](../../product-requirements/cross-cutting/REQ-033-performance-evaluation-conditions.md)の上限・共通条件を維持する。
+- 参照要件：[要件一覧](../../product-requirements/index.md)のREQ-001～033。各本文・受入条件・状態を正本とする。特に[REQ-029](../../product-requirements/non-functional-requirements/cross-cutting/REQ-029-image-and-project-limits.md)と[REQ-033](../../product-requirements/non-functional-requirements/cross-cutting/REQ-033-performance-evaluation-conditions.md)の上限・共通条件を維持する。
 - 関連判断：[ADR-009](../architecture-decisions/2026-09-29-ADR-009-test-automation.md)。実装時のテスト基盤採用と実行結果は別に扱う。
 
 ## 先行する小規模成立確認
@@ -27,14 +27,14 @@ description: 要件差分、IPC契約の観測点、小規模成立確認と製�
 
 ## IPC契約から引き継ぐ評価
 
-[DES-011](../functional-design/DES-011-ipc-contracts.md)の通信契約は決定済みで評価待ち。次の境界を実Tauriで観測する。手順・固定入力・観測方法と実測結果は実装・検証担当が用意し、本書では試験合格を記録しない。
+[DES-011](../interface/DES-011-ipc-contracts.md)の通信契約は決定済みで評価待ち。次の境界を実Tauriで観測する。手順・固定入力・観測方法と実測結果は実装・検証担当が用意し、本書では試験合格を記録しない。
 
 | 対象 | 観測する契約・期待する保護 |
 | --- | --- |
 | 初期化・OS選択 | 同じ初期化要求の結果再取得、用途／セッションのトークン拒否、ダイアログ取消の正常結果、既存保存先の拒否 |
 | HTML5・生チャンク | WindowsのdragDropEnabled=false、DOM File／ブラウザ画像とURLのみのドラッグ、最大1MiB・全体1件、本文とヘッダー、同一再送・位置／内容不一致、取得途中失敗 |
-| 取込終結・参照 | [itemSucceeded](../functional-design/DES-020-ipc-import-images.md#itemsucceeded)／[itemFailed](../functional-design/DES-020-ipc-import-images.md#itemfailed)と[importProcessed](../functional-design/DES-020-ipc-import-images.md#importprocessed)／[importFinished](../functional-design/DES-020-ipc-import-images.md#importfinished)、配置／表示失敗、参照同期の古さ、ボード・Undo・Redo・バッチ・保存・候補の保持 |
-| 保存対象 | 代表Channelへの一度だけの[snapshotRequired](../functional-design/DES-026-ipc-save-project.md#snapshotrequired)、要求と供給の別requestId・snapshotId、settingsの禁止項目、古い／重複供給、供給前Worker失敗、固定後編集と実保存番号 |
+| 取込終結・参照 | [itemSucceeded](../interface/DES-020-ipc-import-images.md#itemsucceeded)／[itemFailed](../interface/DES-020-ipc-import-images.md#itemfailed)と[importProcessed](../interface/DES-020-ipc-import-images.md#importprocessed)／[importFinished](../interface/DES-020-ipc-import-images.md#importfinished)、配置／表示失敗、参照同期の古さ、ボード・Undo・Redo・バッチ・保存・候補の保持 |
+| 保存対象 | 代表Channelへの一度だけの[snapshotRequired](../interface/DES-026-ipc-save-project.md#snapshotrequired)、要求と供給の別requestId・snapshotId、settingsの禁止項目、古い／重複供給、供給前Worker失敗、固定後編集と実保存番号 |
 | 通知・照会 | acceptedより先の通知、eventSequenceによる再掲重複除去、受付情報・未受領取込結果・保存対象の回収、PNG応答欠落の再取得、終端だけの受領確認 |
 | 候補・ゲート | Worker解析・B0／B1、採用前の元入力変更、同一ファイルの旧保存後再読込、戻ると後着結果、候補破棄、ロック・画像・保存先の移管、採用応答欠落、ready後の保存中確定拒否 |
 | 再試行・復旧 | reconcile／followup・followupKindによるsettings範囲、新transactionId、元の失敗要求の保持、ブロック待機の終結、無効化した定期の内部保留解除、元ファイル欠損時の候補探索、復旧後の別名保存、明示断念後のコピー保全 |
@@ -82,6 +82,6 @@ DES-011と分割先DES-014～039の通信契約の選択・物理名・型は決
 | 中断・初回・復旧 | 中断終結と新transactionIdの後続保存、初回失敗・断念、元欠損探索、別名保存前のコピー保持 | DES-009の置換前後障害・排他評価と同じ保護境界で実証 |
 | 上流・性能 | 要件差分レビューと既存500枚・全3回条件 | 要件担当は変更後の振る舞いを照合。検証担当は[DES-013](#製品評価へ渡す条件)で台帳化・評価し、基準を緩めない |
 
-文書形式・内部リンク・8列表の検査は契約の整合確認であり、実装や製品試験の合格ではない。実証で方式が成立しなければ、結果と変更影響を記録して[IPC契約の定義元一覧](../functional-design/DES-011-ipc-contracts.md)・ADR-016を見直す。
+文書形式・内部リンク・8列表の検査は契約の整合確認であり、実装や製品試験の合格ではない。実証で方式が成立しなければ、結果と変更影響を記録して[IPC契約の定義元一覧](../interface/DES-011-ipc-contracts.md)・ADR-016を見直す。
 
-根拠：[TauriのRust呼出しと生リクエスト](https://v2.tauri.app/develop/calling-rust/)、[Channelによる画面通知](https://v2.tauri.app/develop/calling-frontend/)、[invoke・Response](https://v2.tauri.app/reference/javascript/api/namespacecore/)、[WindowsのHTML5ドロップ設定](https://v2.tauri.app/reference/javascript/api/namespacewebview/)、[RustのOSダイアログ](https://v2.tauri.app/plugin/dialog/)。アプリ固有の上限、識別、解放順序は[IPC契約](../functional-design/DES-011-ipc-contracts.md)の設計判断であり、Tauriが保証する値と混同しない。
+根拠：[TauriのRust呼出しと生リクエスト](https://v2.tauri.app/develop/calling-rust/)、[Channelによる画面通知](https://v2.tauri.app/develop/calling-frontend/)、[invoke・Response](https://v2.tauri.app/reference/javascript/api/namespacecore/)、[WindowsのHTML5ドロップ設定](https://v2.tauri.app/reference/javascript/api/namespacewebview/)、[RustのOSダイアログ](https://v2.tauri.app/plugin/dialog/)。アプリ固有の上限、識別、解放順序は[IPC契約](../interface/DES-011-ipc-contracts.md)の設計判断であり、Tauriが保証する値と混同しない。
