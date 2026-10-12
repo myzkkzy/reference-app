@@ -14,8 +14,12 @@
 - 要求変更：product_requirements で、対象DEMの影響を確認し、IDを維持して更新する。
 - 要件：requirements_definition で、対象DEMを要件と受入条件へ具体化する。
 - 要件変更：requirements_definition で、変更DEMの関連要件・対応表を更新する。
-- 設計：product_design で、対象REQから全体設計とテーマ別設計を作成する。
-- 設計変更：product_design で、対象REQの関連DES・ADR・図・方針・引継ぎを見直す。
+- 設計：product_design で、対象REQから全体方針・責務・境界を整理し、テーマ別の詳細設計を反復して具体化する。
+- 設計再開：product_design で、既存DES・未決・受領結果から必要な段階を再開する。
+- 設計変更：product_design で、対象REQの関連DES・ADR・図・テスト方針・引継ぎへの影響を調べ、影響する段階から見直す。
+
+設計全体の進行と戻り先は[汎用設計ワークフロー](../../../design-product/references/workflow.md)、保存・状態・担当境界との接続は[このプロジェクトの設計手順](workflows/product-design.md)を参照する。
+テスト方針は設計方針の段階から具体化する。個別のテストケース・データ・環境・実行手順の設計は検証担当へ引き継ぐ。
 
 ## 操作だけの利用
 
@@ -24,6 +28,7 @@
 - `$manage-product-documents` で、指定した名前空間の未使用IDを対象本文へ反映する。
 - `$manage-product-documents` で、指定したMarkdownのリンク検査だけを行う。
 - `$write-product-requirements` で、指定した要件の受入条件だけを作成する。
+- `$design-product` で、指定したIPCのインターフェース設計だけを行う。対象経路に必要な機能・データ・状態を参照し、他の設計操作や全体ワークフローを自動開始しない。
 
 依頼ではスキル名と操作・対象を指定する。
 各SKILL.mdから該当する手順だけを読み、全操作を自動実行しない。
