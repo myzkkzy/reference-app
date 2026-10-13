@@ -31,4 +31,4 @@ description: 最小画面で必要操作へ到達する条件と検証観点を�
 
 ## 検証への引継ぎ
 
-[DES-013](../../test-strategy/DES-013-design-validation-handoff.md)のテスト方針を適用する。方式の選択と文書整合確認を、製品の性能達成・障害保護・実機試験の成立と区別する。
+[DES-013](../../test-strategy/DES-013-common-test-strategy.md)のテスト方針を適用する。方式の選択と文書整合確認を、製品の性能達成・障害保護・実機試験の成立と区別する。

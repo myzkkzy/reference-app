@@ -62,7 +62,7 @@ API・IPCの項目別定義には[インターフェース契約の記載枠](..
 | product-design/topic.md | [design-product/topic.md](../../../design-product/assets/templates/topic.md) |
 | product-design/data-structure.md | [design-product/data-structure.md](../../../design-product/assets/templates/data-structure.md) |
 | product-design/screen.md | [design-product/screen.md](../../../design-product/assets/templates/screen.md) |
-| product-design/test-strategy.md | [design-product/test-strategy.md](../../../design-product/assets/templates/test-strategy.md) |
+| product-design/test-strategy.md | [design-product-tests/test-strategy.md](../../../design-product-tests/assets/templates/test-strategy.md) |
 | product-design/adr.md | [evaluate-and-record-decisions/adr.md](../../../evaluate-and-record-decisions/assets/templates/adr.md) |
 | product-design/adr-index.md | [manage-product-documents/adr-index.md](../../../manage-product-documents/assets/templates/adr-index.md) |
 | product-design/product-index.md | [manage-product-documents/design-index.md](../../../manage-product-documents/assets/templates/design-index.md) |
@@ -73,6 +73,10 @@ API・IPCの項目別定義には[インターフェース契約の記載枠](..
 命名には本文IDと英語の内容名を使う。汎用テンプレートの保存名は `{{本文ID}}-{{英語の内容名}}.md` とし、接頭辞・番号・保存先は文書規則から解決する。
 
 ## 機能・非機能の分離
+
+共通・テーマ別テスト戦略は同じ戦略テンプレートを使い、戦略区分・上位戦略・具体化先を適用する。設計テンプレートの適用戦略と判断対応表を本文で管理し、通常の見出しリンクからCOND群・共通仕様へ接続する。テーマ数・実際のIDは文書規則と本文で管理する。
+
+テスト方針には[方針テンプレート](../../../design-product-tests/assets/templates/test-strategy.md)、条件・ケースの設計には[テスト設計テンプレート](../../../design-product-tests/assets/templates/test-design.md)を使う。保存先・DES採番・状態・OKF種別は本プロジェクトの規則に従う。COND・CASEの文書内IDと見出しは文書規則を適用し、例示ケースを成果物へそのまま残さない。分析だけの依頼ではケースの例を削除し、未設計の範囲を示す。
 
 要件のtopic・cross-cutting枠は、文書規則の機能・非機能と領域に応じて使う。独立した容量・性能・保証条件を操作の枠に混在させず、別REQとその受入条件へ分けて参照する。制約の種類表記は保持する。
 

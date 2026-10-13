@@ -75,7 +75,7 @@ Rustの専用子プロセスからImageMagick 7のMagickWand C APIを呼ぶ。Q1
 
 要件担当へ：REQ-001のURL自動取得条件、REQ-003の壊れたICC・配置失敗・部分成功、REQ-004の320px・既存要素回避を本文・受入条件と照合する。正常案は各取込経路で初期サイズと間隔を満たし操作可能になること。異常案は直接入力／URL取得／ICC／配置の失敗対象を識別し成功分と既存内容を保持すること。未合意の変更後要件全体を合意済みへ自動変更しない。
 
-実装・検証担当へ：[DES-013](../../test-strategy/DES-013-design-validation-handoff.md)に従い、6形式・先頭コマ／ページ・ICC・透過・巨大入力・HTML5入力・OS選択・チャンク再送／不一致・取得途中失敗・配置競合・表示失敗を小規模成立確認で評価する。MagickWandのWindowsビルド、FFI、実Tauri転送、色変換・ピーク資源と配置探索性能は未検証。成立しない場合は証拠と影響を記録して本書・ADR-013・016を見直す。
+実装・検証担当へ：[DES-013](../../test-strategy/DES-013-common-test-strategy.md)に従い、6形式・先頭コマ／ページ・ICC・透過・巨大入力・HTML5入力・OS選択・チャンク再送／不一致・取得途中失敗・配置競合・表示失敗を小規模成立確認で評価する。MagickWandのWindowsビルド、FFI、実Tauri転送、色変換・ピーク資源と配置探索性能は未検証。成立しない場合は証拠と影響を記録して本書・ADR-013・016を見直す。
 
 根拠：[reqwest ClientBuilder](https://docs.rs/reqwest/latest/reqwest/struct.ClientBuilder.html)は接続・取得タイムアウトと転送制御の確認元。数値は本設計の初期値でありライブラリの既定値ではない。
 

@@ -143,4 +143,4 @@ Rustは画面集合、取込バッチ、保存固定対象、直前成功B0、�
 - [共通通信・資源寿命](DES-014-ipc-common-protocol.md)：識別・非同期応答・保持と終結。
 - [状態DTO](DES-015-ipc-state-dtos.md)、[入出力複合型](DES-016-ipc-composite-types.md)：各項目の通信表現。
 - [エラー契約](DES-017-ipc-error-contracts.md)：拒否・実行失敗・取消と保護位置。
-- [検証への引継ぎ](../test-strategy/DES-013-design-validation-handoff.md#ipc契約の共通評価観点)：成立確認・性能・障害の共通観点。
+- [検証への引継ぎ](../test-strategy/DES-059-ipc-contract-test-strategy.md#ipc契約の共通評価観点)：成立確認・性能・障害の共通観点。

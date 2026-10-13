@@ -267,7 +267,7 @@ flowchart LR
 - [DES-011](../interface/DES-011-ipc-contracts.md)：IPCの責務・導出方針と定義元一覧。22コマンド・14通知はDES-018～039、通信・状態DTO・複合型・エラー・寿命はDES-014～017へ分割した。契約は決定済み、実IPCと性能は評価待ち。
 - [DES-012](../non-functional-design/cross-cutting/DES-012-portable-runtime-distribution.md)：Home・x64・固定WebView2、同梱資材・パス解決・更新台帳。
 - DES-002・005・006：textareaと描画・文字計数、ダーク固定、中ボタンパンとキー入力先。
-- [DES-013](../test-strategy/DES-013-design-validation-handoff.md)：全対象要件との照合、受入条件変更案と小規模成立確認・製品評価への引継ぎ。
+- [DES-013](../test-strategy/DES-013-common-test-strategy.md)：全対象要件との照合、受入条件変更案と小規模成立確認・製品評価への引継ぎ。
 
 残件は上流本文への差分反映と変更後レビュー、具体的依存ビルドと配布台帳の固定、入力／表示／画像／保存／配布の小規模成立確認、既存条件による性能・障害実証。選択済み方式を未回答として扱わない。今回変更しない画面図の過去の表示検証結果と、今回の文書整合確認を区別する。
 

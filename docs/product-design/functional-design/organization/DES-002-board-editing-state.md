@@ -154,7 +154,7 @@ textareaとPixiJSの文字描画で、端末標準メッセージフォントの
 
 文字数計数のライブラリ・Unicode版・照合条件は[DES-045](../../non-functional-design/organization/DES-045-note-text-capacity-controls.md)を正本とする。超過入力の拒否・通知・復元と文章内Undoは本書の入力契約に従う。
 
-要件担当へ：REQ-010の入力優先・Enter改行・完了／取消ボタン・保存を越える文章内Undo、REQ-031のフォント差を照合する。正常案は日本語入力と長文で文章・幅・高さ・履歴を保持し、保存後も入力できること。異常案は超過入力・変換中操作・表示差で確定本文を消さないこと。成立確認と担当は[DES-013](../../test-strategy/DES-013-design-validation-handoff.md)。具体的試験・計測は未実施。
+要件担当へ：REQ-010の入力優先・Enter改行・完了／取消ボタン・保存を越える文章内Undo、REQ-031のフォント差を照合する。正常案は日本語入力と長文で文章・幅・高さ・履歴を保持し、保存後も入力できること。異常案は超過入力・変換中操作・表示差で確定本文を消さないこと。成立確認と担当は[DES-013](../../test-strategy/DES-013-common-test-strategy.md)。具体的試験・計測は未実施。
 
 根拠：[textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/textarea)、[unicode-segmenter](https://github.com/cometkim/unicode-segmenter)、[unicode-segmentation](https://github.com/unicode-rs/unicode-segmentation)、[Unicode 17のGraphemeBreakTest](https://www.unicode.org/Public/17.0.0/ucd/auxiliary/GraphemeBreakTest.txt)。
 

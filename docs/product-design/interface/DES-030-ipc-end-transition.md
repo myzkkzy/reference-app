@@ -51,7 +51,7 @@ returnは遷移と候補だけを取消し、実行中の取込・保存を続�
 
 ## 検証観点と関連契約
 
-戻ると後着結果、閉じる・終了の保護判定、ready後に開始した保存の再照合、空セッション移行。具体的な成立確認・性能・障害評価は[DES-013](../test-strategy/DES-013-design-validation-handoff.md#ipc契約の共通評価観点)へ引き継ぐ。
+戻ると後着結果、閉じる・終了の保護判定、ready後に開始した保存の再照合、空セッション移行。具体的な成立確認・性能・障害評価は[DES-059](../test-strategy/DES-059-ipc-contract-test-strategy.md#ipc契約の共通評価観点)へ引き継ぐ。
 
 - [DES-011](DES-011-ipc-contracts.md)：全体方針とコマンド一覧。
 - [共通通信・資源寿命](DES-014-ipc-common-protocol.md)、[エラー契約](DES-017-ipc-error-contracts.md)：識別・照会・保持・終結と失敗分類。

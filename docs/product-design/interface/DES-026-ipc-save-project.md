@@ -137,7 +137,7 @@ board保存は[BoardState](DES-015-ipc-state-dtos.md#boardstate)・[SettingsStat
 
 ## 検証観点と関連契約
 
-保存キューの集約、settings保存の範囲、保存先未確立、ブロック待機の失敗終結、保存中編集と実保存番号。具体的な成立確認・性能・障害評価は[DES-013](../test-strategy/DES-013-design-validation-handoff.md#ipc契約の共通評価観点)へ引き継ぐ。
+保存キューの集約、settings保存の範囲、保存先未確立、ブロック待機の失敗終結、保存中編集と実保存番号。具体的な成立確認・性能・障害評価は[DES-059](../test-strategy/DES-059-ipc-contract-test-strategy.md#ipc契約の共通評価観点)へ引き継ぐ。
 
 - [DES-011](DES-011-ipc-contracts.md)：全体方針とコマンド一覧。
 - [共通通信・資源寿命](DES-014-ipc-common-protocol.md)、[エラー契約](DES-017-ipc-error-contracts.md)：識別・照会・保持・終結と失敗分類。

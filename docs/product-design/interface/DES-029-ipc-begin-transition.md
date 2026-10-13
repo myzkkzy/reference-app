@@ -91,7 +91,7 @@ waitingImports → waitingSaves → readyを通知する。readyは確認可能�
 
 ## 検証観点と関連契約
 
-取込表示終結・保存終端の待機、通知先着、戻る操作による遷移取消と処理継続。具体的な成立確認・性能・障害評価は[DES-013](../test-strategy/DES-013-design-validation-handoff.md#ipc契約の共通評価観点)へ引き継ぐ。
+取込表示終結・保存終端の待機、通知先着、戻る操作による遷移取消と処理継続。具体的な成立確認・性能・障害評価は[DES-059](../test-strategy/DES-059-ipc-contract-test-strategy.md#ipc契約の共通評価観点)へ引き継ぐ。
 
 - [DES-011](DES-011-ipc-contracts.md)：全体方針とコマンド一覧。
 - [共通通信・資源寿命](DES-014-ipc-common-protocol.md)、[エラー契約](DES-017-ipc-error-contracts.md)：識別・照会・保持・終結と失敗分類。

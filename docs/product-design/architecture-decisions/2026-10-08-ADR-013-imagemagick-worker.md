@@ -32,6 +32,6 @@ ImageMagick 7 Q16と必要コーデック・Little CMSを同梱し、Rustワー�
 
 - [MagickWand API](https://imagemagick.org/magick-wand/)：画像読込・縮小・書込を扱う公開API。
 - [色管理](https://imagemagick.org/color-management/)・[形式一覧](https://imagemagick.org/formats/)：色変換と形式対応の確認元。配布ビルドの能力は別に確認する。
-- 具体的バージョン・WindowsのFFIビルドと配布構成は実装担当が成立確認で固定。検証担当が[DES-013](../test-strategy/DES-013-design-validation-handoff.md)の能力と制限を実証する。
+- 具体的バージョン・WindowsのFFIビルドと配布構成は実装担当が成立確認で固定。検証担当が[DES-013](../test-strategy/DES-013-common-test-strategy.md)の能力と制限を実証する。
 - 要件担当はREQ-001～003の変更案を反映・レビューする。試作・計測は未実施。必要な上流反映前にADR採用へ遷移しない。
 - 置換元・先：なし。ADR-012の資源管理を補完する。

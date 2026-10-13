@@ -36,4 +36,4 @@ description: メモ本文の容量判定とUnicode版・改行を揃えた文字
 
 ## 検証への引継ぎ
 
-[DES-013](../../test-strategy/DES-013-design-validation-handoff.md)のテスト方針を適用する。方式の選択と文書整合確認を、製品の性能達成・障害保護・実機試験の成立と区別する。
+[DES-013](../../test-strategy/DES-013-common-test-strategy.md)のテスト方針を適用する。方式の選択と文書整合確認を、製品の性能達成・障害保護・実機試験の成立と区別する。

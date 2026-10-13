@@ -52,7 +52,7 @@ description: finish_import_inputの責務・事前条件、項目別の入出力
 
 ## 検証観点と関連契約
 
-完全受信・容量不一致・取得失敗、同じ終結の再送と異なる終結の拒否、元取込要求への対象失敗通知。具体的な成立確認・性能・障害評価は[DES-013](../test-strategy/DES-013-design-validation-handoff.md#ipc契約の共通評価観点)へ引き継ぐ。
+完全受信・容量不一致・取得失敗、同じ終結の再送と異なる終結の拒否、元取込要求への対象失敗通知。具体的な成立確認・性能・障害評価は[DES-059](../test-strategy/DES-059-ipc-contract-test-strategy.md#ipc契約の共通評価観点)へ引き継ぐ。
 
 - [DES-011](DES-011-ipc-contracts.md)：全体方針とコマンド一覧。
 - [共通通信・資源寿命](DES-014-ipc-common-protocol.md)、[エラー契約](DES-017-ipc-error-contracts.md)：識別・照会・保持・終結と失敗分類。

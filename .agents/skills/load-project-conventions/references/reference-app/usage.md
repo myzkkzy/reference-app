@@ -19,9 +19,14 @@
 - 設計変更：product_design で、対象REQの関連DES・ADR・図・テスト方針・引継ぎへの影響を調べ、影響する段階から見直す。
 
 設計全体の進行と戻り先は[汎用設計ワークフロー](../../../design-product/references/workflow.md)、保存・状態・担当境界との接続は[このプロジェクトの設計手順](workflows/product-design.md)を参照する。
-テスト方針は設計方針の段階から具体化する。個別のテストケース・データ・環境・実行手順の設計は検証担当へ引き継ぐ。
+テスト方針・条件分析は設計方針の段階から[design-product-tests](../../../design-product-tests/SKILL.md)で始め、責務・状態・契約に合わせてケース・データ仕様・環境要件・手順を文書で設計する。製品設計との整合をレビューし、確定した範囲をコード化・実データ生成・環境構築・実行準備・実行の担当へ渡す。
 
 ## 操作だけの利用
+
+- `$design-product-tests` で、対象のテスト方針だけを策定する。
+- `$design-product-tests` で、受入条件と技術契約から条件分析だけを行う。
+- `$design-product-tests` で、指定された条件の具体的ケース・データ仕様・環境要件・手順だけを設計する。
+- `$design-product-tests` で、指定された条件・ケースの設計レビューだけを行う。
 
 - `$evaluate-and-record-decisions` で、指定した案の比較だけを行う。
 - `$evaluate-and-record-decisions` で、確認済みの技術判断をADRへ記録する。
@@ -40,7 +45,7 @@
 
 必要なスキルを対象プロジェクトのスキル領域へ配置する。
 SKILL.mdが参照する他スキルの資料も同じ相対関係で配置する。
-設計を扱うスキルには、design-product の設計レビューも必要である。
+製品設計の整合レビューはdesign-product、テスト設計の詳細レビューはdesign-product-testsの参照資料を使う。依頼の対象に必要な資料だけを読む。
 参照資料を読むことと、その所有スキルの作業を実行することは別である。
 reference-app の規則は、このプロジェクトを指定された場合だけ適用する。
 
@@ -54,7 +59,7 @@ reference-app の規則は、このプロジェクトを指定された場合だ
 | `assess-change-impact` | [manage-product-documents](../../../manage-product-documents/SKILL.md) | 変更影響の分析 |
 | `compare-options` | [evaluate-and-record-decisions](../../../evaluate-and-record-decisions/SKILL.md) | 選択肢の比較 |
 | `define-acceptance-criteria` | [write-product-requirements](../../../write-product-requirements/SKILL.md) | 受入条件の作成 |
-| `define-test-strategy` | [design-product](../../../design-product/SKILL.md) | テスト方針の策定 |
+| `define-test-strategy` | [design-product-tests](../../../design-product-tests/SKILL.md) | テスト方針の策定 |
 | `design-component` | [design-product](../../../design-product/SKILL.md) | 機能・責務の設計 |
 | `design-data-model` | [design-product](../../../design-product/SKILL.md) | データ構造の設計 |
 | `design-system-architecture` | [design-product](../../../design-product/SKILL.md) | 全体構成の設計 |

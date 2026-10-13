@@ -66,4 +66,4 @@ description: PixiJS表示のメモを編集するときにHTML textareaを併用
 
 入力確認日：2026-10-08。取得経路は本チャットのユーザー回答と詳細設計反映計画の実行指示の要約。非編集時はPixiJS、編集時だけtextareaを重ねる方式をユーザーが選択した。従前の未選択という理由は当時の経緯として保持し、現在の方式選択の残件にはしない。
 
-表示同等性・長文タイル・Unicode 17ライブラリと入力優先を[DES-002](../functional-design/organization/DES-002-board-editing-state.md)・[DES-006](../screen-design/DES-006-board-screen.md)へ具体化した。選択の反映だけで上流REQの変更後レビューや実機入力品質が完了した扱いにせず、提案状態を維持する。実装・検証の引継ぎは[DES-013](../test-strategy/DES-013-design-validation-handoff.md)。
+表示同等性・長文タイル・Unicode 17ライブラリと入力優先を[DES-002](../functional-design/organization/DES-002-board-editing-state.md)・[DES-006](../screen-design/DES-006-board-screen.md)へ具体化した。選択の反映だけで上流REQの変更後レビューや実機入力品質が完了した扱いにせず、提案状態を維持する。実装・検証の引継ぎは[DES-013](../test-strategy/DES-013-common-test-strategy.md)。

@@ -213,7 +213,7 @@ SQLiteはrusqlite bundled・limits・hooks、ZIPはzipを使う設計案。比�
 
 DB生成・ZIP生成・ハッシュ・同期・置換・復旧更新・完了記録を画面とasync executorの同期処理から分離する。保存開始時の固定状態をDBへ変換し、単一トランザクション・DELETEジャーナル・閉じたDBを格納する既存方式を維持する。SQL完了時点では保存成功を通知しない。保存中の追加編集は未保存として後続要求へ残す。
 
-読込は読み取り専用・DEFENSIVE有効・trusted_schema無効・拡張禁止・trigger/view拒否とし、既存のDB／PNG／ZIP全体検証を省かない。PNGはStored、DB・manifestはDeflateレベル1、ZIP64を使用する。具体的同梱版・防御API・大容量読書きの成立は実装／検証担当が確認する。画像処理の具体化は[DES-010](../collection/DES-010-image-import-pipeline.md)、配布と更新は[DES-012](../../non-functional-design/cross-cutting/DES-012-portable-runtime-distribution.md)、上流照合と小規模成立確認は[DES-013](../../test-strategy/DES-013-design-validation-handoff.md)。
+読込は読み取り専用・DEFENSIVE有効・trusted_schema無効・拡張禁止・trigger/view拒否とし、既存のDB／PNG／ZIP全体検証を省かない。PNGはStored、DB・manifestはDeflateレベル1、ZIP64を使用する。具体的同梱版・防御API・大容量読書きの成立は実装／検証担当が確認する。画像処理の具体化は[DES-010](../collection/DES-010-image-import-pipeline.md)、配布と更新は[DES-012](../../non-functional-design/cross-cutting/DES-012-portable-runtime-distribution.md)、上流照合と小規模成立確認は[DES-013](../../test-strategy/DES-013-common-test-strategy.md)。
 
 ## 分割先と正本
 
