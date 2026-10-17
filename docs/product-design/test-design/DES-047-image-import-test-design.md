@@ -6,7 +6,7 @@ description: 全取込経路、静止画化と色・寸法変換、部分成功�
 
 # DES-047：画像取込・変換のテスト設計
 
-- 設計状態：ドラフト。条件・ケース・データ仕様・環境要件・手順を文書化した。上流差分の反映・レビューと実行準備は未完了で、試験結果を表さない。
+- 設計状態：評価待ち。条件・ケース・データ仕様・環境要件・手順を文書化した。上流差分の反映・レビューと実行準備は未完了で、試験結果を表さない。残件の担当・解消条件・進行範囲は本文の未決事項・引継ぎに従い、必要な確認後にドラフトへ戻して再レビューする。
 - 目的・範囲：[DES-055のテーマ別戦略](../test-strategy/DES-055-image-import-test-strategy.md)を、REQ-001～003・034の全受入条件とDES-010・043の入力取得、画像変換、初期配置、表示終結について、COND-001～009・CASE-001～018と準備仕様へ具体化する。
 - 根拠・参照要件：[REQ-001](../../product-requirements/functional-requirements/collection/REQ-001-add-image-path.md#受入条件)、[REQ-002](../../product-requirements/functional-requirements/collection/REQ-002-static-image-formats.md#受入条件)、[REQ-003](../../product-requirements/functional-requirements/collection/REQ-003-batch-import-errors.md#受入条件)、[REQ-034](../../product-requirements/non-functional-requirements/collection/REQ-034-image-conversion-timeout.md#受入条件)。いずれもドラフト。合意状況と未決の正本は各本文。
 - 依存設計・方針：[DES-010](../functional-design/collection/DES-010-image-import-pipeline.md)、[DES-043](../non-functional-design/collection/DES-043-image-conversion-resource-controls.md)、[DES-004](../data-design/DES-004-board-data-model.md)、[DES-008](../data-design/DES-008-project-file-data.md)、[DES-013](../test-strategy/DES-013-common-test-strategy.md)。方式選択・ADRの状態をこの文書で遷移させない。

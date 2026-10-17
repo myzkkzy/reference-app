@@ -12,5 +12,5 @@ okf_version: "0.2"
 
 ## 判断の根拠から探す
 
-- [プロダクト判断](product-demands/product-decisions/index.md) - 対話で決めた範囲、優先順位、変更理由。
+- [プロダクト判断](product-demands/product-decisions/index.md) - プロダクト判断の範囲、優先順位、確認できる理由。
 - [技術判断](product-design/architecture-decisions/index.md) - デスクトップ基盤、描画とUI、テキスト編集の判断記録。

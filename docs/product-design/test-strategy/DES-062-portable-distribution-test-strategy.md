@@ -6,14 +6,14 @@ description: 選択済みのWindows対象と固定WebView2方式に基づき、�
 
 # DES-062：Windows向けポータブル配布のテスト戦略
 
-- 設計状態：ドラフト。配布成立の検証方針を具体化し、上流反映と実配布物・実環境での確認を後続へ引き継ぐ。
+- 設計状態：評価待ち。配布成立の検証方針を具体化し、上流反映と実配布物・実環境での確認を後続へ引き継ぐ。残件の担当・解消条件・進行範囲は本文の未決事項・引継ぎに従い、必要な確認後にドラフトへ戻して再レビューする。
 - 戦略区分：テーマ別。
 - 上位戦略：[DES-013：共通テスト戦略](DES-013-common-test-strategy.md)。層・基盤、証拠保全、文書と実行の状態区分は上位を適用する。
 - 具体化先：[DES-054：Windows向けポータブル配布のテスト設計](../test-design/DES-054-portable-distribution-test-design.md)。配布台帳・環境・条件・ケース・準備・操作・後片付けは同本文を正本とする。
 - 目的・範囲：一般利用者による配布ZIPの展開・起動、必要資材の全同梱と実ロード、主要操作の成立、配布資材の更新時の利用者データ保護を確認する。
-- 入力確認日：2026-10-13。共通戦略と8テーマ別戦略から既存テスト設計へ具体化するユーザーの指示に基づく。
+- 入力確認日：2026-10-13。確認時点の入力は[DES-013：共通テスト戦略](DES-013-common-test-strategy.md)、[DES-054：Windows向けポータブル配布のテスト設計](../test-design/DES-054-portable-distribution-test-design.md)、[REQ-020](../../product-requirements/non-functional-requirements/cross-cutting/REQ-020-portable-windows-app.md)、[DES-012](../non-functional-design/cross-cutting/DES-012-portable-runtime-distribution.md)の本文・該当節。現在の合意状況・設計状態は各本文を正本とし、方式の反映と成立確認を区別する。
 - 根拠：[REQ-020](../../product-requirements/non-functional-requirements/cross-cutting/REQ-020-portable-windows-app.md)の条件付き合意、[DES-012](../non-functional-design/cross-cutting/DES-012-portable-runtime-distribution.md)の選択済み対象・方式と上流受入案。REQ-020への反映・変更後レビュー待ちを維持する。
-- 依存する製品契約：[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)、[DES-010](../functional-design/collection/DES-010-image-import-pipeline.md)、[ADR-015](../architecture-decisions/2026-10-08-ADR-015-fixed-webview2-distribution.md)（提案）。方式のユーザー選択とADR採用・配布成立を別に扱う。
+- 依存する製品契約：[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)、[DES-010](../functional-design/collection/DES-010-image-import-pipeline.md)、[ADR-015](../architecture-decisions/2026-10-08-ADR-015-fixed-webview2-distribution.md)（提案）。方式の記録とADR採用・配布成立を別に扱う。
 - 抽出関係：旧DES-013の配布・実機入力の先行成立確認と、DES-054に含まれていたテーマ方針を本書へ接続する。既存COND・CASEと対象選択は維持する。
 
 ## 検証目的と主要リスク
@@ -52,7 +52,7 @@ description: 選択済みのWindows対象と固定WebView2方式に基づき、�
 
 ## 観測と制御の方針
 
-配布台帳と実ロード情報を中心に、起動exe、CWD／試験PATH、一般利用者権限、依存導入状況、user data・PC設定・画像作業先・保存先、画面／IME／フォーカス、保存transaction・complete・本ZIPの結果を関連付ける。起動不能な欠落行ではOSローダー側の失敗も観測し、全失敗を同じアプリ通知へ補作しない。
+配布台帳と実ロード情報を中心に、起動exe、CWD／試験PATH、一般利用者権限、依存導入状況、user data・共通設定・画像作業先・保存先、画面／IME／フォーカス、保存transaction・complete・本ZIPの結果を関連付ける。起動不能な欠落行ではOSローダー側の失敗も観測し、全失敗を同じアプリ通知へ補作しない。
 
 依存欠落・非互換は使い捨て配布コピーへ限定し、正常配布と利用者原本を保護する。ACL・PATH・VM等の環境準備と、利用時に管理者昇格や追加導入を求めない契約を区別する。具体的な診断口・ロード観測・自動化と手動手順は後続が準備し、実装済みフックを仮定しない。
 
@@ -73,11 +73,15 @@ description: 選択済みのWindows対象と固定WebView2方式に基づき、�
 | 区分 | 状態・影響と進める範囲 | 担当・解消条件 |
 | --- | --- | --- |
 | 選択済みと上流反映待ち | Home・x64・サポート中通常リリース・常時固定WebView2は選択済み。REQ-020への対象範囲・同梱資材・正常異常受入案の反映と変更後合意が残る | 要件担当がDES-012の上流変更案を反映・レビュー。配布方式を未回答として再質問しない |
-| ADRの状態 | ADR-015は提案。ユーザーの方式選択から採用・技術成立を自動判断しない | 技術判断担当が既存ADRの手順で採否・成立を確認 |
+| ADRの状態 | ADR-015は提案。方式の記録から採用・技術成立を自動判断しない | 技術判断担当が既存ADRの手順で採否・成立を確認 |
 | 後続準備未完了 | 具体OSとサポート照合、配布A/Bと全依存版・x64・台帳・ライセンス、実資料、一般利用者・導入状況の対照、観測・自動化・手動手順が未準備 | ビルド／実装／検証担当がDES-054の準備仕様を実物化し、実行計画と証拠を用意。文書完成や方式選択を試験合格としない |
 
 未決・上流状態と準備未完了の詳細は[DES-054のレビュー・引継ぎ](../test-design/DES-054-portable-distribution-test-design.md#レビュー引継ぎ)へ接続する。具体OSの受入時点でのサポート状態は後続が公式情報へ照合するため、今回の文書レビューで将来のサポートを保証しない。
 
 ## テスト設計への接続
 
-本書の通常見出しからDES-054の「戦略判断の具体化」へ対応し、COND-001～009から既存CASE-001～010へ追跡する。条件固有の技法、配布台帳、変異、環境・観測口、準備・操作・期待結果・後片付けは設計を正本とする。依存の実接続や実機確認で方式が成立しない場合は証拠と変更影響を設計担当へ返し、製品契約・ADR・上流反映を見直す。
+本書の通常見出しからDES-054の「戦略判断の具体化」へ対応し、COND-001～010から既存CASE-001～012へ追跡する。条件固有の技法、配布台帳、変異、環境・観測口、準備・操作・期待結果・後片付けは設計を正本とする。依存の実接続や実機確認で方式が成立しない場合は証拠と変更影響を設計担当へ返し、製品契約・ADR・上流反映を見直す。
+
+## 共通設定分離の検証方針
+
+起動パス・書込権限・更新と既存config引継ぎを独立した状態・現物の証拠で確認する。[DES-054](../test-design/DES-054-portable-distribution-test-design.md)のCOND-010・CASE-011～012へ具体化する。既存のボード試験の成功で設定保存の成立を代替しない。実装、実行準備と製品試験は未完了。

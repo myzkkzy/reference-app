@@ -6,7 +6,7 @@ description: 失敗包絡、段階・理由コード、保護位置と共通fail
 
 # DES-017：IPCのエラー契約
 
-- 設計状態：評価待ち。契約は決定済み。実Tauriの成立確認・性能・障害評価は未実施。
+- 設計状態：ドラフト。共通設定分離を反映した変更後契約は再レビュー対象。実Tauriの成立確認・性能・障害評価は未実施。
 - 目的・範囲：全コマンドの失敗包絡、エラー分類、保護位置と共通の[failed](#failed)通知。対象ごとの通常の部分失敗は関連通知を参照する。
 - 分割関係：[DES-011](DES-011-ipc-contracts.md)から項目別契約を分割した。全体方針と参照要件・確認時点は分割元を参照する。
 - 関連判断：[ADR-016](../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)。文書の分割で方式の選択・設計状態を変更しない。
@@ -23,7 +23,7 @@ description: 失敗包絡、段階・理由コード、保護位置と共通fail
 | --- | --- | --- | --- |
 | 失敗段階 | `stage` | string（[ErrorStage](#errorstage)） | 必須。下表の固定値。 |
 | 理由コード | `reason` | string（[ErrorReason](#errorreason)） | 必須。下表の固定値。 |
-| 再試行可能性 | `retryable` | boolean | 必須。同じ操作を安全に明示再試行できる場合true。自動再実行の許可ではない。置換後は先に[retry_save](DES-028-ipc-retry-save.md#retry_save)、conflictは別名保存。 |
+| 再試行可能性 | `retryable` | boolean | 必須。同じ操作を安全に明示再試行できる場合true。自動再実行の許可ではない。ボード置換後は先に[retry_save](DES-028-ipc-retry-save.md#retry_save)、ボードconflictは別名保存。共通設定は固定先の照合・再試行と明示再作成に従い、保存先を自動変更しない。 |
 | 対象種別 | `targetKind` | string（enum） | 対象が判明した場合だけ。input・item・asset・destination・candidate・transaction・project・request・token。 |
 | 対象識別子 | `targetId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | targetKindと対で必須。該当するID／[Token](DES-014-ipc-common-protocol.md#共通スカラー型)。名前・配列添字にしない。 |
 | 関連保存処理 | `transactionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 保存処理が作られた場合だけ。 |
@@ -33,7 +33,7 @@ description: 失敗包絡、段階・理由コード、保護位置と共通fail
 
 | 論理名 | 物理名 | 型 | 説明 |
 | --- | --- | --- | --- |
-| 位置種別 | `kind` | string（enum） | 必須。project・backup・recovery・candidate。 |
+| 位置種別 | `kind` | string（enum） | 必須。project・backup・recovery・candidate・settingsOriginal・settingsBackup・settingsTemporary。設定の位置にはinputTokenを発行しない。 |
 | 表示名 | `displayName` | string | 必須。保護された内容の名称。 |
 | 表示パス | `displayPath` | string | 必須。表示用で、ファイル操作引数にしない。 |
 | 検証済み入力 | `inputToken` | [Token](DES-014-ipc-common-protocol.md#共通スカラー型) | 同じセッションで全体検証・読込可能性を確認できた場合だけ。未検証・唯一のコピーへの書込権限を意味しない。 |
@@ -62,6 +62,7 @@ description: 失敗包絡、段階・理由コード、保護位置と共通fail
 | commit | 完了記録・保存成功境界 |
 | cleanup | 成功後の安全な整理 |
 | load | ZIP・DB・PNG・中断記録の読込検証 |
+| appSettings | 共通設定のパス解決・読込・独立保存・競合・退避・照合 |
 
 ### ErrorReason
 
@@ -69,11 +70,12 @@ description: 失敗包絡、段階・理由コード、保護位置と共通fail
 | --- | --- |
 | invalidRequest | 必須欠落、型・値域・判別型・参照集合等の不正要求 |
 | unsupportedProtocol | 通信形式版が1以外 |
-| duplicateRequest | 初期化の再取得を除く受付済みrequestIdの再使用 |
+| duplicateRequest | 初期化・共通設定の同一入力による結果再取得を除く受付済みrequestIdの再使用 |
 | invalidToken | 未知・別用途・別WebView・別セッションのトークン |
 | staleSession | 変更系要求が現セッションと一致しない |
 | staleRequest | 既に無効となった処理・バッチ・遷移 |
 | staleReference | 古いreferenceRevision |
+| staleRevision | 共通設定のexpectedAppSettingsRevisionが現在値と一致しない |
 | staleCandidate | 最新候補でない、または採用前の元入力変化 |
 | staleSnapshot | 有効な供給待ちsnapshotIdではない |
 | snapshotAlreadySupplied | 既に受領した保存対象への重複供給 |
@@ -124,6 +126,17 @@ description: 失敗包絡、段階・理由コード、保護位置と共通fail
 | transportUnavailable | Tauri通信が失われた。Rust処理の終結結果と区別する |
 | channelClosed | 通知経路が閉じた。保存処理を停止する理由にしない |
 | processingFailed | 分類不能の処理失敗。例外文字列から原因を推定しない |
+| settingsPathUnavailable | 実行ファイル基準のパス解決不能 |
+| settingsReadFailed | 設定の読込I/O失敗 |
+| settingsInvalid | 設定JSONの破損・型・値・構造不正 |
+| settingsUnsupportedVersion | 設定形式版の非対応 |
+| settingsWriteFailed | 設定の新規出力・置換の失敗 |
+| settingsSyncFailed | 設定同期失敗で成功未確定 |
+| settingsConflict | 起動時／直前成功時の基準と現物不一致 |
+| settingsBackupFailed | 再作成前の原本退避・検証・同期失敗 |
+| settingsOutcomeUnknown | 設定置換後の結果未確定。照合が必要 |
+| settingsBusy | 設定mutexまたはアプリ内の処理が使用中 |
+| settingsProtected | 不正／読込失敗原本を保護中 |
 
 画面文言はstage・reason・target・保護位置から生成する。[ErrorInfo](#errorinfo)は分類データであり、利用者向けメッセージ文字列を自由入力しない。配置・表示失敗を画面が報告する場合も同じ型で、placementまたはdisplayに限定する。
 
@@ -155,3 +168,9 @@ description: 失敗包絡、段階・理由コード、保護位置と共通fail
 - [状態DTO](DES-015-ipc-state-dtos.md)、[入出力複合型](DES-016-ipc-composite-types.md)：各項目の通信表現。
 - [エラー契約](DES-017-ipc-error-contracts.md)：拒否・実行失敗・取消と保護位置。
 - [検証への引継ぎ](../test-strategy/DES-059-ipc-contract-test-strategy.md#ipc契約の共通評価観点)：成立確認・性能・障害の共通観点。
+
+## 共通設定のエラー
+
+共通設定要求はsessionId・projectIdを含めない。適用前の通信版・入力型・期待番号・所有不正はFailedEnvelopeで拒否する。保存処理開始後のファイル失敗はsave_app_settingsのoutcome=failedとAppSettingsSnapshot.lastErrorで返し、即時適用値を失わせない。
+
+ErrorInfoのstageへappSettingsを追加する。reasonはsettingsPathUnavailable、settingsReadFailed、settingsInvalid、settingsUnsupportedVersion、settingsWriteFailed、settingsSyncFailed、settingsConflict、settingsBackupFailed、settingsOutcomeUnknown、settingsBusy、settingsProtectedを追加し、retryableは原因解消後に再試行可能かを示す。汎用のinvalidRequest・staleRevision等も適用する。protectedLocationsへsettingsOriginal・settingsBackup・settingsTemporaryを追加し、確認できた場所だけ返す。transactionIdはボード用なので付けない。パス解決不能時は場所なしとし、別保存先へ自動変更しない。

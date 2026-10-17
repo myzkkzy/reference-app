@@ -6,7 +6,7 @@ description: 表示、画像・グループ・メモ編集、履歴、スナッ�
 
 # DES-048：ボード表示・参照維持・編集・メモのテスト設計
 
-- 設計状態：ドラフト。条件・ケース・データ仕様・環境要件・準備・操作・後片付けを文書化した。実入力・表示・操作性の成立と上流レビューは未完了。
+- 設計状態：評価待ち。条件・ケース・データ仕様・環境要件・準備・操作・後片付けを文書化した。実入力・表示・操作性の成立と上流レビューは未完了。残件の担当・解消条件・進行範囲は本文の未決事項・引継ぎに従い、必要な確認後にドラフトへ戻して再レビューする。
 - 目的・範囲：[DES-056のテーマ別戦略](../test-strategy/DES-056-board-interaction-test-strategy.md)を、REQ-004～010・027・028・035・036の全受入条件とDES-002・004～006・044・045の操作/状態/計数/表示契約について、COND-001～013・CASE-001～037と準備仕様へ具体化する。
 - 根拠・参照要件：[REQ-004](../../product-requirements/functional-requirements/comparison/REQ-004-board-overview-and-detail.md#受入条件)、[REQ-005](../../product-requirements/functional-requirements/comparison/REQ-005-keep-references-visible.md#受入条件)、[REQ-006](../../product-requirements/functional-requirements/organization/REQ-006-image-transform.md#受入条件)、[REQ-007](../../product-requirements/functional-requirements/organization/REQ-007-image-deletion.md#受入条件)、[REQ-008](../../product-requirements/functional-requirements/organization/REQ-008-group-membership.md#受入条件)、[REQ-009](../../product-requirements/functional-requirements/organization/REQ-009-group-movement.md#受入条件)、[REQ-010](../../product-requirements/functional-requirements/organization/REQ-010-independent-notes.md#受入条件)、[REQ-027](../../product-requirements/functional-requirements/organization/REQ-027-edit-history-and-stacking.md#共通受入条件)、[REQ-028](../../product-requirements/functional-requirements/organization/REQ-028-placement-grid-and-snapping.md#共通受入条件)、[REQ-035](../../product-requirements/non-functional-requirements/comparison/REQ-035-minimum-window-usability.md#受入条件)、[REQ-036](../../product-requirements/non-functional-requirements/organization/REQ-036-note-text-capacity.md#受入条件)。REQ-005は合意済み、他はドラフト。状態の正本は各REQ。
 - 依存設計・方針：[DES-002](../functional-design/organization/DES-002-board-editing-state.md)、[DES-004](../data-design/DES-004-board-data-model.md)、[DES-005](../screen-design/DES-005-screen-overview.md)、[DES-006](../screen-design/DES-006-board-screen.md)、[DES-044](../non-functional-design/comparison/DES-044-minimum-window-usability.md)、[DES-045](../non-functional-design/organization/DES-045-note-text-capacity-controls.md)、[DES-013](../test-strategy/DES-013-common-test-strategy.md)。設計案やADR状態を合意/実証へ遷移させない。
@@ -45,7 +45,7 @@ description: 表示、画像・グループ・メモ編集、履歴、スナッ�
 
 - 製品受入：Windows 11、対象ビルド/同梱固定WebView2、実マウス・キーボード、日本語IME、OS標準フォント。ボード表示領域とクライアント論理寸法、zoom、DPIを記録する。ペイントアプリ1つの名/版は検証計画時に選定・記録する。
 - 確認層：状態/幾何/履歴/計数はユニット、textarea/Pixi/Worker/保存境界は結合、利用経路/IME/フォーカス/前面維持/最小画面は実機/E2E。実入力や実描画をダブルだけで成立扱いにしない。
-- 観測：前後モデル（ID・所属・z・位置・角度・倍率・枠・本文・幅・fontSize・表示）、ドラッグ開始/最終有効/プレビュー/確定、ボードUndo/Redoと文章内履歴、保存固定対象、両更新番号、実描画・補助線・フォーカス・通知を関連付ける。
+- 観測：前後モデル（ID・所属・z・位置・角度・倍率・枠・本文・幅・fontSize・表示）、ドラッグ開始/最終有効/プレビュー/確定、ボードUndo/Redoと文章内履歴、保存固定対象、ボードとアプリ寿命の独立更新番号、実描画・補助線・フォーカス・通知を関連付ける。
 - 制御：ポインター解放/取消、IME compositionの開始/確定/取消、保存対象固定/完了/失敗、候補の消失/画面外移動、PCフォント/表示領域。既存のフックを仮定せず、実装・検証担当へ必要な観測/制御仕様として渡す。
 - 共通準備：各行はB-Eの使い捨てボード/入力素材へ戻し、原本ハッシュ・履歴・保存基準・表示を記録。必要時はDES-049の基準保存P0と失敗制御を参照する。
 - 共通後片付け：証拠回収後にIME/入力を終了し、障害・DPI/フォント試験条件を戻し、通常終了。唯一の正常実体/復旧候補は消さない。作業領域実体の保護はDES-050/052。
@@ -70,7 +70,7 @@ description: 表示、画像・グループ・メモ編集、履歴、スナッ�
 | [DES-056：網羅方針](../test-strategy/DES-056-board-interaction-test-strategy.md#網羅方針) | CSSpx境界、zoom/DPI、候補順位/消失/Alt、回転・拡縮の不変条件を確認する | [COND-010](#cond-010)、[COND-003](#cond-003)、[COND-009](#cond-009)、[ボード・メモデータ](#ボードメモデータの管理元) | 自由値/吸着値/補助線と確定モデルを照合し、技術順位をREQの追加受入にしない |
 | [DES-056：網羅方針](../test-strategy/DES-056-board-interaction-test-strategy.md#網羅方針) | 最小画面・折畳み・長文と入力先/キー/フォーカスの到達性を確認する | [COND-011](#cond-011)、[COND-012](#cond-012)、[環境・観測・共通手順](#環境観測共通手順) | 実窓内側寸法、設定/確認/メモ完了取消、IMEとキー競合を観測。Ctrl+Sの製品設計同期残件を維持 |
 | [DES-056：観測・制御方針](../test-strategy/DES-056-board-interaction-test-strategy.md#観測制御方針) | 全属性・最終有効/プレビュー/確定・二つの履歴・固定保存と実入力/描画を対応付ける | [COND-001](#cond-001)～[COND-013](#cond-013)、[環境・観測・共通手順](#環境観測共通手順) | 具体ポインター/IME/保存境界/候補/DPI制御は共通仕様・CASEに維持。未実装フックを仮定しない |
-| [DES-056：テーマ間の分担](../test-strategy/DES-056-board-interaction-test-strategy.md#テーマ間の分担) | 編集の意味を本書で確認し、保存・PC設定・フォント調整・実体・上限・性能を各管理元へ接続する | [COND-004](#cond-004)、[COND-007](#cond-007)、[COND-008](#cond-008)、[COND-013](#cond-013)、[共通仕様](#共通のデータ仕様環境要件手順) | フォント調整はDES-049、画像実体はDES-050、要素容量はDES-052。性能用固定操作や新閾値を本書に追加しない |
+| [DES-056：テーマ間の分担](../test-strategy/DES-056-board-interaction-test-strategy.md#テーマ間の分担) | 編集の意味を本書で確認し、保存・共通設定・フォント調整・実体・上限・性能を各管理元へ接続する | [COND-004](#cond-004)、[COND-007](#cond-007)、[COND-008](#cond-008)、[COND-013](#cond-013)、[共通仕様](#共通のデータ仕様環境要件手順) | フォント調整はDES-049、画像実体はDES-050、要素容量はDES-052。性能用固定操作や新閾値を本書に追加しない |
 | [DES-056：未決と引継ぎ](../test-strategy/DES-056-board-interaction-test-strategy.md#未決と引継ぎ) | 上流キー照合・操作手段/精度・実行準備と他テーマ残件を分ける | [COND-001](#cond-001)、[COND-006](#cond-006)、[COND-007](#cond-007)、[COND-011](#cond-011)～[COND-013](#cond-013)、[レビュー・引継ぎ](#レビュー引継ぎ) | 既存担当・解消条件を維持し、描画精度・操作性の未決を独立モデル確認へ広げない |
 
 ## テスト条件
@@ -142,7 +142,7 @@ description: 表示、画像・グループ・メモ編集、履歴、スナッ�
 - 確認層／種別・品質観点：状態ユニット/保存結合＋E2E、機能・履歴整合性。
 - 技法・網羅対象・理由：Undo/Redo/新編集/保存/表示/選択の決定表、解放/取消、1/100/1000と+1。
 - 優先理由：誤編集回復と保存境界。観測・制御の見通し：保存固定前後・履歴/選択/z/枠。
-- 対応ケース：[CASE-006](#case-006)、[CASE-009](#case-009)～[CASE-015](#case-015)、[CASE-020](#case-020)、[CASE-024](#case-024)～[CASE-027](#case-027)。未決・影響：PC設定適用の主ケースはDES-049。
+- 対応ケース：[CASE-006](#case-006)、[CASE-009](#case-009)～[CASE-015](#case-015)、[CASE-020](#case-020)、[CASE-024](#case-024)～[CASE-027](#case-027)。未決・影響：共通設定適用の主ケースはDES-049。
 
 ### COND-009
 
@@ -477,14 +477,14 @@ description: 表示、画像・グループ・メモ編集、履歴、スナッ�
 
 ### CASE-026
 
-- 名称・確認目的：Undo+Redo合計上限、最古破棄、現履歴と次回PC設定。製品受入。対応条件：[COND-008](#cond-008)。確認層／種別・品質観点：状態ユニット＋設定/再開E2E、容量・設定分離。
-- 前提・環境要件：履歴上限100の利用中ボード、TEXT-L文章内履歴。入力・データ仕様：100確定→101、Undo40/Redo60、PC設定1/1000と各+1。
-- 準備：生成した確定移動の順/期待位置を台帳化。PC設定の保存手順はDES-049。
+- 名称・確認目的：Undo+Redo合計上限、最古破棄、現履歴と次回共通設定。製品受入。対応条件：[COND-008](#cond-008)。確認層／種別・品質観点：状態ユニット＋設定/再開E2E、容量・設定分離。
+- 前提・環境要件：履歴上限100の利用中ボード、TEXT-L文章内履歴。入力・データ仕様：100確定→101、Undo40/Redo60、共通設定1/1000と各+1。
+- 準備：生成した確定移動の順/期待位置を台帳化。共通設定の保存手順はDES-049。
 - 操作・事象：101件目確定→Undo可能な最古まで確認→保存成功。利用中にPC上限1/1000を保存し現履歴確認→新規/他ファイルopen/同じfile再open→上限+1編集。
 - 期待結果と根拠：REQ-027/030。Undo+Redo合計上限、超過最古破棄、保存で消えず文章内履歴別。PC変更で現履歴は変更せず、次回各開始で設定上限、新セッション履歴空、プロジェクトへ履歴を保存しない。
 - 観測方法：両履歴件数/最古ID/文章内履歴、PC保存値/セッション設定、保存列。
-- 後片付け：PC設定を試験前へ戻し共通後片付け。実現方法・準備物：履歴列/実PC設定と再開を後続担当が準備。
-- 未決・影響：PC設定主ケースの準備はDES-049、合否値は確定。
+- 後片付け：共通設定を試験前へ戻し共通後片付け。実現方法・準備物：履歴列/実共通設定と再開を後続担当が準備。
+- 未決・影響：共通設定主ケースの準備はDES-049、合否値は確定。
 
 ### CASE-027
 

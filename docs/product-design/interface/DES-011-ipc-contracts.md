@@ -1,20 +1,20 @@
 ---
 type: Product Design
 title: 画面とRustのIPC契約
-description: IPCの責務分担と導出方針、22コマンド・4共通契約の定義元を案内する。
+description: IPCの責務分担と導出方針、24コマンド・4共通契約の定義元を案内する。
 ---
 
 # DES-011：画面とRustのIPC契約
 
 - 設計状態：評価待ち。今回の対象である画像・プロジェクト操作の通信契約を決定済み。実Tauriでの転送・状態固定・描画・保存の成立確認と性能・障害評価は未実施。
 - 目的・範囲：Tauri境界の初期化、画像取込・表示、保存、読込候補、終了・切替、要求の照会と受領確認。編集正本は[DES-002](../functional-design/organization/DES-002-board-editing-state.md)、保存・排他・復旧は[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)、取込・配置は[DES-010](../functional-design/collection/DES-010-image-import-pipeline.md)、永続値域は[DES-008](../data-design/DES-008-project-file-data.md)を正本とする。
-- 入力確認日：2026-10-09。ユーザーのIPC詳細設計計画実行指示とHTML5ドラッグ入力の選択を反映。物理名、補助型、資源移管と照会の細部は設計担当が具体化した。
+- 入力確認日：2026-10-09。確認時点の入力は[DES-002](../functional-design/organization/DES-002-board-editing-state.md)、[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)、[DES-010](../functional-design/collection/DES-010-image-import-pipeline.md)、[DES-008](../data-design/DES-008-project-file-data.md)の本文・該当節。現在の合意状況・設計状態は各本文を正本とし、方式の反映と成立確認を区別する。
 - 関連判断：[ADR-016](../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)。通信方式の選択、要件全体の合意、設計レビュー完了、試験合格は別に管理する。
 - 参照要件：[REQ-001～003](../../product-requirements/functional-requirements/collection/REQ-001-add-image-path.md)、[REQ-004](../../product-requirements/functional-requirements/comparison/REQ-004-board-overview-and-detail.md)、[REQ-011](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md)、[REQ-012](../../product-requirements/functional-requirements/cross-cutting/REQ-012-periodic-autosave.md)、[REQ-014～017](../../product-requirements/functional-requirements/cross-cutting/REQ-014-manual-save.md)、[REQ-023](../../product-requirements/non-functional-requirements/cross-cutting/REQ-023-saving-operation-latency.md)、[REQ-024](../../product-requirements/non-functional-requirements/cross-cutting/REQ-024-saving-detail-display.md)、[REQ-029](../../product-requirements/non-functional-requirements/cross-cutting/REQ-029-image-and-project-limits.md)、[REQ-032](../../product-requirements/functional-requirements/cross-cutting/REQ-032-file-lock-and-save-retry.md)。状態・受入条件は各要件本文に従う。
 
 ## コマンドの導出と対象範囲
 
-各コマンドは「必要な操作 → 境界を越える処理 → 入出力・完了条件 → 命名」の順で導いたアプリ固有の契約である。画面が編集状態、Rustが画像実体・保存キュー・ファイル検証・トークンを所有する。移動・回転・メモ編集・Undoは画面内で確定し、保存時に状態を渡す。既存6コマンドを維持し、資源の取得・終結と遷移・要求管理の16コマンドを追加する。
+各コマンドは「必要な操作 → 境界を越える処理 → 入出力・完了条件 → 命名」の順で導いたアプリ固有の契約である。画面が編集状態、Rustが画像実体・保存キュー・ファイル検証・トークンを所有する。移動・回転・メモ編集・Undoは画面内で確定し、保存時に状態を渡す。画像・ボード・要求管理の22コマンドと、アプリ寿命で独立する共通設定取得・保存の2コマンドを定義する。
 
 | 論理名 | 物理コマンド名 | 呼出元 → 呼出先 | 責務・切り出した理由 | 根拠 |
 | --- | --- | --- | --- | --- |
@@ -40,6 +40,9 @@ description: IPCの責務分担と導出方針、22コマンド・4共通契約�
 | 取消可能な要求の取消 | [cancel_request](DES-037-ipc-cancel-request.md#cancel_request) | 画面 → Rust | 作業取消と遷移取消を区別する。 | [DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)、[REQ-011](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md)、[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md) |
 | 要求状態照会 | [get_request_status](DES-038-ipc-get-request-status.md#get_request_status) | 画面 → Rust | 通知欠落時に受領前の実際の状態・結果を取り出す。 | [DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)、[REQ-016](../../product-requirements/functional-requirements/cross-cutting/REQ-016-save-failure-recovery.md)・[REQ-032](../../product-requirements/functional-requirements/cross-cutting/REQ-032-file-lock-and-save-retry.md)、[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md) |
 | 終端結果の受領確認 | [acknowledge_requests](DES-039-ipc-acknowledge-requests.md#acknowledge_requests) | 画面 → Rust | 画面が処理済みの要求記録を解放する。 | [DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md) |
+| 共通設定取得 | [get_app_settings](DES-064-ipc-get-app-settings.md#get_app_settings) | 画面 → Rust | アプリ寿命の設定値・適用値・保存状態を取得する | [DES-063](../functional-design/cross-cutting/DES-063-common-settings-management.md) |
+| 共通設定保存 | [save_app_settings](DES-065-ipc-save-app-settings.md#save_app_settings) | 画面 → Rust | 設定の即時適用・独立保存・再試行・明示再作成 | [DES-063](../functional-design/cross-cutting/DES-063-common-settings-management.md) |
+
 
 ## 共通契約の定義元
 

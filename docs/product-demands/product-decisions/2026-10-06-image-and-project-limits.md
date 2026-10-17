@@ -1,7 +1,7 @@
 ---
 type: Product Decision
 title: 画像とプロジェクトの利用上限の反映判断
-description: 画像処理・資源管理・読込制限の計画指示と、利用上限・失敗時保護を要件へ反映した判断範囲を整理する。
+description: 画像処理・資源管理・読込制限の方針と、利用上限・失敗時保護を要件へ反映した判断範囲を整理する。
 ---
 # 画像とプロジェクトの利用上限の反映判断
 
@@ -14,13 +14,13 @@ description: 画像処理・資源管理・読込制限の計画指示と、利�
 
 ## 決定内容
 
-「画像処理・資源管理・読込制限の設計具体化」計画実行指示に基づき、REQ-001～003・008・010・011・014・016に画像・内部PNG・manifest／DB・ZIPエントリー・ボード要素・プロジェクト容量の利用上限と、超過時に理由を示して拒否し既存内容と編集を守る振る舞いを反映する。画像の作業先はプロジェクト隣の専用フォルダーを既定とし、PC側設定で代替先を指定できる。書込不可・容量不足では自動代替しない。
+既存の利用上限と失敗時保護の方針として、REQ-001～003・008・010・011・014・016に画像・内部PNG・manifest／DB・ZIPエントリー・ボード要素・プロジェクト容量の利用上限と、超過時に理由を示して拒否し既存内容と編集を守る振る舞いを反映する。画像の作業先はプロジェクト隣の専用フォルダーを既定とし、PC側設定で代替先を指定できる。書込不可・容量不足では自動代替しない。
 
 計画反映は設計値の成立を実測した結果ではなく、変更後要件全体への合意でもない。性能基準と利用制限は別の条件として維持する。
 
 ## 理由・根拠
 
-取得経路は既存文書の要約であり、原対話の逐語引用ではない。[画像とプロジェクトの利用上限](../../product-requirements/non-functional-requirements/cross-cutting/REQ-029-image-and-project-limits.md#画像とプロジェクトの利用上限)に計画実行指示の要件反映範囲、[画像処理・資源管理](../../product-design/non-functional-design/cross-cutting/DES-042-rendering-performance-and-resources.md#表示資源の初期予算)と[読込保存の資源上限](../../product-design/non-functional-design/cross-cutting/DES-040-project-resource-validation.md#読込保存の資源上限)に初期設計値と失敗時の保護が記載されている。個々の数値への直接回答や未記載の選択理由は補作しない。技術的な予算・変換・読込検証の判断は[ADR-012](../../product-design/architecture-decisions/2026-10-06-ADR-012-image-resource-limits.md)で扱う。
+既存文書に記載された内容を整理した記録であり、相互参照だけを独立した裏付けとして扱わない。[画像とプロジェクトの利用上限](../../product-requirements/non-functional-requirements/cross-cutting/REQ-029-image-and-project-limits.md#画像とプロジェクトの利用上限)に利用上限の適用範囲、[画像処理・資源管理](../../product-design/non-functional-design/cross-cutting/DES-042-rendering-performance-and-resources.md#表示資源の初期予算)と[読込保存の資源上限](../../product-design/non-functional-design/cross-cutting/DES-040-project-resource-validation.md#読込保存の資源上限)に初期設計値と失敗時の保護が記載されている。個々の数値の選定理由は確認できず、未記録の理由は補作しない。技術的な予算・変換・読込検証の判断は[ADR-012](../../product-design/architecture-decisions/2026-10-06-ADR-012-image-resource-limits.md)で扱う。
 
 ## 関連要求
 

@@ -9,7 +9,7 @@ description: 保存専用SQLiteとZIPを同期ライブラリで生成し、専�
 - 状態：提案。SQLite・単一ZIP・PNGの既存採用を維持するライブラリ案。
 - 作成日：2026-10-08
 - 決定日：未決
-- 判断権限・出典：ユーザーの詳細設計反映計画実行指示と、rusqliteの非同期利用・DB外画像保持の確認対話を要約。ライブラリとスレッド所有は設計案。変更後保存要件の全体合意と実証は別。
+- 判断権限・出典：設計担当が[REQ-011](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md)、[REQ-037](../../product-requirements/non-functional-requirements/cross-cutting/REQ-037-saved-content-durability.md)の適用範囲を入力に、技術方式と確認できる理由を本記録へ整理する。既存の状態・未決事項は維持し、記録整理を採用・上流合意・試験合格と扱わない。
 - 関連：[REQ-011](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md)、[REQ-014](../../product-requirements/functional-requirements/cross-cutting/REQ-014-manual-save.md)、[REQ-016](../../product-requirements/functional-requirements/cross-cutting/REQ-016-save-failure-recovery.md)、[REQ-023](../../product-requirements/non-functional-requirements/cross-cutting/REQ-023-saving-operation-latency.md)、[DES-008](../data-design/DES-008-project-file-data.md)、[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)、[DES-011](../interface/DES-011-ipc-contracts.md)、[save_project](../interface/DES-026-ipc-save-project.md#save_project)、[provide_save_snapshot](../interface/DES-027-ipc-provide-save-snapshot.md#provide_save_snapshot)、[ADR-010](2026-09-29-ADR-010-sqlite-project-storage.md)。
 
 ## 比較・選定案

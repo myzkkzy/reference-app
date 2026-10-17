@@ -10,12 +10,13 @@ description: 「画像とプロジェクトの利用上限」の適用範囲・�
 - 参照要求：[DEM-001](../../../product-demands/collection/DEM-001-collect-reference-images.md)、[DEM-003](../../../product-demands/organization/DEM-003-organize-image-insights.md)、[DEM-004](../../../product-demands/cross-cutting/DEM-004-resume-saved-work.md)
 - 参照時点の要求：適用先の既存要件が参照する要求を根拠とする。各要求の現在の内容・合意状況はリンク先を参照する。
 - 適用要件：[REQ-001](../../functional-requirements/collection/REQ-001-add-image-path.md)、[REQ-002](../../functional-requirements/collection/REQ-002-static-image-formats.md)、[REQ-003](../../functional-requirements/collection/REQ-003-batch-import-errors.md)、[REQ-008](../../functional-requirements/organization/REQ-008-group-membership.md)、[REQ-010](../../functional-requirements/organization/REQ-010-independent-notes.md)、[REQ-011](../../functional-requirements/cross-cutting/REQ-011-restore-saved-content.md)、[REQ-014](../../functional-requirements/cross-cutting/REQ-014-manual-save.md)、[REQ-016](../../functional-requirements/cross-cutting/REQ-016-save-failure-recovery.md)
-- 合意状況：ドラフト
-- 根拠・出典：既存の共通ルールを独立文書へ移した。既存の適用範囲・判断根拠・受入条件を保持し、独立採番を新たな合意として扱わない。
+- 優先度・理由：必須。初期版の画像取込・ボード編集・保存・復元に共通する利用上限と、超過時の内容保護を確定するため。
+- 合意状況：合意済み
+- 根拠・出典：[画像とプロジェクトの利用上限の反映判断](../../../product-demands/product-decisions/2026-10-06-image-and-project-limits.md#決定内容)。参照要求の期待成果と、各記録の決定内容・適用範囲を具体化する。
 
 ## 画像とプロジェクトの利用上限
 
-ユーザーの「画像処理・資源管理・読込制限の設計具体化」計画実行指示を反映する。REQ-001～003・008・010・011・014・016に適用し、個別回答・計画反映と変更後要件全体への合意を区別する。
+根拠文書に記載された利用上限と失敗時保護を具体化する。REQ-001～003・008・010・011・014・016に適用し、適用範囲と合意状況を区別する。
 
 | 対象 | 利用上限 |
 | --- | --- |

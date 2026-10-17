@@ -9,7 +9,7 @@ description: TypeScript・Rust・実Tauriアプリのテスト基盤と、採用
 - 状態：採用
 - 作成日：2026-09-29
 - 決定日：2026-09-29
-- 決定者・判断権限の根拠：ユーザーによる計画実装指示を受け、設計担当が既存構成内のテスト基盤を採用する。既存の条件付き合意、受入条件、提案中の設計判断は変更しない。
+- 決定者・判断権限の根拠：設計担当が[REQ-021](../../product-requirements/non-functional-requirements/cross-cutting/REQ-021-normal-operation-latency.md)、[REQ-033](../../product-requirements/non-functional-requirements/cross-cutting/REQ-033-performance-evaluation-conditions.md)の適用範囲を入力に、技術方式と確認できる理由を本記録へ整理する。既存の状態・未決事項は維持し、記録整理を採用・上流合意・試験合格と扱わない。
 - 関連要求・要件・設計：[DEM-004](../../product-demands/cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)、[REQ-003](../../product-requirements/functional-requirements/collection/REQ-003-batch-import-errors.md#req-003複数取込と失敗通知)、[REQ-011](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)、[REQ-016](../../product-requirements/functional-requirements/cross-cutting/REQ-016-save-failure-recovery.md#req-016保存失敗時の内容保護と再試行)、[REQ-020](../../product-requirements/non-functional-requirements/cross-cutting/REQ-020-portable-windows-app.md#req-020windows-11でのインストール不要利用)、[DES-001](../architecture/DES-001-system-architecture.md#des-001リファレンスボードの全体設計)。
 
 ## 背景・制約
@@ -50,7 +50,7 @@ TypeScriptの単体・結合はVitest、Rustは標準テスト機構と`cargo te
 
 - 比較表のVitest、Jest、Rust、Tauri WebDriver、WebdriverIOのサービス・設定資料、Playwright WebView2を確認した。
 - WebdriverIOのサービス説明と設定資料には外部方式のprovider名称に記述差がある。本文では接続方式を決め、設定値は導入版のAPIで確認する。
-- 本対話における計画実装指示を反映した（要約）。導入・起動試験・自動テスト・実機計測は未実施。
+- 既存構成に合わせて技術判断を記録した。導入・起動試験・自動テスト・実機計測は未実施。
 
 ## 未決条件
 

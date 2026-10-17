@@ -1,37 +1,37 @@
 ---
 type: Product Design
 title: プロジェクトの保存・読込・復旧設計
-description: SQLiteを含むプロジェクトの保存単位、要求結果契約、読込検証、失敗保護と後続への引継ぎを定義するドラフト。
+description: SQLiteを含むプロジェクトの保存単位、要求結果契約、読込検証、失敗保護と後続への引継ぎを定義する。
 ---
 
 # DES-009：プロジェクトの保存・読込・復旧設計
 
-- 設計状態：ドラフト。保存統合・復元と資源制御を具体化したが、障害・性能検証と変更要件のレビューが残るため実装引継ぎ可能とはしない。
+- 設計状態：評価待ち。保存統合・復元と資源制御を具体化済み。合意済み要件との詳細照合、保存・復旧・排他の障害検証、IPCの成立、ライブラリの配布構成、保存中・再開時の性能の確認が残る。設計担当が要件・関連設計との整合を確認し、実装・検証担当が方式の成立を確認する。必要な確認後、ドラフトに戻して再レビューする。
 - 目的・範囲：プロジェクト永続化の処理契約と失敗時の保護。物理構造は[DES-008](../../data-design/DES-008-project-file-data.md)、編集単位は[DES-002](../organization/DES-002-board-editing-state.md)、画面は[DES-007](../../screen-design/DES-007-persistence-screen.md)を正本とする。
-- 入力確認日：2026-09-30。ユーザーの設定独立保存、確認中の保存停止と戻った後の集約実行、入力済みメモ保存・IME変換中除外、同一ファイル再読込、取込完了待ち、表示位置保存、全保存での復旧用更新の回答と、本設計具体化計画の実行指示を確認。要件全体への合意・製品試験合格とは区別する。
+- 入力確認日：2026-09-30。確認時点の入力は[DES-008](../../data-design/DES-008-project-file-data.md)、[DES-002](../organization/DES-002-board-editing-state.md)、[DES-007](../../screen-design/DES-007-persistence-screen.md)、[REQ-011～019](../../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)の本文・該当節。現在の合意状況・設計状態は各本文を正本とし、方式の反映と成立確認を区別する。
 - 参照要件：[REQ-011～019](../../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)（011～017・019は今回の意味変更に伴いドラフト、018は合意済み）、[REQ-023～025](../../../product-requirements/non-functional-requirements/cross-cutting/REQ-023-saving-operation-latency.md#req-023保存中の操作反応)（条件付き合意：保存中操作と500枚再開）。変更後の受入条件と既存性能基準は要件本文を正本とする。
 - 関連ADR：[ADR-011](../../architecture-decisions/2026-10-05-ADR-011-project-lock-and-retry.md)（排他・明示再試行、提案）、[ADR-004](../../architecture-decisions/2026-09-26-ADR-004-zip-board-storage.md)・[ADR-010](../../architecture-decisions/2026-09-29-ADR-010-sqlite-project-storage.md)は採用、[ADR-005](../../architecture-decisions/2026-09-26-ADR-005-save-recovery-policy.md)は変更要件レビュー・障害検証が残る提案。
 
 ## 責務と状態
 
-TypeScriptはボード・設定・表示中心と倍率、二系統の更新番号、未保存表示と手動要求の達成待ちを所有する。Rustは直列保存キュー、直前成功スナップショット、画像参照、DB変換・検証、ZIP生成・読込、ファイル置換と保存先を所有する。SQLiteは保存・復元専用であり、UIスレッドで長いDB・画像・ZIP処理を行わない。
+TypeScriptはボード・表示中心と倍率、boardRevision・savedBoardRevision、ボードの未保存表示と要求達成待ちを所有する。Rustはボード保存キュー、直前成功内容B0、画像参照、DB・ZIP生成検証、置換・復旧・保存先を所有する。共通設定は[DES-063](DES-063-common-settings-management.md)のAppSettingsServiceへ分離し、同じアプリ配置先の全ボードに適用する。
 
-- `boardRevision`はボードまたは表示中心／倍率の確定変更、`settingsRevision`は設定変更で進む。各々の`savedBoardRevision`・`savedSettingsRevision`と比較し、未保存を別々に判断する。取消も新番号、同値の確定・重なり順を変えない選択変更・描画・未確定ドラッグは番号を進めない。選択時前面化は永続編集として扱い、その確定境界はDES-002で具体化する。パン・ズームは保存対象だがUndo履歴には含めない。
-- 番号はセッション内の単調増加整数。同一ファイルを開き直しても新しいsessionIdを発行し、保存先・セッションの異なる成功基準を混用しない。
-- Rustは直前成功スナップショットとしてボード・表示位置・設定と両成功番号を保持する。設定保存はここへ最新設定だけを組み合わせる。画面で削除済みでも、直前成功内容が参照する画像実体を保持する。直前成功内容・履歴・実行中保存・読込候補の全参照がなくなるまで解放しない。
-- 新規作成は保存先と名前を指定し、空ボード・初期設定・初期表示位置の初回保存成功後に編集可能にする。取消では作成しない。失敗は再試行・別保存先・取消を選べる。既存ボードは新規ファイル保存成功と未保存保護の解決まで保持する。
-- 復旧から開く場合だけは保存先未確立で編集可能とし、別名保存まで設定独立保存・定期保存を開始しない。設定変更も未保存として示す。
+- board/viewの確定変更でboardRevisionを進める。Undoも新番号。同値・描画・選択だけ・未確定ドラッグは進めない。パン・ズームは保存対象だがUndo対象外。選択時前面化の確定境界はDES-002。
+- ボード番号はセッション内で単調増加し、採用時に現在・成功番号を0へ初期化する。フォント補正で保存属性が変わる場合だけboardRevision=1、savedBoardRevision=0。共通設定の番号は初期化しない。
+- B0・履歴・進行中保存・候補の全参照がなくなるまで画像実体を保持する。B0へ設定を合成する保存種類は廃止する。
+- 新規作成は場所・名前を指定し、空ボード・初期表示位置の初回保存成功後に編集開始する。設定ファイル生成はアプリ起動時の別処理で、ボード新規作成を待たない。
+- 復旧ボードは保存先未確立で編集でき、別名保存まで定期ボード保存を止める。共通設定の取得・変更・保存は通常どおり利用する。
 
 ## 主要契約
 
-以下は責務間の論理契約である。通信契約の全体入口は[DES-011](../../interface/DES-011-ipc-contracts.md)。22コマンドの物理名・8列の入出力・通知は各コマンド文書、共通通信・寿命は[DES-014](../../interface/DES-014-ipc-common-protocol.md)、状態DTOは[DES-015](../../interface/DES-015-ipc-state-dtos.md)、複合型は[DES-016](../../interface/DES-016-ipc-composite-types.md)、エラーは[DES-017](../../interface/DES-017-ipc-error-contracts.md)を正本とする。通信形式はprotocolVersion=1、更新番号はu64範囲の10進文字列。受付・保存対象供給・保存成功、候補検証・採用を別の要求として扱う。通信方式の理由は[ADR-016](../../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)へ記録する。
+以下は責務間の論理契約である。通信契約の全体入口は[DES-011](../../interface/DES-011-ipc-contracts.md)。24コマンドの物理名・8列の入出力・通知は各コマンド文書、共通通信・寿命は[DES-014](../../interface/DES-014-ipc-common-protocol.md)、状態DTOは[DES-015](../../interface/DES-015-ipc-state-dtos.md)、複合型は[DES-016](../../interface/DES-016-ipc-composite-types.md)、エラーは[DES-017](../../interface/DES-017-ipc-error-contracts.md)を正本とする。通信形式はprotocolVersion=1、更新番号はu64範囲の10進文字列。受付・保存対象供給・保存成功、候補検証・採用を別の要求として扱う。通信方式の理由は[ADR-016](../../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)へ記録する。
 
 | 契約 | 入力・事前条件 | 結果・失敗 |
 | --- | --- | --- |
-| 保存要求 | requestId、sessionId、projectId、destinationToken、kind、trigger、requiredBoardRevision（boardだけ）・requiredSettingsRevision。キュー先頭でRustが発行するsnapshotIdへ、別requestIdの[provide_save_snapshot](../../interface/DES-027-ipc-provide-save-snapshot.md#provide_save_snapshot)で不変状態を供給 | acceptedは保存成功と別。[saveSucceeded](../../interface/DES-026-ipc-save-project.md#savesucceeded)はsavedBoardRevision・savedSettingsRevision、保存先、transactionId、archiveSha256、cleanupPending。設定保存で現在のboard成功番号を進めない。失敗は共通ErrorInfo |
+| 保存要求 | requestId、sessionId、projectId、destinationToken、kind、trigger、requiredBoardRevision（board固定）。キュー先頭でRustが発行するsnapshotIdへ、別requestIdの[provide_save_snapshot](../../interface/DES-027-ipc-provide-save-snapshot.md#provide_save_snapshot)で不変状態を供給 | acceptedは保存成功と別。[saveSucceeded](../../interface/DES-026-ipc-save-project.md#savesucceeded)はsavedBoardRevision、保存先、transactionId、archiveSha256、cleanupPending。設定保存で現在のboard成功番号を進めない。失敗は共通ErrorInfo |
 | 画像保持 | スナップショットのassetId集合。不変のPNG実体をRust側で取得できること | 保存完了・失敗まで参照を保持。履歴や画面から削除されても実体を解放しない。不在は保存失敗 |
-| 読込候補生成 | requestId、現sessionId、transitionId、OS選択または検証済み候補のinputToken | candidateToken、nextSessionId、projectId、原本board/settings/view、画像メタデータ・参照、sourceKindをUTF-8 JSONバイナリで返し、画面側Workerで解析。現在の状態を変更しない |
-| 候補採用 | 最新読込要求に属するcandidateToken、transitionId、nextSessionId、元入力の識別・ハッシュ一致、旧状態のprotection、B1準備後のboardAdjusted | ロック・画像・保存先を一括移管しnewSessionIdを返す。両番号・両成功番号は0、フォント補正があればB0を成功状態に保持してB1だけboardRevision=1。失敗・取消なら旧状態を保持 |
+| 読込候補生成 | requestId、現sessionId、transitionId、OS選択または検証済み候補のinputToken | candidateToken、nextSessionId、projectId、原本board/view、画像メタデータ・参照、sourceKindをUTF-8 JSONバイナリで返し、画面側Workerで解析。現在の状態を変更しない |
+| 候補採用 | 最新読込要求に属するcandidateToken、transitionId、nextSessionId、元入力の識別・ハッシュ一致、旧状態のprotection、B1準備後のboardAdjusted | ロック・画像・保存先を一括移管しnewSessionIdを返す。boardRevision・savedBoardRevisionは0、フォント補正があればB0を成功状態に保持してB1だけboardRevision=1。失敗・取消なら旧状態を保持 |
 
 エラーは[DES-017](../../interface/DES-017-ipc-error-contracts.md)のFailedEnvelopeとErrorInfoへ統一する。stageは保存段階にprotocol・gate等を含め、固定reason、retryable、対象識別、transactionId、protectedLocationsを正本から参照する。実際に判定できた範囲だけ通知し、例外文字列から容量不足等を推測しない。遅延結果はsessionId・requestId・保存先を照合し、別プロジェクトを保存済みにしたり、取り消した切替を実行したりしない。
 
@@ -41,7 +41,7 @@ TypeScriptはボード・設定・表示中心と倍率、二系統の更新番�
 | --- | --- |
 | 初期化・OS選択 | [initialize_session](../../interface/DES-018-ipc-initialize-session.md#initialize_session)で空セッション、[select_inputs](../../interface/DES-019-ipc-select-inputs.md#select_inputs)で用途別トークン。ダイアログ取消は正常結果 |
 | 画像所有 | [sync_asset_refs](../../interface/DES-024-ipc-sync-asset-refs.md#sync_asset_refs)で画面・Undo・Redoの和集合を原子的に同期。バッチ・保存・B0・候補は別保持元。[complete_import](../../interface/DES-025-ipc-complete-import.md#complete_import)は表示結果と参照同期の受領後 |
-| 対象供給 | [snapshotRequired](../../interface/DES-026-ipc-save-project.md#snapshotrequired)は代表Channelへ一度だけ。Workerが固定状態をUTF-8 JSONへ変換し[provide_save_snapshot](../../interface/DES-027-ipc-provide-save-snapshot.md#provide_save_snapshot)の生本文へ。settingsは最新設定と設定番号だけ |
+| 対象供給 | [snapshotRequired](../../interface/DES-026-ipc-save-project.md#snapshotrequired)は代表Channelへ一度だけ。Workerが固定状態をUTF-8 JSONへ変換し[provide_save_snapshot](../../interface/DES-027-ipc-provide-save-snapshot.md#provide_save_snapshot)の生本文へ。共通設定の供給は禁止 |
 | ゲート | [begin_transition](../../interface/DES-029-ipc-begin-transition.md#begin_transition)は取込転送・変換・配置・表示と実行中／受付済み手動保存を待つ。[end_transition](../../interface/DES-030-ipc-end-transition.md#end_transition)(return)は遷移だけ取消し、後着成功で閉じる・切替をしない |
 | 候補・新規 | [open_project](../../interface/DES-031-ipc-open-project.md#open_project)と[create_project](../../interface/DES-034-ipc-create-project.md#create_project)は旧状態を保持して候補生成。[adopt_project](../../interface/DES-032-ipc-adopt-project.md#adopt_project)で採用、[discard_project_candidate](../../interface/DES-033-ipc-discard-project-candidate.md#discard_project_candidate)で候補だけ解放。初回成功前に新ボードを編集可能にしない |
 | 再試行・照会 | [retry_save](../../interface/DES-028-ipc-retry-save.md#retry_save)のreconcile／followupと[transactionResolved](../../interface/DES-028-ipc-retry-save.md#transactionresolved)／[retryFinished](../../interface/DES-028-ipc-retry-save.md#retryfinished)を区別。[get_request_status](../../interface/DES-038-ipc-get-request-status.md#get_request_status)で欠落結果を回収、[acknowledge_requests](../../interface/DES-039-ipc-acknowledge-requests.md#acknowledge_requests)で終端記録を解放 |
@@ -51,42 +51,37 @@ TypeScriptはボード・設定・表示中心と倍率、二系統の更新番�
 
 ### 保存対象と直列キュー
 
-| 種類 | 実行開始時に固定する内容 | 成功の反映 |
-| --- | --- | --- |
-| 設定保存 | 直前成功のboard/viewとその画像集合＋最新settings | settings成功番号だけを進める |
-| 手動・定期保存 | 最新の確定済みboard/view/settingsと画像集合 | 実際に含む両成功番号を進める |
+ボードの手動・定期保存は確定したboard/view、boardRevision、使用PNG参照だけを固定する。同じボード保存先は1件ずつ実行し、保留定期要求は最大1件へ集約する。各手動要求の必要boardRevisionと実成功番号を照合し、必要番号を満たしてから個別完了を通知する。設定要求を同じキューへ入れたり、ボード成功で設定要求を達成したりしない。
 
-例えば保存済みB0/S0から画像を動かしてB1とし、自動保存を無効にしてS1とした場合、設定保存はB0/S1を保存する。画面のB1は未保存のまま。後の手動保存でB1/S1になる。
+例えばB0を保存後B1へ編集し、共通設定S0からS1を保存しても.refboardはB0のまま。後の手動保存でB1を書き、settings.jsonは変更しない。両保存は独立の成功基準とエラーを持つ。
 
-同じ保存先への書込は設定を含め1件だけ実行する。待機要求は種類・必要番号で管理し、実行開始時に最新の確定対象を取得・固定する。設定保存の基礎は先行処理成功後のスナップショットとし、古いボードを予約して巻き戻さない。固定後の変更は次の保存へ送る。保存要求と供給要求のrequestIdは別とし、Rust発行snapshotIdで対応させる。画面は固定オブジェクトを書き換えず、後続編集は別状態へ反映する。供給前Worker失敗はSnapshotFailureで元保存を終結。古い供給・受領後重複は拒否するが、進行中の別保存や受領済み保存を取り消さない。UTF-8 JSON化はWorker、SQL・ZIP・同期・置換は専用保存スレッドで行い、受渡しのコピー量も成立確認する。待機要求は受付順を基本に、定期要求と設定要求を各最大1件へ集約する。手動要求の達成待ちは個々に維持し、成功した両番号が必要番号を満たす場合だけ完了通知する。ボード保存が待機中の最新設定も含めば、その設定要求を満たして重複書込を省く。
+キュー先頭でRustがsnapshotIdを発行し、UIはその時点の不変board/view・番号・画像集合を固定する。後続編集は別状態へ反映する。WorkerがUTF-8 JSONへ変換し、別requestIdのprovide_save_snapshotで供給する。供給前Worker失敗はSnapshotFailureで元保存を終結する。古い供給・重複は拒否するが進行中の別保存を取り消さない。DB・ZIP・同期・置換は専用保存スレッドで行い、コピー量と保存中反応を評価する。
 
-失敗は待機要求の成功ではない。実行した要求は失敗結果で終了し、未保存は保持する。次の独立した受付要求・手動再試行・次の固定周期で再評価し、失敗要求の無限即時再試行はしない。置換以降の失敗は当該保存先の書込を止める。利用者の再試行では下記の照合・中断処理終結契約を先に実行し、解消できなければ別名保存へ案内する。編集メモリは保持する。
+失敗は待機要求の成功ではない。未保存と編集メモリを保持し、無限即時再試行は行わない。置換以降の失敗は当該ボード先をblocked-transactionとして明示再試行で照合する。共通設定サービスの保存は止めない。
 
 ### 書込と成功境界
 
-[保存整合性と復元保証](../../non-functional-design/cross-cutting/DES-041-save-integrity-and-recovery.md)を正本とする。関連する操作・結果の扱いは本書に残す。
+[DES-041](../../non-functional-design/cross-cutting/DES-041-save-integrity-and-recovery.md)のボード保護・準備記録・置換・復旧更新・完了記録同期を適用する。保持方針は実行開始時に共通設定サービスから捕捉する。設定保存の成功境界は[DES-063](DES-063-common-settings-management.md)で独立管理する。
 
 ## 設定と表示状態の保存
 
-設定はプロジェクトごとに持ち、新規の自動保存・復旧用保持は共に有効。値変更で即時適用してsettingsRevisionを進め、自動保存の有効・無効とは独立した設定保存要求を送る。「閉じる」は変更を取り消さない。失敗でも適用値は戻さず、設定保存失敗と再試行を表示する。手動保存でも最新設定を保存できる。
+設定8項目は[DES-063](DES-063-common-settings-management.md)の専用処理でconfig/settings.jsonへ保存する。board/view・DB・ZIP・復旧用は一切変更しない。即時項目は失敗でも適用値を保持し、次回適用項目は直前成功値を維持する。ボード切替でも設定の値・処理・未保存を保持する。
 
-自動保存の無効化は新しい定期要求と保留した定期要求を止めるが、設定保存・実行中保存・受付済み手動要求を止めない。有効化で30秒周期を開始し、同値では起算点を変えない。読込成功後はそのプロジェクトの設定を使い、利用可能時点から周期を開始する。保持設定は固定したスナップショットの値で適用し、処理途中で切り替えない。
+自動保存の無効化は新規・保留定期ボード要求だけを止め、実行中保存・受付済み手動・設定保存を止めない。有効化で30秒周期を開始し、同値では起算点を変えない。ボード採用後は現在の共通設定を使い、利用可能時点から周期を開始する。保持方針は保存開始時にRustが捕捉した値を処理中維持する。
 
-パン・ズームの確定はboardRevisionを進め、別PCでも同じ表示中心・倍率を復元する。設定保存だけには未保存の表示変更を含めない。
+パン・ズーム確定はboardRevisionを進め、別PCでも保存中心と倍率を復元する。設定保存で表示位置を保存しない。
 
-メモは手動・定期保存時に入力済み文章を確定して保存対象に含め、編集を継続できる。IME変換中の部分は除外し、変換開始直前までの確定入力を保持する。未確定分が残れば両番号が一致しても「入力中・未保存」を示す。編集取消の基点は保存対象として確定した文章へ進む（書込失敗でも確定自体は戻さず、本文を未保存として保持）。文章内Undoを途中保存でも維持する契約はDES-002に従う。
+メモは手動・定期保存時にIME変換開始直前までの確定入力を保存対象へ確定し、入力を継続できる。変換中部分は除外し、boardRevisionと成功番号が一致しても「入力中・未保存」を示す。編集取消の基点は保存対象に確定した文章へ進む。書込失敗でも本文確定を戻さず未保存で保持し、文章内Undoを途中保存でも維持する。詳細はDES-002。
 
 ## 終了・切替の保存ゲート
 
-1. [begin_transition](../../interface/DES-029-ipc-begin-transition.md#begin_transition)で遷移識別子を発行する。取込中なら入力転送・変換に加え、全対象の配置・表示成功または失敗確定と[complete_import](../../interface/DES-025-ipc-complete-import.md#complete_import)まで待つ。[end_transition](../../interface/DES-030-ipc-end-transition.md#end_transition)(return)は現在のボードへ戻り、取込そのものは中止しない。
-2. 新たな定期保存・設定保存の開始を止める。実行中保存と受付済み手動保存の処理が終わるまで待ち、失敗も結果として扱う。保留定期要求は最大1件、設定要求は最新値だけ保持する。
-3. 未確定ドラッグ・IME等は編集完了／取消／戻るで解消する。IME変換をアプリ側で強制確定しない。残るボード・表示位置・設定の未保存を確認し、保存／破棄／戻るを選べる。既に保存成功した設定は破棄対象に含めない。
-4. 保存選択は最新の全対象を保存し、成功かつ追加の未保存・未確定入力がない場合だけ進む。確認中は新たな編集を抑止する。破棄選択は未保存変更と保留要求だけを捨てる。処理済みの保存を巻き戻さない。
-5. 戻るではゲートを解除し、設定要求を再開する。停止中に固定周期を迎えたなら、自動保存が有効で未保存がある場合に最新内容を1回保存する。設定要求を同じ保存で満たせば重複実行しない。次の時刻は元の固定周期を維持する。停止中に周期を迎えていなければ戻るだけで追加の定期保存を開始しない。
+1. begin_transitionで目的と遷移IDを確立する。取込転送・変換・配置・表示とcomplete_importまで待つ。戻るは取込を中止せず目的だけ取り消す。
+2. 新規定期ボード保存を止め、実行中・受付済み手動ボード保存の終結を待つ。アプリ終了目的だけ共通設定の新規確定・保存も止め、進行中設定保存の終結を待つ。切替・ボードを閉じる・移送では設定を止めず保持する。
+3. 未確定ドラッグ・IME等を完了／取消／戻るで解消し、IMEを強制確定しない。ボード未保存を確認する。アプリ終了では共通設定未保存も別に表示する。
+4. 保存はボードだけを通常保存する。アプリ終了で設定も未保存なら設定専用IPCで独立保存し、必要な両対象が成功した時だけ終了する。片方の成功は維持し、他方失敗で終了しない。切替時の破棄はボードだけで、共通設定は保持する。
+5. 戻るでゲートを解除する。停止中に周期を迎え、有効かつ未保存ならボードを1回保存し、以後は元の周期を維持する。終了取消後は設定の確定・保存も再開する。後着保存成功で終了・切替を実行しない。
 
-保存待ち中の戻る・切替取消は遷移要求だけを取り消し、実行中保存を中断しない。後着の成功で終了・切替しない。
-
-readyは確認可能の通知であり、保護解決・採用・終了ではない。[adopt_project](../../interface/DES-032-ipc-adopt-project.md#adopt_project)／[end_transition](../../interface/DES-030-ipc-end-transition.md#end_transition)(close・exit)には最新両番号と未確定入力なしのProtectionDecisionを渡す。savedは実成功番号の包含をRustが検査し、discardedは未保存分だけを破棄する。ゲート取消中の候補生成・初回書込は終結まで資源を保持してから候補を解放し、旧状態を維持する。ready後の手動保存・再試行が残る場合も、採用・閉じる・終了の確定をgateNotReadyで拒否し、終端を待つ。中断先の断念は[release_tokens](../../interface/DES-036-ipc-release-tokens.md#release_tokens)で明示してから確定する。
+readyは確認可能であり採用・終了ではない。adopt_project／end_transition(close・exit)のProtectionDecisionはboardRevision・hasUnconfirmedInputだけを検査する。exitでは別途appSettingsProtectionの最新設定番号・保存／破棄と設定処理終結をサービスで確認する。ボードがない空セッションでも設定終了ガードを行う。戻るでは進行中保存を中断しない。ready後の追加手動・再試行が残ればgateNotReadyとし、成功未確認の中断先の断念はrelease_tokensで明示する。
 
 ## 画像処理・資源管理
 
@@ -100,7 +95,7 @@ readyは確認可能の通知であり、保護解決・採用・終了ではな
 flowchart TD
     A["ファイル選択"] --> B["ZIP・manifest・版を検証"]
     B --> C["専用一時領域でDB読取専用検査・PNG照合"]
-    C --> D["候補を保持：board・settings・view"]
+    C --> D["候補を保持：board・view"]
     D --> E["旧状態の未保存保護を解決"]
     E --> F["新セッションへ一括切替"]
     B -.-> X["失敗・取消：入力と旧状態を保持"]
@@ -128,14 +123,14 @@ flowchart TD
 | 画像欠損・容量不足・ZIP書込失敗 | 対象と判定できる理由を通知。保存成功番号を進めず、画像保持を安全に解放して再試行可能にする |
 | 本ファイル置換・バックアップ処理失敗 | 旧正常内容の所在を確認するまで補助ファイルを削除しない。API失敗だけで本ファイル無変更と仮定しない |
 | 強制終了 | 最後の保存成功内容を回復できること。未保存変更・編集履歴の復旧は保証外 |
-| 保存中編集・設定変更・取消 | 両系統の成功番号と現在番号を観測し、後続状態を保存済みと誤認しない |
+| 保存中編集・設定変更・取消 | 独立したボード番号とアプリ共通設定番号を観測し、後続状態を保存済みと誤認しない |
 | 読込失敗・取消・遅延応答 | 入力ファイル、現在の内容・設定・表示位置・保存先をまとめて保護する |
 
 保証対象はアプリのクラッシュ・強制終了。停電・媒体故障への保証を今回追加しない。
 
-検証では設定だけの保存によるB0/S1、受付順の逆転、確認中の周期到来と戻る／破棄／保存、同一ファイル再読込を確認する。一時ZIP生成・退避・準備記録・置換・復旧用更新・完了記録・後片付けの各境界で強制終了し、保持有効／無効、初回保存、容量不足・アクセス拒否・外部変更・復旧用更新失敗でも直前成功内容と編集を保護する。復元操作自体の中断も対象とする。
+検証では共通設定保存中のボード現物不変、受付順の逆転、確認中の周期到来と戻る／破棄／保存、同一ファイル再読込を確認する。一時ZIP生成・退避・準備記録・置換・復旧用更新・完了記録・後片付けの各境界で強制終了し、保持有効／無効、初回保存、容量不足・アクセス拒否・外部変更・復旧用更新失敗でも直前成功内容と編集を保護する。復元操作自体の中断も対象とする。
 
-ユニットでは変換・不変条件・更新番号・要求達成を、結合では実SQLite・PNG・ZIPとファイル置換の境界を、E2Eでは保存・再開・プロジェクト設定の分離・復旧後別名保存を確認する。500枚再開5秒以内、保存中の操作反応500ms以内・細部表示2秒以内は既存要件を維持し、全3回と共通評価条件を変えない。計測点は要求受付、DB生成、ZIP完了、置換完了、候補検証、表示・操作可能化とし、具体的環境・データ・障害注入・手順は検証担当へ渡す。性能や障害試験は未実施。
+ユニットでは変換・不変条件・更新番号・要求達成を、結合では実SQLite・PNG・ZIPとファイル置換の境界を、E2Eでは保存・再開・共通設定とボードの分離・復旧後別名保存を確認する。500枚再開5秒以内、保存中の操作反応500ms以内・細部表示2秒以内は既存要件を維持し、全3回と共通評価条件を変えない。計測点は要求受付、DB生成、ZIP完了、置換完了、候補検証、表示・操作可能化とし、具体的環境・データ・障害注入・手順は検証担当へ渡す。性能や障害試験は未実施。
 
 各上限の直前・一致・超過、120秒タイムアウトと変換プロセス停止、巨大画像・容量不足・アクセス拒否、キャッシュ解放後の再表示、Undo用画像保持、同一画像要求の集約と取消、セッション切替後の遅延応答を検証対象に加える。限界値を満たす入力も破損・資源不足等の独立した理由では失敗し得る。性能未達なら方式・予算を見直し、既存性能目標を黙って緩めない。
 
@@ -143,16 +138,16 @@ flowchart TD
 
 | 対象・区分 | 担当・確定時期・解消条件・進行範囲 |
 | --- | --- |
-| 要件・画面同期 | REQ-011～017・019へ反映。意味変更した要件はドラフトとし、ユーザーの個別回答・計画実行指示と全REQへの合意を区別する。新規保存先、復旧用保持と復旧後別名保存も反映済み |
-| 入力境界 | DES-002に前面化・途中保存・取消・IME・文章内Undoを具体化。要件担当が実装前に差分を反映・レビューする |
+| 要件・画面同期 | 新規保存先、復旧用保持と復旧後別名保存を具体化済み。設計担当が実装引継ぎ前にREQ-011～017・019および関連する共通要件の本文・受入条件とDES-007を照合し、不一致を解消する。要件の意味変更が必要な場合は要件担当へ戻す |
+| 入力境界 | DES-002に前面化・途中保存・取消・IME・文章内Undoを具体化。設計担当が実装引継ぎ前に合意済み要件との詳細整合を確認し、実装・検証担当が入力と保存の組合せを検証する |
 | 保存・回復の検証 | ReplaceFileW・同期・準備／完了記録・退避・復旧用更新順を本書へ具体化。実装／検証担当が各境界の異常終了と外部競合・再起動を検証するまで成立確認済みにしない |
 | SQLite配布・資源制御 | 資源上限と管理方式は本書・DES-008へ反映。rusqlite bundled・防御設定・zipはADR-014、ImageMagick・色変換・縮小はDES-010・ADR-013へ具体化。具体的依存ビルドとAPI・資源・性能の成立確認を実装側へ引き継ぐ。500枚は性能評価条件 |
-| IPC成立確認 | DES-011から分割した22コマンド・通知・DTO・寿命は決定済みで評価待ち。実装／検証担当が生リクエスト、Worker固定・JSON化、Channel先着・欠落、照会・受領確認、ロック・画像移管をDES-013に従い実証 |
+| IPC成立確認 | DES-011から分割した24コマンド・通知・DTO・寿命は決定済みで評価待ち。実装／検証担当が生リクエスト、Worker固定・JSON化、Channel先着・欠落、照会・受領確認、ロック・画像移管をDES-013に従い実証 |
 | 移送 | 保存成功後にプロジェクトを閉じ、その後OSコピーする方針をDES-007へ反映。開いたままの安定コピー対象提供は初版の手順に含めない |
-| 失敗後の継続・排他 | 本書に方式とAPI根拠を具体化。要件反映、実装／検証担当による各障害・パス別名・ACL・異常終了の実証を実装引継ぎ前に確認。文書方式は確定、成立は未検証 |
-| 性能・検証準備 | 検証担当が既存共通評価条件の未決を解消して実測する。設定保存もZIP更新を伴うため、保存中の性能基準で確認。独立退避・ハッシュ・同期を省いて目標を満たした扱いにしない |
+| 失敗後の継続・排他 | 本書に方式とAPI根拠を具体化。設計担当による合意済み要件との詳細照合、実装／検証担当による各障害・パス別名・ACL・異常終了の実証を実装引継ぎ前に確認。文書方式は確定、成立は未検証 |
+| 性能・検証準備 | 検証担当が既存共通評価条件の未決を解消して実測する。設定保存がZIPを書き換えないことを確認し、ボード保存中の性能基準を評価する。独立退避・ハッシュ・同期を省いて目標を満たした扱いにしない |
 
-文書整備・形式検査の完了、SQLite技術選定の採用、要件の合意、設計レビュー完了、製品試験合格は別の状態として報告する。
+上記を評価待ちの残件として管理し、必要な確認後にドラフトへ戻して再レビューする。文書整備・形式検査の完了、SQLite技術選定の採用、要件の合意、設計レビュー完了、製品試験合格は別の状態として報告する。
 
 ## フォント差読込と保存原本
 
@@ -163,7 +158,7 @@ flowchart TD
 3. 正規状態が上限内へ収まらない巨大な集合（必要枠の辺が2,000,000超等）は、位置補正だけでは解決できないため候補採用を拒否し旧ボード・元ファイルを保持する。この例外では読込失敗理由を示し、切捨て・文字縮小をしない。
 4. 枠拡大だけなら対象をまとめて非モーダル通知する。座標補正が生じた場合はその対象の調整通知を出さない（利用者指定の例外）。他の保存／読込失敗通知まで抑止しない。
 5. 保存属性が変わった場合だけB1のboardRevisionを1、savedBoardRevisionを0とする。メモ高だけ変化し枠・座標が同値なら番号は0のまま。履歴は新規空で開始し、環境調整をUndo項目に入れない。次の利用者操作のUndo基準はB1。
-6. 設定だけの保存はB0/view0＋最新設定であり、B1の枠・座標を混入させない。初回のボード保存成功でB1を新成功基準にする。B1保存前の終了・切替も未保存保護を適用する。
+6. 共通設定の保存はボード原本B0も未保存B1も変更しない。初回のボード保存成功でB1を新成功基準にする。B1保存前の終了・切替も未保存保護を適用する。
 
 保存中心／倍率は補正に連動して変更しない。全体表示・メモ編集開始で利用者が表示を変えられる。フォントの取得・描画契約はDES-004。OS取得根拠：[SystemParametersInfoW](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-systemparametersinfow)、[NONCLIENTMETRICSW](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nonclientmetricsw)。描画・折返しの一致は実機検証待ち。
 
@@ -184,11 +179,11 @@ flowchart TD
 
 ## 置換以降の失敗と再試行
 
-再試行入力はrequestId・sessionId・destinationToken・transactionId、followupKind、必要番号とonEvent。followupKind=settingsでは必要設定番号だけ、boardでは両番号を渡す。設定だけの再試行はB0/view0＋最新settingsを維持し、未保存ボードを追加しない。phase=reconcileの[transactionResolved](../../interface/DES-028-ipc-retry-save.md#transactionresolved)はcompleted／retryable／conflictと元保存の実結果、phase=followupは新transactionIdの後続保存、[retryFinished](../../interface/DES-028-ipc-retry-save.md#retryfinished)は制御全体の終結。最新編集対象を中断記録へ上書きしない。未採用create初回保存では最新番号を渡さず、元の空状態を再試行して成功時に採用候補を返す。
+再試行入力はrequestId・sessionId・destinationToken・transactionId、followupKind=board、requiredBoardRevisionとonEvent。中断の照合と後続ボード保存を分け、元の失敗要求を書き換えない。共通設定の再試行はsave_app_settingsへ分離する。phase=reconcileのtransactionResolvedと新transactionIdのphase=followupを区別し、retryFinishedで制御全体を終結する。未採用createは最新編集番号を渡さず元の空状態を再試行し、成功後に候補を返す。
 
-1. 本ファイル置換以降に失敗したら、キューを `blocked-transaction` とする。定期・設定・手動要求の未達成番号を保持して追加書込を停止する。編集・パン・ズームは継続可能。周期到来で照合を自動実行せず、利用者の「再試行」を待つ。進められない当該先の待機要求・新規受付はtransactionBlockedで失敗終結し、必要番号とkind・triggerはキュー内部に保持し、無効化した定期要求の内部保留も解除する。これらを保存待ちゲートの終端結果として扱い、明示再試行で最新状態と未達成番号を再評価する。元の失敗要求を成功に変更しない。
+1. 本ファイル置換以降に失敗したら、キューを `blocked-transaction` とする。定期・手動ボード要求の未達成番号を保持して追加書込を停止する。編集・パン・ズームは継続可能。周期到来で照合を自動実行せず、利用者の「再試行」を待つ。進められない当該先の待機要求・新規受付はtransactionBlockedで失敗終結し、必要番号とkind・triggerはキュー内部に保持し、無効化した定期要求の内部保留も解除する。これらを保存待ちゲートの終端結果として扱い、明示再試行で最新状態と未達成番号を再評価する。元の失敗要求を成功に変更しない。
 2. 排他所有下で準備／完了記録の形式・帰属・新旧ZIP・直前成功内容・本ファイルのハッシュ／サイズを検証する。本ファイルが記録の新内容なら置換をやり直さず、記録した保持設定で必要な復旧用更新・照合・同期・完了記録を終える。本ファイルが旧内容なら検証済み新候補と旧退避が揃う場合だけ記録と同じ処理を再開する。初回で本ファイルなしは旧なし記録と新候補が一致する場合だけ再開する。
-3. 完了記録と新本ファイルが一致していれば通知が失われただけの成功として終結できる。同じtransactionIdの完了通知を二重計上せず、記録されたスナップショットとその両番号だけを成功基準にする。settings保存だった場合は当該board番号を新編集の成功番号へ進めない。
+3. 完了記録と新本ファイルが一致していれば通知が失われただけの成功として終結できる。同じtransactionIdの完了通知を二重計上せず、記録されたボードスナップショットとboardRevisionだけを成功基準にする。共通設定番号には反映しない。
 4. 再照合・復旧用更新・完了記録書込の障害は同じブロック状態を保持し、成功番号を進めない。再試行を無限ループしない。元ファイルと記録の不一致、外部変更、既存本ファイルの削除、候補欠損・帰属不明は `conflict` とし元へ上書きしない。現在の編集を別名保存へ案内し、原本・記録・退避を保全する。
 5. 中断処理完了後は現画面を保存スナップショットへ戻さず、後続確定編集と最新設定を保持する。待機番号を最新状態へ再評価し、通常キューを再開する。中断成功基準だけで未保存がなくなった場合は追加保存を省略し、残れば後続保存する。
 6. 失敗結果で終了した元requestIdを成功へ書き換えない。再試行は新requestIdで中断終結結果と最新内容保存の達成待ちを関連付ける。「再試行が完了、追加編集は未保存／保存中」を区別する。途中で終了・切替要求を取り消した場合、後着成功で遷移しない。
@@ -199,7 +194,7 @@ flowchart TD
 
 | 対象 | 本文差分案 | 正常の受入条件案 | 異常の受入条件案 |
 | --- | --- | --- | --- |
-| REQ-011・019 | 別PCのフォント差で枠を必要拡大。上限超過では通知せず座標を最小補正し、本文・幅・サイズとグループ相対配置を保つ | 枠拡大だけは通知し未保存。座標補正がある対象は無通知。設定だけの保存は原本B0、ボード保存後B1を復元 | 座標補正だけでは収まらない候補を拒否し旧ボード・元ファイル保持。外部ファイルを自動修復しない |
+| REQ-011・019 | 別PCのフォント差で枠を必要拡大。上限超過では通知せず座標を最小補正し、本文・幅・サイズとグループ相対配置を保つ | 枠拡大だけは通知し未保存。座標補正がある対象は無通知。設定保存ではボード現物不変、ボード保存後B1を復元 | 座標補正だけでは収まらない候補を拒否し旧ボード・元ファイル保持。外部ファイルを自動修復しない |
 | REQ-011・019 | 同じ保存ファイルは別プロセスで二重オープン拒否。別ファイルは同時利用可 | 同一セッションの再オープンで排他を維持し最新内容を再検証。閉じてからコピー可能 | 別名・ハードリンクによる同一実体も使用中通知で拒否。異常終了後はロック取得と記録照合で再開可能 |
 | REQ-012～017 | 置換以降の保存失敗で書込停止。明示再試行で中断内容照合・終結後に最新編集を保存 | 中断内容を完了しても後続編集を未保存で保ち、その後の保存で保存済みにする。保存成功は含まれた更新番号のみ | 外部変更／削除／記録不一致は元への上書きなし、編集を別名保存可能。再試行中障害は再度停止し内容・退避保持 |
 

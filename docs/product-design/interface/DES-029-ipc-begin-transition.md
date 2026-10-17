@@ -6,7 +6,7 @@ description: begin_transitionの責務・事前条件、項目別の入出力、
 
 # DES-029：終了・切替の開始のIPC契約
 
-- 設計状態：評価待ち。契約は決定済み。実Tauriの成立確認・性能・障害評価は未実施。
+- 設計状態：ドラフト。共通設定分離を反映した変更後契約は再レビュー対象。実Tauriの成立確認・性能・障害評価は未実施。
 - 目的・範囲：終了・切替の開始。この入口とその応答・処理条件を管理し、編集正本や保存・排他の契約は根拠設計を参照する。
 - 分割関係：[DES-011](DES-011-ipc-contracts.md)から項目別契約を分割した。全体方針と参照要件・確認時点は分割元を参照する。
 - 関連判断：[ADR-016](../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)。文書の分割で方式の選択・設計状態を変更しない。
@@ -96,3 +96,7 @@ waitingImports → waitingSaves → readyを通知する。readyは確認可能�
 - [DES-011](DES-011-ipc-contracts.md)：全体方針とコマンド一覧。
 - [共通通信・資源寿命](DES-014-ipc-common-protocol.md)、[エラー契約](DES-017-ipc-error-contracts.md)：識別・照会・保持・終結と失敗分類。
 - 関連コマンド：[end_transition](DES-030-ipc-end-transition.md#end_transition)、[open_project](DES-031-ipc-open-project.md#open_project)、[create_project](DES-034-ipc-create-project.md#create_project)、[adopt_project](DES-032-ipc-adopt-project.md#adopt_project)。
+
+## 共通設定の待機範囲
+
+purpose=exitだけはゲート取得後に設定の新規確定・通常保存を止め、進行中設定保存の終結もwaitingSavesで待つ。ready後は終了確認が許可した設定保存・再試行・明示再作成を行え、end_transition(exit)で最新結果を照合する。create/open/closeでは設定の値・未保存・要求記録を保持し、設定保存の終結を待たず処理を継続する。ボードなしのexitにも同じ設定保護を適用する。

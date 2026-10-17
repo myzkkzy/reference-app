@@ -8,7 +8,7 @@
 ## 開始時に読む資料
 
 - [担当境界と共通運用](roles.md)。
-- [成果物の保存先・ID・索引](documents.md)。
+- [成果物の保存先・ID・索引](documents.md)、特に[根拠・出典と合意状況](documents.md#根拠出典と合意状況)。
 - 文書の探索・作成・更新・検査では[OKF適用規則](okf.md)を読み、指定された操作に`manage-okf`を使う。
 - 担当の進行手順を一つ読む。
   [着想](workflows/product-ideation.md)、[要求](workflows/product-requirements.md)。

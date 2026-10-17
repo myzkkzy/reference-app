@@ -6,7 +6,7 @@ description: create_projectの責務・事前条件、項目別の入出力、�
 
 # DES-034：新規初回保存のIPC契約
 
-- 設計状態：評価待ち。契約は決定済み。実Tauriの成立確認・性能・障害評価は未実施。
+- 設計状態：ドラフト。共通設定分離を反映した変更後契約は再レビュー対象。実Tauriの成立確認・性能・障害評価は未実施。
 - 目的・範囲：新規初回保存。この入口とその応答・処理条件を管理し、編集正本や保存・排他の契約は根拠設計を参照する。
 - 分割関係：[DES-011](DES-011-ipc-contracts.md)から項目別契約を分割した。全体方針と参照要件・確認時点は分割元を参照する。
 - 関連判断：[ADR-016](../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)。文書の分割で方式の選択・設計状態を変更しない。
@@ -38,7 +38,7 @@ description: create_projectの責務・事前条件、項目別の入出力、�
 
 ### 処理と失敗時の扱い
 
-RustがprojectId・boardIdを新規発行し、空ボード、[SettingsState](DES-015-ipc-state-dtos.md#settingsstate)既定値、[ViewState](DES-015-ipc-state-dtos.md#viewstate)原点・1、両番号0を初回保存する。[createSucceeded](#createsucceeded)は保存成功境界後だけ。失敗でも旧状態を保持。再試行・別保存先・戻るを選べる。成功したファイルは戻るで削除しない。
+RustがprojectId・boardIdを新規発行し、空ボード、[ViewState](DES-015-ipc-state-dtos.md#viewstate)原点・1、ボード番号0を初回保存する。[createSucceeded](#createsucceeded)は保存成功境界後だけ。失敗でも旧状態を保持。再試行・別保存先・戻るを選べる。成功したファイルは戻るで削除しない。
 
 ## 応答・通知・エラー
 
@@ -87,7 +87,7 @@ RustがprojectId・boardIdを新規発行し、空ボード、[SettingsState](DE
 | — | — | — | — | 対象プロジェクト | `projectId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 対象判明時に必須。空セッションでは省略。 |
 | — | — | — | — | 通知順序 | `eventSequence` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。要求内で増加。照会再掲では同じ値。 |
 | — | — | — | — | 対応遷移 | `transitionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。 |
-| — | — | — | — | 初回保存結果 | `saved` | object（[SavedResult](DES-016-ipc-composite-types.md#savedresult)） | 必須。kind=board、両成功番号0。 |
+| — | — | — | — | 初回保存結果 | `saved` | object（[SavedResult](DES-016-ipc-composite-types.md#savedresult)） | 必須。kind=board、ボード成功番号0。 |
 | — | — | — | — | 採用候補 | `candidate` | object（[ProjectCandidate](DES-016-ipc-composite-types.md#projectcandidate)） | 必須。sourceKind=normal。 |
 
 旧状態を保持し、[adopt_project](DES-032-ipc-adopt-project.md#adopt_project)でだけ切り替える。遷移が取り消されていた場合、保存結果は記録し候補を解放して自動採用しない。

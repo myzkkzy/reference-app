@@ -6,7 +6,7 @@ description: acknowledge_requestsの責務・事前条件、項目別の入出�
 
 # DES-039：終端結果の受領確認のIPC契約
 
-- 設計状態：評価待ち。契約は決定済み。実Tauriの成立確認・性能・障害評価は未実施。
+- 設計状態：ドラフト。共通設定分離を反映した変更後契約は再レビュー対象。実Tauriの成立確認・性能・障害評価は未実施。
 - 目的・範囲：終端結果の受領確認。この入口とその応答・処理条件を管理し、編集正本や保存・排他の契約は根拠設計を参照する。
 - 分割関係：[DES-011](DES-011-ipc-contracts.md)から項目別契約を分割した。全体方針と参照要件・確認時点は分割元を参照する。
 - 関連判断：[ADR-016](../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)。文書の分割で方式の選択・設計状態を変更しない。
@@ -30,9 +30,9 @@ description: acknowledge_requestsの責務・事前条件、項目別の入出�
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 通信形式版 | `protocolVersion` | number（整数） | 必須。1。 | 通信形式版 | `protocolVersion` | number（整数） | 必須。1。 |
 | 要求識別子 | `requestId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。画面発行。この呼出し自身の識別。 | 応答・通知種別 | `type` | string | 必須。requestsAcknowledged。 |
-| 要求元セッション | `sessionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。現セッション。解放・受領確認は所有を証明できる旧セッションも可。 | 対応要求 | `requestId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。元の受付要求。 |
-| 現プロジェクト | `projectId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 現プロジェクトがある場合必須。ない場合は省略。対象候補のIDはRustが特定。 | 要求元セッション | `sessionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。[CommonEnvelope](DES-014-ipc-common-protocol.md#commonenvelope)の照合規則。 |
-| 受領済み要求 | `targetRequestIds` | array（[UUID](DES-014-ipc-common-protocol.md#共通スカラー型)） | 必須。重複なし。空は[]。 | 対象プロジェクト | `projectId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 対象判明時に必須。空セッション・対象不明では省略。 |
+| 要求元セッション | `sessionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 通常は必須。共通設定要求だけならsessionId・projectIdは入出力とも省略。ボード記録は所有を証明できる旧セッションも可。 | 対応要求 | `requestId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。元の受付要求。 |
+| 現プロジェクト | `projectId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 共通設定要求だけなら禁止。それ以外は現プロジェクトがある場合必須。ない場合は省略。対象候補のIDはRustが特定。 | 要求元セッション | `sessionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 共通設定要求だけの結果では省略。それ以外は必須でCommonEnvelopeの照合規則。 |
+| 受領済み要求 | `targetRequestIds` | array（[UUID](DES-014-ipc-common-protocol.md#共通スカラー型)） | 必須。重複なし。空は[]。 | 対象プロジェクト | `projectId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 共通設定要求だけの結果では省略。それ以外は対象判明時に必須。空セッション・対象不明では省略。 |
 | — | — | — | — | 確認結果 | `results` | array（[Acknowledgement](DES-016-ipc-composite-types.md#imagereceiptacknowledgement)） | 必須。対象ごとの結果。 |
 
 ### 処理と失敗時の扱い
@@ -53,3 +53,7 @@ description: acknowledge_requestsの責務・事前条件、項目別の入出�
 - [DES-011](DES-011-ipc-contracts.md)：全体方針とコマンド一覧。
 - [共通通信・資源寿命](DES-014-ipc-common-protocol.md)、[エラー契約](DES-017-ipc-error-contracts.md)：識別・照会・保持・終結と失敗分類。
 - 関連コマンド：[get_request_status](DES-038-ipc-get-request-status.md#get_request_status)、[release_tokens](DES-036-ipc-release-tokens.md#release_tokens)、[complete_import](DES-025-ipc-complete-import.md#complete_import)、[discard_project_candidate](DES-033-ipc-discard-project-candidate.md#discard_project_candidate)。
+
+## アプリスコープの共通設定要求
+
+同じWebViewが所有するget_app_settings・save_app_settingsの要求だけを扱う場合はsessionId・projectIdを省略する。ボード要求との混在は拒否する。セッション切替後でも要求結果を回収・受領確認できる。所有検査と記録寿命は[DES-014](DES-014-ipc-common-protocol.md#共通設定要求の寿命)。

@@ -8,7 +8,7 @@ description: 既存設計の画像変換・表示資源予算・読込制限と�
 - 状態：提案
 - 作成日：2026-10-06
 - 決定日：未決
-- 判断権限：ユーザーの計画実行指示に基づく既存の初期設計を設計担当の技術提案として整理する。元の判断日・未記録の候補比較・試験結果は補作しない。
+- 判断権限：設計担当が[REQ-029](../../product-requirements/non-functional-requirements/cross-cutting/REQ-029-image-and-project-limits.md)、[REQ-034](../../product-requirements/non-functional-requirements/collection/REQ-034-image-conversion-timeout.md)、[REQ-038](../../product-requirements/functional-requirements/cross-cutting/REQ-038-image-workspace-management.md)の適用範囲を入力に、技術方式と確認できる理由を本記録へ整理する。既存の状態・未決事項は維持し、記録整理を採用・上流合意・試験合格と扱わない。
 - 関連要求・要件・設計：[DEM-001](../../product-demands/collection/DEM-001-collect-reference-images.md#dem-001比較したい参考画像を継続して蓄積する)、[DEM-002](../../product-demands/comparison/DEM-002-compare-image-overviews.md#dem-002多くの画像を見渡し全体と細部を比較する)、[利用上限の共通要件](../../product-requirements/non-functional-requirements/cross-cutting/REQ-029-image-and-project-limits.md#画像とプロジェクトの利用上限)、[DES-040](../non-functional-design/cross-cutting/DES-040-project-resource-validation.md#読込保存の資源上限)、[DES-042](../non-functional-design/cross-cutting/DES-042-rendering-performance-and-resources.md#表示資源の初期予算)、[利用上限のPDR](../../product-demands/product-decisions/2026-10-06-image-and-project-limits.md#決定内容)。
 
 ## 背景・制約と上流見直しの経緯
@@ -27,7 +27,7 @@ description: 既存設計の画像変換・表示資源予算・読込制限と�
 
 ## 根拠資料・試作結果
 
-取得経路はDES-009の「画像処理・資源管理」「検証観点」とDES-008の「読込保存の資源上限」の既存記載の要約である。直接取得していないユーザー回答や外部資料の新たな検証を根拠にしない。試作・性能計測・障害試験は未実施。
+整理元は[DES-040：読込保存の資源上限](../non-functional-design/cross-cutting/DES-040-project-resource-validation.md#読込保存の資源上限)、[DES-042：表示資源の初期予算](../non-functional-design/cross-cutting/DES-042-rendering-performance-and-resources.md#表示資源の初期予算)、[DES-043：画像変換の資源制御](../non-functional-design/collection/DES-043-image-conversion-resource-controls.md)。既存設計値の整理であり、外部資料の新たな検証・試作・性能計測・障害試験は未実施。
 
 ## 未決条件
 

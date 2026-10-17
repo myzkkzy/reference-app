@@ -6,12 +6,12 @@ description: 容量境界、全体候補の安全な検証、表示資源の予�
 
 # DES-060：容量上限・安全な読込・表示資源のテスト戦略
 
-- 設計状態：ドラフト。容量・安全読込・表示資源の検証方針を具体化し、実物・資源寿命の成立確認を後続へ引き継ぐ。
+- 設計状態：評価待ち。容量・安全読込・表示資源の検証方針を具体化し、実物・資源寿命の成立確認を後続へ引き継ぐ。残件の担当・解消条件・進行範囲は本文の未決事項・引継ぎに従い、必要な確認後にドラフトへ戻して再レビューする。
 - 戦略区分：テーマ別。
 - 上位戦略：[DES-013：共通テスト戦略](DES-013-common-test-strategy.md)。層・基盤、証拠保全、文書と実行の状態区分は上位を適用する。
 - 具体化先：[DES-052：容量上限・安全な読込・表示資源のテスト設計](../test-design/DES-052-resource-validation-test-design.md)。境界数値・共通データ、条件・ケース、環境・手順は同本文を正本とする。
 - 目的・範囲：読込・作成・編集・保存の容量条件、安全な全体候補検証、必要ピーク容量、表示資源の予約・共有・解放・取消、実表示の正しさを確認する。
-- 入力確認日：2026-10-13。共通戦略と8テーマ別戦略から既存テスト設計へ具体化するユーザーの指示に基づく。
+- 入力確認日：2026-10-13。確認時点の入力は[DES-013：共通テスト戦略](DES-013-common-test-strategy.md)、[DES-052：容量上限・安全な読込・表示資源のテスト設計](../test-design/DES-052-resource-validation-test-design.md)、[REQ-029](../../product-requirements/non-functional-requirements/cross-cutting/REQ-029-image-and-project-limits.md)、[DES-040](../non-functional-design/cross-cutting/DES-040-project-resource-validation.md)の本文・該当節。現在の合意状況・設計状態は各本文を正本とし、方式の反映と成立確認を区別する。
 - 根拠：[REQ-029](../../product-requirements/non-functional-requirements/cross-cutting/REQ-029-image-and-project-limits.md)の現在本文・共通受入条件。変更後本文の合意レビュー待ちを維持する。
 - 依存する製品契約：[DES-040](../non-functional-design/cross-cutting/DES-040-project-resource-validation.md)、[DES-042](../non-functional-design/cross-cutting/DES-042-rendering-performance-and-resources.md)、[DES-008](../data-design/DES-008-project-file-data.md)、[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)。ADR-012の提案状態は維持する。
 - 抽出関係：旧DES-013の大容量ZIP64・DB防御の先行成立確認と、DES-052に含まれていたテーマ方針を本書へ接続する。既存COND・CASEと上限・不足時保護を維持する。

@@ -6,7 +6,7 @@ description: 入力・取込・保存・候補・遷移・要求照会で用い�
 
 # DES-016：IPCの入出力複合型
 
-- 設計状態：評価待ち。契約は決定済み。実Tauriの成立確認・性能・障害評価は未実施。
+- 設計状態：ドラフト。共通設定分離を反映した変更後契約は再レビュー対象。実Tauriの成立確認・性能・障害評価は未実施。
 - 目的・範囲：コマンドと通知で用いる複合型の項目別定義。共通スカラー型と状態DTOはそれぞれの定義元を参照する。
 - 分割関係：[DES-011](DES-011-ipc-contracts.md)から項目別契約を分割した。全体方針と参照要件・確認時点は分割元を参照する。
 - 関連判断：[ADR-016](../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)。文書の分割で方式の選択・設計状態を変更しない。
@@ -85,13 +85,11 @@ OS選択結果と解放対象別結果。トークンの用途は選択purpose�
 
 | 論理名 | 物理名 | 型 | 説明 |
 | --- | --- | --- | --- |
-| 保存種類 | `kind` | string（enum） | 必須。boardまたはsettings。[snapshotRequired](DES-026-ipc-save-project.md#snapshotrequired)と一致。 |
-| ボード | `board` | object（[BoardState](DES-015-ipc-state-dtos.md#boardstate)） | boardだけ必須。settingsでは禁止。 |
-| 設定 | `settings` | object（[SettingsState](DES-015-ipc-state-dtos.md#settingsstate)） | 両種類で必須。 |
-| 表示状態 | `view` | object（[ViewState](DES-015-ipc-state-dtos.md#viewstate)） | boardだけ必須。settingsでは禁止。 |
+| 保存種類 | `kind` | string（enum） | 必須。board固定。[snapshotRequired](DES-026-ipc-save-project.md#snapshotrequired)と一致。 |
+| ボード | `board` | object（[BoardState](DES-015-ipc-state-dtos.md#boardstate)） | 必須。 |
+| 表示状態 | `view` | object（[ViewState](DES-015-ipc-state-dtos.md#viewstate)） | 必須。 |
 | ボード更新番号 | `boardRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | boardだけ必須。必要番号以上。settingsでは禁止。 |
-| 設定更新番号 | `settingsRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 両種類で必須。必要番号以上。 |
-| 保存する画像参照 | `assetIds` | [AssetIds](DES-014-ipc-common-protocol.md#共通スカラー型) | boardだけ必須。board.imagesの使用集合と完全一致。settingsでは禁止。RustのB0参照集合を使う。 |
+| 保存する画像参照 | `assetIds` | [AssetIds](DES-014-ipc-common-protocol.md#共通スカラー型) | boardだけ必須。board.imagesの使用集合と完全一致。 |
 
 ### SavedResult
 
@@ -99,9 +97,8 @@ OS選択結果と解放対象別結果。トークンの用途は選択purpose�
 
 | 論理名 | 物理名 | 型 | 説明 |
 | --- | --- | --- | --- |
-| 保存種類 | `kind` | string（enum） | boardまたはsettings。 |
-| 実保存ボード番号 | `savedBoardRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 実際に保存されたboard/view。settings保存で現在のboard番号を成功扱いにしない。 |
-| 実保存設定番号 | `savedSettingsRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 実際に保存されたsettings。 |
+| 保存種類 | `kind` | string（enum） | board固定。 |
+| 実保存ボード番号 | `savedBoardRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 実際に保存されたboard/view。共通設定の成功番号を含めない。 |
 | 保存先 | `destinationToken` | [Token](DES-014-ipc-common-protocol.md#共通スカラー型) | Rust所有の当該保存先。別名保存成功後は現在の保存先になる。 |
 | 表示用保存先 | `destinationDisplayPath` | string | 表示用パス。アクセス権を意味しない。 |
 | 保存トランザクション | `transactionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 今回成功した処理。 |
@@ -118,7 +115,6 @@ OS選択結果と解放対象別結果。トークンの用途は選択purpose�
 | 採用後セッション | `nextSessionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。Rustが候補生成時に予約。採用成功まで現セッションではない。 |
 | 対象プロジェクト | `projectId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。保存ファイルに保持された値。初回作成では新規発行。 |
 | 原本ボード | `board` | object（[BoardState](DES-015-ipc-state-dtos.md#boardstate)） | 必須。B0。端末フォント補正前。 |
-| 原本設定 | `settings` | object（[SettingsState](DES-015-ipc-state-dtos.md#settingsstate)） | 必須。 |
 | 原本表示状態 | `view` | object（[ViewState](DES-015-ipc-state-dtos.md#viewstate)） | 必須。補正によって自動変更しない。 |
 | 画像メタデータ | `assets` | array（[AssetMetadata](DES-015-ipc-state-dtos.md#assetmetadata)） | 必須。assetIdsと完全一致。 |
 | 候補画像参照 | `assetIds` | [AssetIds](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。board.imagesの使用集合と一致。 |
@@ -143,13 +139,12 @@ OS選択結果と解放対象別結果。トークンの用途は選択purpose�
 
 ### ProtectionDecision
 
-確認中は画面の新編集を抑止する。Rustはsavedの場合に成功番号を照合し、discardedは未保存と保留要求だけを破棄する。
+確認中は画面の新編集を抑止する。ボードの保護型であり、共通設定を含めない。Rustはsavedの場合にボード成功番号を照合し、discardedは未保存と保留要求だけを破棄する。
 
 | 論理名 | 物理名 | 型 | 説明 |
 | --- | --- | --- | --- |
-| 旧状態の保護方法 | `kind` | string（enum） | 必須。savedまたはdiscarded。savedには変更なしで両成功番号が一致する場合も含む。 |
+| 旧状態の保護方法 | `kind` | string（enum） | 必須。savedまたはdiscarded。savedには変更なしでボードの現在番号と成功番号が一致する場合も含む。 |
 | 旧画面の最新ボード番号 | `boardRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。確認時点の現在番号。 |
-| 旧画面の最新設定番号 | `settingsRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。確認時点の現在番号。 |
 | 未確定入力の有無 | `hasUnconfirmedInput` | boolean | 必須。falseだけ受け入れる。解消前に採用・閉じる・終了を確定しない。 |
 
 ### RequestStatusEntry
@@ -159,7 +154,7 @@ OS選択結果と解放対象別結果。トークンの用途は選択purpose�
 | 論理名 | 物理名 | 型 | 説明 |
 | --- | --- | --- | --- |
 | 照会対象要求 | `requestId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。元の要求ID。 |
-| コマンド名 | `command` | string（enum） | 記録がある場合必須。[DES-011](DES-011-ipc-contracts.md)の22コマンドから[get_request_status](DES-038-ipc-get-request-status.md#get_request_status)・[acknowledge_requests](DES-039-ipc-acknowledge-requests.md#acknowledge_requests)を除く。notFoundでは省略。 |
+| コマンド名 | `command` | string（enum） | 記録がある場合必須。[DES-011](DES-011-ipc-contracts.md)の24コマンドから[get_request_status](DES-038-ipc-get-request-status.md#get_request_status)・[acknowledge_requests](DES-039-ipc-acknowledge-requests.md#acknowledge_requests)を除く。notFoundでは省略。 |
 | 元セッション | `sessionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 元要求のセッションが判明済みなら必須。 |
 | 元の対象プロジェクト | `projectId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 元要求で判明済みなら必須。 |
 | 要求段階 | `status` | string（enum） | 必須。accepted・processing・completed・[failed](DES-017-ipc-error-contracts.md#failed)・cancelled・notFound。 |

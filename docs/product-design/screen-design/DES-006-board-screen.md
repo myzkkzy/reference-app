@@ -1,12 +1,12 @@
 ---
 type: Product Design
 title: ボード画面設計
-description: 画像取込・選択・配置・グループ・メモ・参照維持の操作と表示を示す提案ドラフト。
+description: 画像取込・選択・配置・グループ・メモ・参照維持の操作と表示を示す。
 ---
 
 # DES-006：ボード画面設計
 
-- 設計状態：ドラフト。セッション決定の振る舞いを反映済み。キー割当て・中ボタンパンはユーザー選択済み。配置・文言は設計案で、要件反映・操作性実証待ち。
+- 設計状態：評価待ち。判断記録の振る舞い、キー割当て・中ボタンパンの方針を反映済み。配置・文言と要件の詳細照合、IME・フォーカス、スナップの操作感、狭い画面での操作性、保存中の編集・表示性能の確認が残る。設計担当が詳細契約と合意済み要件を照合し、実装・検証担当が方式の成立と操作性を確認する。必要な確認後、ドラフトに戻して再レビューする。
 - 目的・範囲：収集・比較・整理の主要操作を具体化する。
 - 入力確認日：2026-09-28。参照要件：[REQ-001](../../product-requirements/functional-requirements/collection/REQ-001-add-image-path.md#req-001画像の追加経路)、[REQ-002](../../product-requirements/functional-requirements/collection/REQ-002-static-image-formats.md#req-002静止画形式と複数フレームの扱い)、[REQ-003](../../product-requirements/functional-requirements/collection/REQ-003-batch-import-errors.md#req-003複数取込と失敗通知)、[REQ-004](../../product-requirements/functional-requirements/comparison/REQ-004-board-overview-and-detail.md#req-004全体と細部の表示)、[REQ-005](../../product-requirements/functional-requirements/comparison/REQ-005-keep-references-visible.md#req-005制作中の参照維持)、[REQ-006](../../product-requirements/functional-requirements/organization/REQ-006-image-transform.md#req-006画像の移動回転拡縮)、[REQ-007](../../product-requirements/functional-requirements/organization/REQ-007-image-deletion.md#req-007画像の削除)、[REQ-008](../../product-requirements/functional-requirements/organization/REQ-008-group-membership.md#req-008グループへの所属と解除)、[REQ-009](../../product-requirements/functional-requirements/organization/REQ-009-group-movement.md#req-009グループの一括移動)、[REQ-010](../../product-requirements/functional-requirements/organization/REQ-010-independent-notes.md#req-010独立メモの編集と配置)、[REQ-015](../../product-requirements/functional-requirements/cross-cutting/REQ-015-save-status.md#req-015保存状態の識別)、[REQ-016](../../product-requirements/functional-requirements/cross-cutting/REQ-016-save-failure-recovery.md#req-016保存失敗時の内容保護と再試行)、[REQ-021](../../product-requirements/non-functional-requirements/cross-cutting/REQ-021-normal-operation-latency.md#req-021通常時の操作反応)、[REQ-022](../../product-requirements/non-functional-requirements/cross-cutting/REQ-022-normal-detail-display.md#req-022通常時の細部表示)、[REQ-023](../../product-requirements/non-functional-requirements/cross-cutting/REQ-023-saving-operation-latency.md#req-023保存中の操作反応)、[REQ-024](../../product-requirements/non-functional-requirements/cross-cutting/REQ-024-saving-detail-display.md#req-024保存中の細部表示)、[REQ-026](../../product-requirements/non-functional-requirements/cross-cutting/REQ-026-batch-import-performance.md#req-026ローカル500枚の初回取込性能)。REQ-004・006・010・021～024・026は条件付き合意、015・016は更新でドラフト、その他は合意済み。
 - 依存設計：[DES-005](DES-005-screen-overview.md#des-005全体画面設計)、[DES-002](../functional-design/organization/DES-002-board-editing-state.md#des-002ボードの編集状態とグループ構造)、[DES-004](../data-design/DES-004-board-data-model.md#des-004ボードのデータ設計)。
@@ -62,7 +62,7 @@ JPEG・PNG・WebP・GIF・TIFF・BMPを対象に、GIF・WebPは先頭コマ、T
 
 ## 未決事項と検証観点
 
-文字・枠・座標・倍率・スナップの設計値と優先順位は具体化済み。要件担当は前節およびDES-002の差分を本文・受入条件へ反映し、実装引継ぎ前にレビューする。ADR-003の入力方式・IME／フォーカス成立、狭い画面・スナップの操作感と性能は設計／実装／検証担当が入力実装・受入前に確認する。値を実測済みとはしない。
+文字・枠・座標・倍率・スナップの設計値と優先順位は具体化済み。設計担当は前節およびDES-002の契約を合意済み要件の本文・受入条件と照合し、実装引継ぎ前に不一致を解消する。ADR-003の入力方式・IME／フォーカス成立、狭い画面・スナップの操作感と性能は設計／実装／検証担当が入力実装・受入前に確認する。値を実測済みとはしない。
 
 レビュー観点は前面化→保存→取消／確定→Undo、文章内保存境界、IME超過・貼付け拒否、回転画像の対角固定拡縮、複数相対配置、同距離・候補消失・Alt復帰・座標限界とする。製品の試作・具体的試験計画・実行は別担当。今回の変更図と文書の構造・リンク・表示確認を製品の受入試験に代えない。
 
@@ -70,7 +70,7 @@ JPEG・PNG・WebP・GIF・TIFF・BMPを対象に、GIF・WebPは先頭コマ、T
 
 自由回転のみ／スナップなしという以前の案を、利用者のスナップ追加指定で変更する。回転角の数値入力は設けない。
 
-- プロジェクト設定にグリッド表示（初期オン）、間隔8・16・32・64・128（初期32）、スナップ有効（初期オン）、回転刻み5・15・45・90度（初期15）を配置する。表示とスナップは独立切替。原点基準の縦横線とし、縮小時は画面上の間隔が8 CSSpx以上になるまで2の累乗で線を間引く。吸着は元の間隔を維持する。
+- 共通の「設定」にグリッド表示（初期オン）、間隔8・16・32・64・128（初期32）、スナップ有効（初期オン）、回転刻み5・15・45・90度（初期15）を配置する。表示とスナップは独立切替。原点基準の縦横線とし、縮小時は画面上の間隔が8 CSSpx以上になるまで2の累乗で線を間引く。吸着は元の間隔を維持する。
 - 移動・幅変更・枠変更・画像拡縮の候補は、グリッドと他要素の水平／垂直外接矩形の端・中心。回転画像は回転後AABB。グループ移動は保持枠、複数選択移動は選択全体AABB。回転の他要素／グリッド位置への吸着は行わず、角度だけ刻みに合わせる。
 - 表示領域に一部でも入る他画像・メモ・グループ枠（遮蔽されても含む）を候補にする。操作対象・同時移動対象・付随拡大対象・対象の所属先枠を除外する。同じグループの動かしていない画像・メモは含める。候補はポインター更新ごとに再評価し、画面外・削除・除外条件へ変わった吸着先は即解除する。
 - 距離はボード距離×表示zoomのCSSpxで判定し、devicePixelRatioを掛けない。移動は軸ごとに候補を選ぶ。8px以内で取得、取得中は自由操作値から同じ候補への距離が12pxを超えるまで維持。近い候補優先、同距離は他要素→グリッド。残る同距離はUUIDの辞書順、端／中心は左・上→中心→右・下、グリッド線は小さい座標を優先する。
@@ -104,7 +104,7 @@ JPEG・PNG・WebP・GIF・TIFF・BMPを対象に、GIF・WebPは先頭コマ、T
 
 ## キー操作の確定範囲
 
-ユーザーの対話回答と詳細設計反映指示の要約。以下を初版の割当てとし、メモ完了・取消は画面ボタンで行う。Ctrl+Vの画像貼付は既存の取込経路を維持する。
+[初期UI方針のPDR](../../product-demands/product-decisions/2026-10-14-initial-board-ui-policy.md#決定内容)のキー操作範囲を具体化する。以下を初版の割当てとし、メモ完了・取消は画面ボタンで行う。Ctrl+Vの画像貼付は既存の取込経路を維持する。
 
 | 入力 | 操作 | 適用する入力先・状態 |
 | --- | --- | --- |

@@ -6,7 +6,7 @@ description: retry_saveの責務・事前条件、項目別の入出力、応答
 
 # DES-028：中断保存の照合・後続保存のIPC契約
 
-- 設計状態：評価待ち。契約は決定済み。実Tauriの成立確認・性能・障害評価は未実施。
+- 設計状態：ドラフト。共通設定分離を反映した変更後契約は再レビュー対象。実Tauriの成立確認・性能・障害評価は未実施。
 - 目的・範囲：中断保存の照合・後続保存。この入口とその応答・処理条件を管理し、編集正本や保存・排他の契約は根拠設計を参照する。
 - 分割関係：[DES-011](DES-011-ipc-contracts.md)から項目別契約を分割した。全体方針と参照要件・確認時点は分割元を参照する。
 - 関連判断：[ADR-016](../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)。文書の分割で方式の選択・設計状態を変更しない。
@@ -34,14 +34,13 @@ description: retry_saveの責務・事前条件、項目別の入出力、応答
 | 現プロジェクト | `projectId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 現プロジェクトがある場合必須。ない場合は省略。対象候補のIDはRustが特定。 | 要求元セッション | `sessionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。[CommonEnvelope](DES-014-ipc-common-protocol.md#commonenvelope)の照合規則。 |
 | 保存先 | `destinationToken` | [Token](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。中断処理を所有する保存先。 | 対象プロジェクト | `projectId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 対象判明時に必須。空セッション・対象不明では省略。 |
 | 中断トランザクション | `transactionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。元の失敗処理。 | — | — | — | — |
-| 最新ボード必要番号 | `requiredBoardRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | followupKind=boardだけ必須。settingsおよび未採用createでは禁止。 | — | — | — | — |
-| 最新設定必要番号 | `requiredSettingsRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 通常プロジェクトで必須。未採用createでは禁止。 | — | — | — | — |
+| 最新ボード必要番号 | `requiredBoardRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 通常プロジェクトで必須。未採用createでは禁止。 | — | — | — | — |
 | 後続通知経路 | `onEvent` | Tauri Channel（[NotificationEnvelope](DES-014-ipc-common-protocol.md#包絡型の参照先)） | 必須。要求ごとに画面が生成し、invoke前にハンドラーを登録する。 | — | — | — | — |
-| 後続保存の範囲 | `followupKind` | string（enum） | 通常プロジェクトで必須。boardまたはsettings。未採用createでは禁止。settingsの再試行はsettings、手動全体保存の再試行はboard。 | — | — | — | — |
+| 後続保存の範囲 | `followupKind` | string（enum） | 通常プロジェクトで必須。board固定。未採用createでは禁止。 | — | — | — | — |
 
 ### 処理と失敗時の扱い
 
-reconcileの[transactionResolved](#transactionresolved)とfollowupの後続保存を分離する。followupは新transactionId。settingsだけの再試行では未保存board/viewを含めない。全体終端は[retryFinished](#retryfinished)。元の失敗要求を書き換えない。初回作成の成功ならcandidateを返し、後続編集保存を行わない。
+reconcileの[transactionResolved](#transactionresolved)とfollowupの後続ボード保存を分離する。followupは新transactionId。全体終端は[retryFinished](#retryfinished)で、元の失敗要求を書き換えない。初回作成成功ではcandidateを返し、後続編集保存はしない。設定の再試行は[save_app_settings](DES-065-ipc-save-app-settings.md)。
 
 ## 応答・通知・エラー
 
@@ -106,13 +105,13 @@ reconcileの[transactionResolved](#transactionresolved)とfollowupの後続保�
 
 [retry_save](#retry_save)は新requestIdで受付し、元transactionIdをphase=reconcileで一度照合する。[transactionResolved](#transactionresolved)(completed)は元の固定対象の成功結果だけを示す。失敗要求を再度成功通知へ書き換えず、記録された実保存番号とtransactionIdで成功基準を更新する。retryable／conflictでは同じブロックと保護コピーを保持し、後続保存へ進まない。
 
-中断が解消した場合だけ現在状態と保留必要番号を再評価する。followupKind=boardは最新確定board/view/settings、settingsはB0/view0＋最新settingsを保存する。settingsだけの再試行のために未保存ボードを追加しない。別に未達成の手動board要求があれば、その必要番号を満たすboard保存へ集約できる。自動保存無効またはゲート停止中の保留定期要求を、設定再試行のboard保存へ昇格させない。残る適格要求があればphase=followup、新transactionId、新snapshotIdで通常保存する。後続結果も同じ再試行Channelへ返し、[retryFinished](#retryfinished)のfollowupStatusで追加編集が保存されたかを区別する。原本の中断対象へ最新状態を上書きしない。
+中断が解消した場合だけ最新確定board/viewと保留必要boardRevisionを再評価する。followupKindはboard固定で、settingsは受け付けない。残る適格要求があれば新transactionId・snapshotIdで通常保存し、同じChannelへ後続結果とretryFinishedを返す。無効・ゲート停止中の定期要求を昇格させず、未達成の手動要求だけ個別に扱う。共通設定を元の中断ボード対象へ合成しない。
 
-ブロックで進められない当該保存先の待機要求はtransactionBlockedの[failed](DES-017-ipc-error-contracts.md#failed)で終結し、未達成番号とkind・triggerをキュー内部に保持する。periodicは自動保存無効化で内部保留も解除し、ゲート中は新実行を保留する。手動・設定の再評価は別に維持する。新しい保存要求も書込を始めず同じ分類で終結する。これにより保存待ちゲートが終端結果を確認できる。明示再試行で内部の未達成番号と最新状態を再評価し、元の失敗要求を書き換えない。
+ブロックで進められない当該保存先の待機要求はtransactionBlockedの[failed](DES-017-ipc-error-contracts.md#failed)で終結し、未達成番号とkind・triggerをキュー内部に保持する。periodicは自動保存無効化で内部保留も解除し、ゲート中は新実行を保留する。手動ボードの再評価は別に維持する。新しい保存要求も書込を始めず同じ分類で終結する。これにより保存待ちゲートが終端結果を確認できる。明示再試行で内部の未達成番号と最新状態を再評価し、元の失敗要求を書き換えない。
 
 ## 検証観点と関連契約
 
-reconcileとfollowup、settingsだけの後続範囲、新transactionId、元の失敗要求の維持、初回作成の中断候補。具体的な成立確認・性能・障害評価は[DES-059](../test-strategy/DES-059-ipc-contract-test-strategy.md#ipc契約の共通評価観点)へ引き継ぐ。
+reconcileとfollowup、後続ボード保存の範囲、新transactionId、元の失敗要求の維持、初回作成の中断候補。具体的な成立確認・性能・障害評価は[DES-059](../test-strategy/DES-059-ipc-contract-test-strategy.md#ipc契約の共通評価観点)へ引き継ぐ。
 
 - [DES-011](DES-011-ipc-contracts.md)：全体方針とコマンド一覧。
 - [共通通信・資源寿命](DES-014-ipc-common-protocol.md)、[エラー契約](DES-017-ipc-error-contracts.md)：識別・照会・保持・終結と失敗分類。

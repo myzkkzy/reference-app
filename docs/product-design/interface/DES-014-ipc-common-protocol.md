@@ -6,7 +6,7 @@ description: 通信形式、共通型・ヘッダー、要求記録とトーク�
 
 # DES-014：IPCの共通通信・資源寿命
 
-- 設計状態：評価待ち。契約は決定済み。実Tauriの成立確認・性能・障害評価は未実施。
+- 設計状態：ドラフト。共通設定分離を反映した変更後契約は再レビュー対象。実Tauriの成立確認・性能・障害評価は未実施。
 - 目的・範囲：全コマンドに適用する通信形式と、要求・トークン・画像の所有と寿命。保存・読込の業務処理は[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)を参照する。
 - 分割関係：[DES-011](DES-011-ipc-contracts.md)から項目別契約を分割した。全体方針と参照要件・確認時点は分割元を参照する。
 - 関連判断：[ADR-016](../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)。文書の分割で方式の選択・設計状態を変更しない。
@@ -40,7 +40,7 @@ JSON入力はcamelCase、コマンド名はsnake_caseとする。通常のinvoke
 | [Sha256](#共通スカラー型) | string | 全バイトのSHA-256、小文字16進64文字。実体照合用。 |
 | [AssetIds](#共通スカラー型) | array（[UUID](#共通スカラー型)） | 重複なし。空集合は[]。順序に意味を持たせない。 |
 | boolean | boolean | true／false。SQLiteへ変換するときだけ0／1へ変換する。 |
-| 任意項目 | 各項目の型 | 適用しなければキーを省略する。groupId以外の項目へnullを送らない。記載のないキー、異なる判別型のキーを拒否する。 |
+| 任意項目 | 各項目の型 | 適用しなければキーを省略する。groupId・AppSettings・AppSettingsSnapshotで明示したnullable項目以外へnullを送らない。記載のないキー、異なる判別型のキーを拒否する。 |
 
 ### CommonEnvelope
 
@@ -51,13 +51,13 @@ JSON応答・通知の共通項目。コマンドの出力表にも列挙する�
 | 通信形式版 | `protocolVersion` | number（整数） | 必須。1のみ。非対応版はunsupportedProtocol。 |
 | 結果・通知の種別 | `type` | string（各契約のenum） | 必須。各コマンド・通知表の固定値で判別する。 |
 | 要求識別子 | `requestId` | [UUID](#共通スカラー型) | 取得可能なら必須。受付要求の値を返す。 |
-| 要求元セッション | `sessionId` | [UUID](#共通スカラー型) | 取得可能なら必須。初期化成功は発行した値。それ以外は要求元の値。切替先はnextSessionId／newSessionIdへ分ける。 |
-| 対象プロジェクト | `projectId` | [UUID](#共通スカラー型) | 対象判明時に必須。候補生成・採用は候補のprojectId。空セッションと対象不明の解析エラーでは省略。 |
+| 要求元セッション | `sessionId` | [UUID](#共通スカラー型) | アプリスコープの共通設定応答では禁止。それ以外で取得可能なら必須。初期化成功は発行した値。ほかは要求元の値。切替先はnextSessionId／newSessionIdへ分ける。 |
+| 対象プロジェクト | `projectId` | [UUID](#共通スカラー型) | アプリスコープの共通設定応答では禁止。それ以外で対象判明時に必須。候補生成・採用は候補のprojectId。空セッションと対象不明の解析エラーでは省略。 |
 | 通知順序 | `eventSequence` | [Revision](#共通スカラー型) | Channel通知だけ必須。要求内で1から増える。同じ通知の照会再掲では同値。Promise結果には付けない。 |
 
-要求入力のprotocolVersion・requestIdは全入口で必須。sessionIdは[initialize_session](DES-018-ipc-initialize-session.md#initialize_session)では禁止、それ以外では必須。ただし初期化応答が失われた場合の[get_request_status](DES-038-ipc-get-request-status.md#get_request_status)は初期化要求だけをsessionIdなしで照会でき、照会応答も発行値が未判明ならsessionIdを省略する。projectIdは現プロジェクトがある場合に入力し、プロジェクト操作では必須。Rustは呼出し元WebView・現セッションとの一致を検査する。候補や初回保存の対象IDはRustがトークンから求める。
+要求入力のprotocolVersion・requestIdは全入口で必須。initialize_session・get_app_settings・save_app_settingsではsessionIdを禁止し、通常のボード要求では必須とする。get_request_statusは初期化要求だけの照会で未取得sessionIdを省略できる。get_request_status・acknowledge_requestsは同じWebView所有の共通設定要求だけを扱う場合、sessionId・projectIdを入力・出力とも省略する。ボード要求と共通設定要求を一括処理せず、別々に呼び出す。get_app_settings・save_app_settingsのprojectIdは禁止。それ以外は現プロジェクトがある場合に入力し、プロジェクト操作では必須。Rustは呼出元WebViewと、ボード要求では現セッションとの一致を検査する。候補や初回保存の対象IDはトークンから求める。
 
-受付のtypeはaccepted。単一結果・最終結果のtypeは各表の固定値。解析前のエラーでは判読できない識別子を省略し、画面はPromiseの呼出し文脈と併せて照合する。初期化を除く通常の応答で識別子を省略しない。
+受付のtypeはaccepted。単一結果・最終結果のtypeは各表の固定値。解析前のエラーでは判読できない識別子を省略し、画面はPromiseの呼出し文脈と併せて照合する。初期化とアプリスコープの共通設定応答を除き通常応答で識別子を省略しない。
 
 ### バイナリ入力の共通ヘッダー
 
@@ -144,3 +144,7 @@ Rustは画面集合、取込バッチ、保存固定対象、直前成功B0、�
 - [状態DTO](DES-015-ipc-state-dtos.md)、[入出力複合型](DES-016-ipc-composite-types.md)：各項目の通信表現。
 - [エラー契約](DES-017-ipc-error-contracts.md)：拒否・実行失敗・取消と保護位置。
 - [検証への引継ぎ](../test-strategy/DES-059-ipc-contract-test-strategy.md#ipc契約の共通評価観点)：成立確認・性能・障害の共通観点。
+
+## 共通設定要求の寿命
+
+get_app_settings・save_app_settingsはWebView所有のアプリスコープ要求で、sessionId・projectIdを入力・出力に含めない。ボード切替・空セッション化で要求とサービス状態を破棄せず、遅延応答もアプリ設定へ反映する。単一結果をResultEnvelopeへ追加し、get_request_status・acknowledge_requestsのsessionId省略は同じWebViewのアプリスコープ要求だけを対象にする。ボード要求と混在する一括照会・受領確認は拒否し、別々に呼ぶ。記録・再作成tokenはWebView所有を検査する。ボードと設定の成功番号を相互適用しない。

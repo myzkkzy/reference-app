@@ -6,7 +6,7 @@ description: adopt_projectの責務・事前条件、項目別の入出力、応
 
 # DES-032：候補採用のIPC契約
 
-- 設計状態：評価待ち。契約は決定済み。実Tauriの成立確認・性能・障害評価は未実施。
+- 設計状態：ドラフト。共通設定分離を反映した変更後契約は再レビュー対象。実Tauriの成立確認・性能・障害評価は未実施。
 - 目的・範囲：候補採用。この入口とその応答・処理条件を管理し、編集正本や保存・排他の契約は根拠設計を参照する。
 - 分割関係：[DES-011](DES-011-ipc-contracts.md)から項目別契約を分割した。全体方針と参照要件・確認時点は分割元を参照する。
 - 関連判断：[ADR-016](../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)。文書の分割で方式の選択・設計状態を変更しない。
@@ -35,9 +35,7 @@ description: adopt_projectの責務・事前条件、項目別の入出力、応
 | 候補トークン | `candidateToken` | [Token](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。現セッション・遷移に属する候補。 | 対象プロジェクト | `projectId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 対象判明時に必須。空セッション・対象不明では省略。 |
 | 対応遷移 | `transitionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。 | 移管した新セッション | `newSessionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。nextSessionIdと一致。 |
 | 予約セッション | `nextSessionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。候補出力の値と一致。 | 新ボード番号 | `boardRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。boardAdjustedなら1、ほかは0。 |
-| 旧状態保護 | `protection` | object（[ProtectionDecision](DES-016-ipc-composite-types.md#protectiondecision)） | 必須。 | 新設定番号 | `settingsRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。0。 |
 | 永続属性のフォント補正 | `boardAdjusted` | boolean | 必須。B0→B1で座標／枠に変更がある場合true。本文・幅・文字サイズ・表示中心／倍率を変更しない。 | 原本ボード成功番号 | `savedBoardRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。0。 |
-| — | — | — | — | 原本設定成功番号 | `savedSettingsRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。0。 |
 | — | — | — | — | 新画像参照番号 | `referenceRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。0。ボード参照をRust側で移管し、画面履歴は空にする。 |
 | — | — | — | — | 新保存先 | `destinationToken` | [Token](DES-014-ipc-common-protocol.md#共通スカラー型) | normalだけ必須。復旧系では省略。 |
 
@@ -58,11 +56,11 @@ description: adopt_projectの責務・事前条件、項目別の入出力、応
 
 1. [begin_transition](DES-029-ipc-begin-transition.md#begin_transition)のready後、選択したinputTokenとtransitionIdで[open_project](DES-031-ipc-open-project.md#open_project)を呼ぶ。RustはDES-009の全体検証・排他を行い、B0と画像、元識別・ハッシュを保持する。
 2. 画面側WorkerがUTF-8 JSON候補を解析する。フォントを用いてB1のメモ高・枠・最小座標補正を検査し、準備中は旧状態を保持する。補正できなければ候補を破棄する。
-3. 旧状態の未確定入力・未保存保護を解決する。savedは現在両番号が実保存成功番号で覆われることを検査する。discardedは未保存分と保留要求だけを捨て、既保存設定を巻き戻さない。
+3. 旧状態の未確定入力・未保存保護を解決する。savedは現在ボード番号が実保存成功番号で覆われることを検査する。discardedはボードの未保存分と保留ボード要求だけを捨て、共通設定の値・未保存・処理は保持する。
 4. [adopt_project](#adopt_project)で最新候補・入力識別とハッシュ・遷移・旧保護と実行中保存なしを再照合する。ready後に始めた手動保存・再試行が残る場合はgateNotReadyで確定を拒否し、その終端を待つ。中断先を捨てる場合は[release_tokens](DES-036-ipc-release-tokens.md#release_tokens)のabandonTransactionsで先に明示する。閉じる・終了も同じ再照合を行う。古い候補は拒否し、新requestIdで再検証する。同一ファイルで旧保存を行った場合はその後に再読込し、保存前候補を採用しない。
-5. 採用時に候補ロック・画像・保存先を新セッションへ原子的に移管する。Rustの直前成功はB0、画面は準備済みB1を使う。補正ありならboardRevisionだけ1、その他番号0。失敗なら旧状態を保持する。
+5. 採用時に候補ロック・画像・保存先を新セッションへ原子的に移管する。Rustの直前成功はB0、画面は準備済みB1を使う。補正ありならboardRevisionだけ1、その他のボード・参照番号は0。アプリ設定の値・現在／成功番号・未保存は保持する。失敗なら旧状態を保持する。
 6. 採用応答が失われた場合は結果照会でRustの実際の移管を確認し、二重採用・旧状態への推測復帰をしない。新セッションの描画要求は移管確認後に発行する。
-7. 戻るは[end_transition](DES-030-ipc-end-transition.md#end_transition)(return)。候補と遷移を取消し、取込・保存そのものは継続する。後着結果で閉じる・終了・採用をしない。保留設定と定期要求はDES-009の元の固定周期・最新値で再評価する。
+7. 戻るは[end_transition](DES-030-ipc-end-transition.md#end_transition)(return)。候補と遷移を取消し、取込・保存そのものは継続する。後着結果で閉じる・終了・採用をしない。ボード定期要求はDES-009の元の固定周期・最新値で再評価する。共通設定の処理は切替中も継続する。
 
 正常候補の保存先は採用後に現在先へ移管する。recovery／backup／incompleteInitialは保存先未確立で採用し、正常コピー・破損元と異なる新しい別名保存先を必要とする。sourceDisplayPathを保存先引数として使わない。中断候補探索で元ファイルがなくても、記録と候補全体の検証が成功したものだけを提示する。
 
@@ -73,3 +71,7 @@ description: adopt_projectの責務・事前条件、項目別の入出力、応
 - [DES-011](DES-011-ipc-contracts.md)：全体方針とコマンド一覧。
 - [共通通信・資源寿命](DES-014-ipc-common-protocol.md)、[エラー契約](DES-017-ipc-error-contracts.md)：識別・照会・保持・終結と失敗分類。
 - 関連コマンド：[begin_transition](DES-029-ipc-begin-transition.md#begin_transition)、[open_project](DES-031-ipc-open-project.md#open_project)、[create_project](DES-034-ipc-create-project.md#create_project)、[discard_project_candidate](DES-033-ipc-discard-project-candidate.md#discard_project_candidate)、[end_transition](DES-030-ipc-end-transition.md#end_transition)、[release_tokens](DES-036-ipc-release-tokens.md#release_tokens)、[get_request_status](DES-038-ipc-get-request-status.md#get_request_status)。
+
+## 次のボードへ適用する共通設定
+
+履歴上限・画像作業先は、候補生成時ではなく採用直前に共通設定サービスのnextBoardSettingsを捕捉する。捕捉した成功値による履歴・作業領域の準備に失敗した場合は採用せず、旧ボード・所有と候補原本を保護する。即時6項目は現在の共通設定を使う。共通設定の未保存・処理中を理由に切替を中止しない。詳細は[DES-063](../functional-design/cross-cutting/DES-063-common-settings-management.md)。

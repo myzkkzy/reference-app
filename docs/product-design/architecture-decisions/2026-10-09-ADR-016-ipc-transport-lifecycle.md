@@ -9,8 +9,10 @@ description: HTML5入力、用途別トークン、生バイナリ転送とChann
 - 状態：提案。通信契約の選択は設計へ反映済み。変更後要件のレビューと実IPC・性能の成立確認を残す。
 - 作成日：2026-10-09
 - 決定日：未決
-- 決定者・判断権限の根拠：ユーザーのIPC詳細設計計画実行指示とHTML5統一の選択。物理名・補助型・終結と所有移管は設計担当の具体化。個別方式の選択を要件全体の合意・ADR採用・製品試験合格へ置き換えない。
+- 決定者・判断権限の根拠：HTML5へ入力を統一する方針の決定者はユーザー。詳細方式の記録・検討は設計担当が[REQ-001](../../product-requirements/functional-requirements/collection/REQ-001-add-image-path.md)、[REQ-003](../../product-requirements/functional-requirements/collection/REQ-003-batch-import-errors.md)の適用範囲を入力に、技術方式と確認できる理由を本記録へ整理する。既存の状態・未決事項は維持し、記録整理を採用・上流合意・試験合格と扱わない。
 - 関連：[REQ-001](../../product-requirements/functional-requirements/collection/REQ-001-add-image-path.md)、[REQ-003](../../product-requirements/functional-requirements/collection/REQ-003-batch-import-errors.md)、[REQ-011](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md)、[REQ-014](../../product-requirements/functional-requirements/cross-cutting/REQ-014-manual-save.md)、[REQ-017](../../product-requirements/functional-requirements/cross-cutting/REQ-017-exit-with-unsaved-changes.md)、[REQ-023](../../product-requirements/non-functional-requirements/cross-cutting/REQ-023-saving-operation-latency.md)、[REQ-024](../../product-requirements/non-functional-requirements/cross-cutting/REQ-024-saving-detail-display.md)、[REQ-029](../../product-requirements/non-functional-requirements/cross-cutting/REQ-029-image-and-project-limits.md)、[REQ-032](../../product-requirements/functional-requirements/cross-cutting/REQ-032-file-lock-and-save-retry.md)、[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)、[DES-010](../functional-design/collection/DES-010-image-import-pipeline.md)、[DES-011](../interface/DES-011-ipc-contracts.md)。
+
+置換関係の更新：[ADR-017](2026-10-17-ADR-017-executable-relative-common-settings.md)が設定のSQLite同梱・ボードへの合成部分を置き換える。ボードの形式・保存成功境界と通信方式の既存理由・状態は維持し、共通設定IPCだけアプリ寿命へ分離する。
 
 ## 背景・制約
 
@@ -22,7 +24,7 @@ Windowsのローカルとブラウザのドラッグを扱い、ブラウザ画�
 
 | 対象・選択肢 | 適合・利点 | 不利益・リスク | 判断 |
 | --- | --- | --- | --- |
-| HTML5へ統一 | DOM File／Blobとブラウザ画像の入力処理を共通化。画像データ優先を実現しやすい | ローカル画像もWebViewから転送が必要。イベント中のデータ保持と実WebView2の成立確認が必要 | ユーザー選択を反映。WindowsのdragDropEnabled=false |
+| HTML5へ統一 | DOM File／Blobとブラウザ画像の入力処理を共通化。画像データ優先を実現しやすい | ローカル画像もWebViewから転送が必要。イベント中のデータ保持と実WebView2の成立確認が必要 | 本記録の入力方針。WindowsのdragDropEnabled=false |
 | ローカルはTauriのネイティブドロップ、ブラウザはHTML5 | ローカルのパス参照をRustが直接処理できる | WindowsのHTML5ドロップ設定と二経路の整合を管理する必要がある | 今回の入力方針では選ばない。OSファイル選択はRust直接処理を維持 |
 | JSON／Base64で画像・大きな状態を送る | 通信包絡を単純化しやすい | バイト拡張、同期変換と大きな配列、解析・コピーが画面反応を妨げ得る | 画像・大きな状態の転送には選ばない |
 | 生バイナリ＋識別ヘッダー／Response | 画像はArrayBuffer、保存対象・候補はUTF-8 JSONとしてWorkerで生成・解析できる | JSONキーとヘッダーの個別検査、コピー・上限・再送台帳の管理が必要 | 選定案。PNGと候補の単一結果、画像チャンクと保存供給の生入力に使う |

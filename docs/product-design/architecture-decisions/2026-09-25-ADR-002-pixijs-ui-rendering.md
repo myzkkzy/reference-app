@@ -9,24 +9,24 @@ description: 画像ボードとメニューなどの表示をPixiJSに統一す�
 - 状態：採用
 - 作成日：2026-09-25
 - 決定日：未特定（2026-09-25に記録）
-- 決定者・判断権限の根拠：ユーザーが対話でWebGLによる画像表示を希望し、UI方式として「ほぼ全てPixiJS」を選択した。これは表示方式の採用であり、すべての入力をCanvas内で完結させる決定ではない。
+- 決定者・判断権限の根拠：PixiJS中心の画面構成の方針の決定者はユーザー。詳細方式の記録・検討は設計担当が[REQ-004](../../product-requirements/functional-requirements/comparison/REQ-004-board-overview-and-detail.md)、[REQ-006](../../product-requirements/functional-requirements/organization/REQ-006-image-transform.md)、[REQ-010](../../product-requirements/functional-requirements/organization/REQ-010-independent-notes.md)の適用範囲を入力に、技術方式と確認できる理由を本記録へ整理する。既存の状態・未決事項は維持し、記録整理を採用・上流合意・試験合格と扱わない。
 - 関連要求・要件・設計：[DEM-002](../../product-demands/comparison/DEM-002-compare-image-overviews.md#dem-002多くの画像を見渡し全体と細部を比較する)、[DEM-003](../../product-demands/organization/DEM-003-organize-image-insights.md#dem-003画像の関係や気づきを自分なりに整理する)、[REQ-004](../../product-requirements/functional-requirements/comparison/REQ-004-board-overview-and-detail.md#req-004全体と細部の表示)、[REQ-006](../../product-requirements/functional-requirements/organization/REQ-006-image-transform.md#req-006画像の移動回転拡縮)、[REQ-010](../../product-requirements/functional-requirements/organization/REQ-010-independent-notes.md#req-010独立メモの編集と配置)、[REQ-021](../../product-requirements/non-functional-requirements/cross-cutting/REQ-021-normal-operation-latency.md#req-021通常時の操作反応)、[REQ-022](../../product-requirements/non-functional-requirements/cross-cutting/REQ-022-normal-detail-display.md#req-022通常時の細部表示)、[REQ-023](../../product-requirements/non-functional-requirements/cross-cutting/REQ-023-saving-operation-latency.md#req-023保存中の操作反応)、[REQ-024](../../product-requirements/non-functional-requirements/cross-cutting/REQ-024-saving-detail-display.md#req-024保存中の細部表示)、[REQ-025](../../product-requirements/non-functional-requirements/cross-cutting/REQ-025-saved-project-open-performance.md#req-025保存済み500枚の再開性能)、[REQ-026](../../product-requirements/non-functional-requirements/cross-cutting/REQ-026-batch-import-performance.md#req-026ローカル500枚の初回取込性能)、[DES-001：全体設計](../architecture/DES-001-system-architecture.md#des-001リファレンスボードの全体設計)。
 
 ## 背景・制約
 
-画像を多数配置する単一ボードで、俯瞰・細部表示、移動・回転・拡縮、グループ、メモ、メニューを扱う。初期版はTauri上のWebViewで動く。画像をCanvas上のWebGLで表示し、メニュー等もできるだけPixiJSで構成したいというユーザーの選択がある。
+画像を多数配置する単一ボードで、俯瞰・細部表示、移動・回転・拡縮、グループ、メモ、メニューを扱う。初期版はTauri上のWebViewで動く。画像とメニュー等をCanvas上のWebGL・PixiJSで構成する表示方針を扱う。
 
 ## 選択肢と判断基準
 
 | 選択肢 | 判断基準への適合 | 利点 | 不利益・リスク | 根拠 |
 | --- | --- | --- | --- | --- |
-| PixiJS v8のWebGL描画でボードとメニュー等を表示し、必要なUI部品に`@pixi/ui`を使う | ユーザーの選択と一致。画像と操作UIを同じ描画系で扱える | 表示の座標系・見た目を統一しやすい | メニューのキーボード操作、フォーカス、アクセシビリティを明示的に設計する必要がある | [PixiJSレンダラー](https://pixijs.com/8.x/guides/components/renderers)、[イベント](https://pixijs.com/8.x/guides/components/events)、[`@pixi/ui`](https://github.com/pixijs/ui) |
-| 画像ボードをPixiJS、メニュー等をHTMLとReactで表示する | 一般的なWeb UI部品を使いやすい | 文字入力・フォーカスなどを標準のDOMに寄せられる | ボードとUIの二系統の表示・座標管理になり、ユーザーの選んだ方式と異なる | [React公式](https://react.dev/) |
+| PixiJS v8のWebGL描画でボードとメニュー等を表示し、必要なUI部品に`@pixi/ui`を使う | 記録された構成方針に適合。画像と操作UIを同じ描画系で扱える | 表示の座標系・見た目を統一しやすい | メニューのキーボード操作、フォーカス、アクセシビリティを明示的に設計する必要がある | [PixiJSレンダラー](https://pixijs.com/8.x/guides/components/renderers)、[イベント](https://pixijs.com/8.x/guides/components/events)、[`@pixi/ui`](https://github.com/pixijs/ui) |
+| 画像ボードをPixiJS、メニュー等をHTMLとReactで表示する | 一般的なWeb UI部品を使いやすい | 文字入力・フォーカスなどを標準のDOMに寄せられる | ボードとUIの二系統の表示・座標管理になり、本記録の表示方針と異なる | [React公式](https://react.dev/) |
 | ボードとUIをHTML/CSS主体で表示する | 通常のフォームを作りやすい | DOMの操作部品を広く使える | 多数画像の拡縮・配置という描画中心の画面で別の描画設計が必要 | [MDN Canvas API](https://developer.mozilla.org/docs/Web/API/Canvas_API) |
 
 ## 決定と理由
 
-TypeScript＋Vite上でPixiJS v8を採用し、WebGLレンダラーで画像ボードを描画する。メニュー、ツールバー、選択表示、通知、ダイアログもPixiJSの画面固定レイヤーに表示し、適合する部品は`@pixi/ui`を利用する。ユーザーの「ほぼ全てPixiJS」という選択を、Canvasに描かれる画面の方針として反映する。デスクトップ基盤は[ADR-001](2026-09-25-ADR-001-tauri-desktop-runtime.md)、テキスト編集時の入力方式は[ADR-003](2026-09-25-ADR-003-text-editing.md)で扱う。
+TypeScript＋Vite上でPixiJS v8を採用し、WebGLレンダラーで画像ボードを描画する。メニュー、ツールバー、選択表示、通知、ダイアログもPixiJSの画面固定レイヤーに表示し、適合する部品は`@pixi/ui`を利用する。Canvasに描かれる画面の構成方針として記録する。デスクトップ基盤は[ADR-001](2026-09-25-ADR-001-tauri-desktop-runtime.md)、テキスト編集時の入力方式は[ADR-003](2026-09-25-ADR-003-text-editing.md)で扱う。
 
 ## 影響・利点・不利益・リスク
 

@@ -6,7 +6,7 @@ description: sync_asset_refsの責務・事前条件、項目別の入出力、�
 
 # DES-024：画面・履歴の画像参照同期のIPC契約
 
-- 設計状態：評価待ち。契約は決定済み。実Tauriの成立確認・性能・障害評価は未実施。
+- 設計状態：ドラフト。共通設定分離を反映した変更後契約は再レビュー対象。実Tauriの成立確認・性能・障害評価は未実施。
 - 目的・範囲：画面・履歴の画像参照同期。この入口とその応答・処理条件を管理し、編集正本や保存・排他の契約は根拠設計を参照する。
 - 分割関係：[DES-011](DES-011-ipc-contracts.md)から項目別契約を分割した。全体方針と参照要件・確認時点は分割元を参照する。
 - 関連判断：[ADR-016](../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)。文書の分割で方式の選択・設計状態を変更しない。
@@ -32,7 +32,7 @@ description: sync_asset_refsの責務・事前条件、項目別の入出力、�
 | 要求識別子 | `requestId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。画面発行。この呼出し自身の識別。 | 応答・通知種別 | `type` | string | 必須。assetRefsSynced。 |
 | 要求元セッション | `sessionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。現セッション。解放・受領確認は所有を証明できる旧セッションも可。 | 対応要求 | `requestId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。元の受付要求。 |
 | 現プロジェクト | `projectId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。現プロジェクト。 | 要求元セッション | `sessionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。[CommonEnvelope](DES-014-ipc-common-protocol.md#commonenvelope)の照合規則。 |
-| 参照更新番号 | `referenceRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。画面の参照集合変更ごとに進める。boardRevision・settingsRevisionとは別。初期0、最初の同期は1以上。 | 対象プロジェクト | `projectId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 対象判明時に必須。空セッション・対象不明では省略。 |
+| 参照更新番号 | `referenceRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。画面の参照集合変更ごとに進める。boardRevisionおよびアプリ寿命のappSettingsRevisionとは別。初期0、最初の同期は1以上。 | 対象プロジェクト | `projectId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 対象判明時に必須。空セッション・対象不明では省略。 |
 | 保持画像集合 | `assetIds` | [AssetIds](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。現在ボード・Undo・Redoに必要な実体の和集合。 | 反映した参照番号 | `referenceRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。入力値。 |
 
 ### 処理と失敗時の扱い

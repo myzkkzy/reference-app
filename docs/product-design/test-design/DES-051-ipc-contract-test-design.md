@@ -1,13 +1,13 @@
 ---
 type: Test Design
 title: IPC契約のテスト設計
-description: IPCの共通型、22コマンドと14通知の通信・順序・照会・資源寿命を条件とケース、準備仕様へ具体化する。
+description: IPCの共通型、24コマンドと14通知の通信・順序・照会・資源寿命を条件とケース、準備仕様へ具体化する。
 ---
 
 # DES-051：IPC契約のテスト設計
 
-- 設計状態：ドラフト。確定した通信契約に基づく文書設計であり、識別台帳の保持終了条件に依存する一部判定を未決として分離する。
-- 目的・範囲：[DES-011](../interface/DES-011-ipc-contracts.md)の22コマンド、[DES-014](../interface/DES-014-ipc-common-protocol.md)〜[DES-017](../interface/DES-017-ipc-error-contracts.md)の4共通契約、14通知の項目・型・応答経路・順序・要求と資源の寿命を確認する。技術契約だけの条件はDESを根拠とし、新しいREQ受入条件を追加しない。
+- 設計状態：評価待ち。確定した通信契約に基づく文書設計であり、識別台帳の保持終了条件に依存する一部判定を未決として分離する。残件の担当・解消条件・進行範囲は本文の未決事項・引継ぎに従い、必要な確認後にドラフトへ戻して再レビューする。
+- 目的・範囲：[DES-011](../interface/DES-011-ipc-contracts.md)の24コマンド、[DES-014](../interface/DES-014-ipc-common-protocol.md)〜[DES-017](../interface/DES-017-ipc-error-contracts.md)の4共通契約、14通知の項目・型・応答経路・順序・要求と資源の寿命を確認する。技術契約だけの条件はDESを根拠とし、新しいREQ受入条件を追加しない。
 - 入力確認日：2026-10-12。
 - 方針・関連判断：[DES-013](../test-strategy/DES-013-common-test-strategy.md)、[DES-059](../test-strategy/DES-059-ipc-contract-test-strategy.md)、[ADR-009](../architecture-decisions/2026-09-29-ADR-009-test-automation.md)、[ADR-016](../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)。ADR-009は基盤採用、ADR-016は提案、IPC元設計は評価待ちであり、本書の作成で状態を変更しない。
 - 製品結果の主ケース：[DES-047：画像取込](DES-047-image-import-test-design.md)、[DES-049：保存・再開の機能フロー](DES-049-persistence-workflow-test-design.md)、[DES-050：保存整合性・復旧](DES-050-save-integrity-recovery-test-design.md)、[DES-052：容量・安全読込・資源](DES-052-resource-validation-test-design.md)。変換内容、保存コピーの復元保証、読込防御、性能・配布の合否は本書へ複製しない。
@@ -25,10 +25,11 @@ description: IPCの共通型、22コマンドと14通知の通信・順序・照
 | --- | --- |
 | 所有者・識別子 | テスト境界の所有者WV-A／WV-Bを分ける。固定UUIDは `10000000-0000-4000-8000-000000000001` の末尾12桁を変えてS-A、S-B、P-A、P-B、boardId、itemId、assetId、batchId、inputId、snapshotId、transitionId等へ一意に割り当てる。requestIdは `90000000-0000-4000-8000-000000000001` からケースごと・呼出しごとに別値とする。実TauriではRust発行値を記録して記号へ対応付ける。固定発行値の注入はテストダブルに限る。 |
 | D-BOARD | P-Aの単一ボード。画像I-A／I-Bは別itemId、assetId、groupId=null、zIndex=0／1、中心(0,0)／(320,0)、rotationDeg=0、scale=0.1。画像元寸法は1920×1080。メモN-Aは(0,200)、groupId=null、zIndex=2、text=`あ\nb`（実LF）、width=320、fontSize=16。空グループG-Aの枠は(-300,-200,128,128)。全要素・所属・実体参照を整合させる。詳細値域の主ケースはDES-052。 |
-| D-STATE | settingsはautosaveEnabled/recoveryEnabled/gridVisible/snapEnabled=true、gridSpacing=32、rotationSnapDeg=15。viewはcenterX=0、centerY=0、zoom=1。保存済み基準B0の番号はboard=8、settings=18、現在の確定状態はboard=10、settings=20。履歴は別記がなければ空。 |
+| D-STATE | viewはcenterX=0、centerY=0、zoom=1。保存済みB0のboardRevision=8、現在10。設定は含まない。履歴は別記がなければ空。 |
+| D-APP | 共通設定8項目の既定値、appSettingsRevision="20"、savedAppSettingsRevision="18"。別行はhistoryLimit=250、imageWorkspaceOverride=絶対パスW1。fileVersionは独立取得したsettings.jsonのSHA-256。 |
 | D-ASSET | DES-047で仕様化した検証可能なPNG2実体を用意し、寸法・byteSize・全バイトSha256とassetIdの対応を台帳化する。PNG自体を状態DTOへ埋め込まない。純粋な型検査だけではSha256=`a`×64を代表文字列にできるが、実体照合の正常値へ流用しない。 |
 | D-INPUT | token／stream／dragUrlを各1件、inputIndex=0から配列順、inputId一意、displayName=`image-1`等に固定。stream本文の再送データはbyte[i]=i mod 256のバイト列、申告量1、3、1,048,576、1,048,577、1,073,741,824／超過を用途別に指定。符号・小数・指数・先頭ゼロのヘッダー値は文字列として保持する。数値・境界データの仕様は[DES-052の共通仕様](DES-052-resource-validation-test-design.md#共通のデータ仕様環境要件手順)、取込元の実入力検査・拒否時の既存保護は[DES-047 CASE-009](DES-047-image-import-test-design.md#case-009)を管理元とし、本書の申告量の型・受付検査と分ける。 |
-| D-SNAPSHOT | kind=boardはD-BOARD、D-STATE、boardRevision="10"、settingsRevision="20"、assetIds=[A-A,A-B]を同一時点で固定。kind=settingsはsettingsとsettingsRevision="20"だけ。B0/view0/画像はRust側の直前成功対象から使う。異常入力は一項目ずつ変え、影響を特定できるようにする。 |
+| D-SNAPSHOT | kind=board、D-BOARDとview、boardRevision="10"、assetIds=[A-A,A-B]を同時点で固定。settings、appSettingsRevision、savedAppSettingsRevisionを含めない。未知・禁止項目は単一変異で拒否を確認する。 |
 | D-CANDIDATE | normal、recovery、backup、incompleteInitialの検証可能な入力をDES-049／050に従って用意。B0の本文・幅・文字サイズ・viewは一定とし、B1の補正なし／座標・枠のみ補正ありを分ける。実ファイルの識別・ハッシュは準備時に取得し、採用直前変更ケースでは変更前後を証拠化する。 |
 | D-ERROR | 正常なErrorInfoの例はstage=input、reason=sourceUnavailable、retryable=false、targetKind=inputと対応inputId、protectedLocations=[]。対象不明ではtargetKind/targetIdを両方省略する。保護位置トークンは検証済みの場合だけ発行結果を使う。エラー理由はケースの根拠契約に合わせ、OS等の原因を例外文字列から推測しない。 |
 
@@ -44,7 +45,7 @@ description: IPCの共通型、22コマンドと14通知の通信・順序・照
 
 ### 観測と障害制御
 
-O-TRACEは呼出し・応答・通知・照会のprotocol/type/request/session/project/eventSequence、対象token/batch/input/snapshot/transition/transaction、要求段階・両更新番号・参照番号を記録する。大きな本文は固定内容のハッシュ・長さ・参照集合で照合し、性能判定へログ負荷を混ぜない。O-OWNERは要求記録と画像・バッチ・候補・保存固定対象・B0・ロック・保存先の所有を別々に観測する。O-WRITEは固定・DB生成・置換・復旧・完了記録・整理の開始／終結と内容識別を観測する。
+O-TRACEは呼出し・応答・通知・照会のprotocol/type/request/session/project/eventSequence、対象token/batch/input/snapshot/transition/transaction、要求段階・ボードとアプリ寿命の独立更新番号・参照番号を記録する。大きな本文は固定内容のハッシュ・長さ・参照集合で照合し、性能判定へログ負荷を混ぜない。O-OWNERは要求記録と画像・バッチ・候補・保存固定対象・B0・ロック・保存先の所有を別々に観測する。O-WRITEは固定・DB生成・置換・復旧・完了記録・整理の開始／終結と内容識別を観測する。
 
 C-DELIVERYは受付応答の遅延／欠落、Channelの欠落、照会結果の遅延と再掲を制御する。実Channelを任意順に並べ替える能力を前提にせず、PromiseとChannel、Channelと照会の競合を制御する。C-BARRIERはチャンク受信前、保存固定前後、候補検証・採用直前、移管直後に処理を止めて再開する。C-FAILはWorkerのJSON化／解析、入力取得、実体取得、保存の指定段階だけに失敗を注入する。資源・所有文脈の内部観測と制御は実装・検証担当への準備仕様であり、既存フックを確認済みとしない。公開コマンド・DTOを増やす要求ではない。
 
@@ -73,7 +74,7 @@ E-P/E-C/E-Tは本書の環境記号であり、ユニット／インテグレー
 | [DES-059：検証目的・方針・主要リスク](../test-strategy/DES-059-ipc-contract-test-strategy.md#検証目的方針主要リスク) | 受付・制御完了と表示・実保存・採用を区別し、結果不明と旧結果の誤反映を優先する | [COND-032](#cond-032)、[製品結果との接続](#製品結果との接続) | 元要求・制御要求・製品結果の期待を分け、製品合否を047〜050・052へ参照する |
 | [DES-059：層別の確認目的](../test-strategy/DES-059-ipc-contract-test-strategy.md#層別の確認目的) | 型責務、制御した組合せ、実Tauri、主要利用経路を目的別に分担する | [環境と確認層](#環境と確認層)、[COND-003](#cond-003)・[013](#cond-013)・[016](#cond-016)・[020](#cond-020) | E-P/E-C/E-Tを固定の層とせず、各ケースの目的に必要な境界を選ぶ。互換版・実機・コードは後続準備である |
 | [DES-059：テスト種別・品質観点](../test-strategy/DES-059-ipc-contract-test-strategy.md#テスト種別品質観点) | 通信契約確認、型・経路整合、順序と回復性、所有・資源保護、固定と更新単位を分ける | [COND-001](#cond-001)〜[033](#cond-033)の名称・優先理由、各CASEの確認層・品質観点、[環境と確認層](#環境と確認層) | 正常／異常、境界値等の技法、確認層と品質観点を混同しない。性能・復元・安全読込・配布の製品合否は管理元へ接続する |
-| [DES-059：網羅方針](../test-strategy/DES-059-ipc-contract-test-strategy.md#網羅方針) | 共通型、入口、通知ごとに項目・段階・失敗・所有と専用終結を追跡する | [COND-001](#cond-001)〜[033](#cond-033)、[共通4契約](#共通4契約)・[22コマンド](#22コマンド)・[14通知](#14通知) | 根拠→COND→CASEの多対多表を維持し、境界値・組合せ・状態遷移・競合を各条件の網羅対象として記載する。033の依存範囲だけ暫定である |
+| [DES-059：網羅方針](../test-strategy/DES-059-ipc-contract-test-strategy.md#網羅方針) | 共通型、入口、通知ごとに項目・段階・失敗・所有と専用終結を追跡する | [COND-001](#cond-001)〜[033](#cond-033)、[共通4契約](#共通4契約)・[24コマンド](#24コマンド)・[14通知](#14通知) | 根拠→COND→CASEの多対多表を維持し、境界値・組合せ・状態遷移・競合を各条件の網羅対象として記載する。033の依存範囲だけ暫定である |
 | [DES-059：通信表現と要求登録](../test-strategy/DES-059-ipc-contract-test-strategy.md#通信表現と要求登録) | 精度・包絡・判別型・受付前後を照合し、呼出し前登録と要求一意性を確認する | [COND-001](#cond-001)〜[004](#cond-004)、[031](#cond-031)・[032](#cond-032)、[固定入力と状態](#固定入力と状態) | 正常値と一項目差分、初期化再取得と既使用ID拒否、Promise拒否と元要求通知を分ける。保持中の拒否は確定している |
 | [DES-059：通知と照会による結果回収](../test-strategy/DES-059-ipc-contract-test-strategy.md#通知と照会による結果回収) | 通知先着・欠落・照会再掲を回収し、終端だけ受領確認する | [COND-005](#cond-005)〜[008](#cond-008)、[016](#cond-016)・[019](#cond-019)・[022](#cond-022)、[観測と障害制御](#観測と障害制御)のO-TRACE／C-DELIVERY | eventSequence、要求段階、PNG再取得とsnapshotRequired回収を観測する。notFoundや通信欠落だけで実処理失敗を推定しない |
 | [DES-059：所有・参照・資源寿命](../test-strategy/DES-059-ipc-contract-test-strategy.md#所有参照資源寿命) | 要求記録と実資源を分離し、所有・用途・専用終結を照合する | [COND-007](#cond-007)〜[010](#cond-010)、[016](#cond-016)〜[018](#cond-018)、[024](#cond-024)・[026](#cond-026)・[027](#cond-027)・[030](#cond-030)・[033](#cond-033)、O-OWNER／[K-BASE](#共通準備操作後片付け) | 画像所有、参照同期、旧所有者、候補移管、終結票を分ける。時間経過・受領確認だけの解放を期待せず、要求記録除去後の識別情報保持終了だけ033で未決管理する |
@@ -93,7 +94,7 @@ E-P/E-C/E-Tは本書の環境記号であり、ユニット／インテグレー
 
 - 名称・確認対象：共通包絡、必須／省略、版と未知キー。
 - 根拠：[DES-014：CommonEnvelope](../interface/DES-014-ipc-common-protocol.md#commonenvelope)・[共通通信形式](../interface/DES-014-ipc-common-protocol.md#共通通信形式)。
-- 区分・層：正常／異常、E-P・E-T。技法・網羅対象：必須性／禁止項目のデシジョンテーブル、全22入口の正常経路。
+- 区分・層：正常／異常、E-P・E-T。技法・網羅対象：必須性／禁止項目のデシジョンテーブル、全24入口の正常経路。
 - 優先理由・観測：誤要求の受付を防ぐ。O-TRACEで応答経路と副作用なしを観測。
 - 対応ケース：[CASE-001](#case-001)、[CASE-002](#case-002)、[CASE-021](#case-021)。
 
@@ -237,7 +238,7 @@ E-P/E-C/E-Tは本書の環境記号であり、ユニット／インテグレー
 
 - 名称・確認対象：保存kind・trigger・番号・キュー集約。
 - 根拠：[DES-026：save_project](../interface/DES-026-ipc-save-project.md#save_project)・[保存対象固定と集約](../interface/DES-026-ipc-save-project.md#保存対象固定と集約)。
-- 区分・層：正常／異常、E-C。技法・網羅対象：board/manual・board/periodic・settings/settings-change、保存先、集約前後の番号。
+- 区分・層：正常／異常、E-C。技法・網羅対象：board/manual・board/periodic。設定は別IPCで独立評価、保存先、集約前後の番号。
 - 優先理由・観測：範囲外ボード保存と二重snapshot要求を防ぐ。キュー適格要求、代表Channel、達成番号を観測。
 - 対応ケース：[CASE-031](#case-031)、[CASE-032](#case-032)。
 
@@ -245,7 +246,7 @@ E-P/E-C/E-Tは本書の環境記号であり、ユニット／インテグレー
 
 - 名称・確認対象：固定対象の同一時点、供給本文、Worker失敗、古い／重複供給。
 - 根拠：[DES-027](../interface/DES-027-ipc-provide-save-snapshot.md)、[DES-016：SaveSnapshot](../interface/DES-016-ipc-composite-types.md#savesnapshot)・[SnapshotSubmission・SnapshotFailure](../interface/DES-016-ipc-composite-types.md#snapshotsubmissionsnapshotfailure)。
-- 区分・層：正常／異常、E-C・E-T。技法・網羅対象：board／settings本文、正常／失敗、未供給／受領済み／無効ID。
+- 区分・層：正常／異常、E-C・E-T。技法・網羅対象：board本文と禁止設定項目、正常／失敗、未供給／受領済み／無効ID。
 - 優先理由・観測：可変状態混入と別保存の巻添え失敗を防ぐ。O-WRITE、固定ハッシュ、供給と元要求の別IDを観測。
 - 対応ケース：[CASE-033](#case-033)、[CASE-034](#case-034)、[CASE-035](#case-035)、[CASE-036](#case-036)。
 
@@ -277,7 +278,7 @@ E-P/E-C/E-Tは本書の環境記号であり、ユニット／インテグレー
 
 - 名称・確認対象：return／close／exitと保護再照合。
 - 根拠：[DES-030](../interface/DES-030-ipc-end-transition.md)、[DES-016：ProtectionDecision](../interface/DES-016-ipc-composite-types.md#protectiondecision)。
-- 区分・層：正常／異常、E-C・E-T。技法・網羅対象：3outcome×purpose、未確定入力・両番号・実行中保存、後着結果。
+- 区分・層：正常／異常、E-C・E-T。技法・網羅対象：3outcome×purpose、未確定入力・ボードとアプリ共通設定の独立番号・実行中保存、後着結果。
 - 優先理由・観測：戻るによる処理中断・応答欠落での推測終了を防ぐ。O-TRACE・O-OWNER。
 - 対応ケース：[CASE-044](#case-044)、[CASE-045](#case-045)、[CASE-050](#case-050)。
 
@@ -357,7 +358,7 @@ E-P/E-C/E-Tは本書の環境記号であり、ユニット／インテグレー
 
 ### CASE-001
 
-- 名称・対応条件：22入口の正常な通信経路。[COND-001](#cond-001)。
+- 名称・対応条件：24入口の正常な通信経路。[COND-001](#cond-001)。
 - 確認層・品質観点：E-P・E-T。通信経路・応答型の整合性。
 - 前提・環境：正常、E-P・E-T。P-BASEを適用し、コマンド対応表の各入口が必要とする入力、稼働中バッチ、保存要求、遷移、候補を当該入口から作る。
 - 入力・準備：protocolVersion=1、一意なrequestId、S-A/P-Aを基本値とし、初期化のsession/project省略、upload_import_chunkのproject省略、供給時のsnapshotId等は各入力契約へ合わせる。正常要求・応答のフィールド表を22行用意する。
@@ -398,7 +399,7 @@ E-P/E-C/E-Tは本書の環境記号であり、ユニット／インテグレー
 - 前提・環境：正常／異常、E-P。各型の解析と境界検査を対象とする。
 - 入力・準備：D-BOARD/D-STATEを正常とし、DES-016のInputSpec各source、UploadPlan、ImportSuccess/Failure/Outcome、SelectedEntry、TokenReleaseResult、SaveSnapshot、SavedResult、ProjectCandidate、RecoveryEntry/Issue、ProtectionDecision、RequestStatusEntry、ImageReceipt、Acknowledgement、SnapshotSubmission/Failureを型別に1件以上用意する。必須欠落、未知キー、別判別型のフィールド混入、optionalのnull、groupIdのnullを各正常値から一項目ずつ変える。
 - 操作・事象：1. 正常型を解析・再出力する。2. 変異行を独立に解析する。3. 条件付き項目対、配列順／一意性、必須空配列を照合する。4. 詳細な状態値域はDES-052の主ケースへ接続する。
-- 期待結果と根拠：正常型の必須項目・判別値・条件付き項目が保持される。groupIdだけはnullを許し、他のoptionalは該当しないとき省略する。禁止組合せ・未知キー・必須欠落を対象処理前に拒否する。settingsは6項目で、autosave間隔30を追加設定にしない。BoardStateに画像実体を混ぜない。[DES-015](../interface/DES-015-ipc-state-dtos.md)・[DES-016](../interface/DES-016-ipc-composite-types.md)。
+- 期待結果と根拠：正常型の必須項目・判別値・条件付き項目が保持される。groupId、AppSettings.imageWorkspaceOverride、AppSettingsSnapshot.lastSavedValues/settingsDisplayPath/lastErrorの契約上のnullだけを許し、他のoptionalは該当しないとき省略する。禁止組合せ・未知キー・必須欠落を対象処理前に拒否する。共通AppSettingsは8項目で、autosave間隔30を追加設定にしない。BoardStateに画像実体を混ぜない。[DES-015](../interface/DES-015-ipc-state-dtos.md)・[DES-016](../interface/DES-016-ipc-composite-types.md)。
 - 観測・障害制御：型別チェックリストと解析前後の値を照合する。生PNG・ZIP・実体ハッシュの成立をこの純粋型ケースから推定しない。
 - 後片付け：型フィクスチャを破棄する。実資源を発行した結合行を追加した場合はK-BASEを適用する。
 - 準備物・未決：全複合型の代表値と一項目変異表が必要。契約判定の未決なし。
@@ -456,7 +457,7 @@ E-P/E-C/E-Tは本書の環境記号であり、ユニット／インテグレー
 - 名称・対応条件：受付欠落からの継続情報回収。[COND-006](#cond-006)。
 - 確認層・品質観点：E-C。継続情報の整合性・重複処理抑止と回復性。
 - 前提・環境：異常、E-C。import_imagesのstream入力、begin_transitionの待機ゲート、save_projectの供給待ちを独立行とする。
-- 入力・準備：バイト量3のstream、未完了取込を待つtransition、board=10/settings=20の保存要求。C-DELIVERYでacceptedだけを欠落させる。照会targetRequestIdsは各1件と、別状態の自所有2件を逆順に並べた行、空／重複配列を用意する。
+- 入力・準備：バイト量3のstream、未完了取込を待つtransition、board=10の保存要求と別の共通設定保存要求。C-DELIVERYでacceptedだけを欠落させる。照会targetRequestIdsは各1件と、別状態の自所有2件を逆順に並べた行、空／重複配列を用意する。
 - 操作・事象：1. 要求を登録・受付する。2. 元requestIdをget_request_statusで照会する。3. acceptance中のbatchId/uploads/transitionId等から継続する。4. 進行中と終端を再照会する。5. 照会要求自身を対象に照会する。
 - 期待結果と根拠：受付済み記録から継続に必要なacceptanceのuploads等を回収でき、元処理を新IDで二重開始しない。processingのresultは省略、終端でのみ定義済みresultを返す。statusesはtargetRequestIdsの順で、対象は重複なし1件以上、空／重複は拒否する。queryは受領確認ではなく、query自体の要求記録を作らない。notFoundを処理失敗とみなして書込みを再実行しない。[DES-038](../interface/DES-038-ipc-get-request-status.md)・[DES-016：RequestStatusEntry](../interface/DES-016-ipc-composite-types.md#requeststatusentry)。
 - 観測・障害制御：C-DELIVERY、O-TRACE/O-OWNERで受理・処理・照会を分ける。継続情報は照会の型の項目だけを利用する。
@@ -717,51 +718,55 @@ E-P/E-C/E-Tは本書の環境記号であり、ユニット／インテグレー
 
 ### CASE-031
 
-- 名称・対応条件：保存kind/trigger/保存先の組合せ。[COND-011](#cond-011)・[COND-019](#cond-019)。
-- 確認層・品質観点：E-P・E-C。保存要求の型・組合せ・保存先境界の整合性。
-- 前提・環境：正常／異常、E-P・E-C。D-STATEと通常current保存先を用意し、未設定保存先の別行も作る。
-- 入力・準備：board/manual、board/periodicは必要board="10"/settings="20"。settings/settings-changeは必要settings="20"だけ。異常はkindとtrigger不一致、settingsにboard番号、settings/saveAs、未設定current、用途不一致／既存新規保存先。
-- 操作・事象：1. 組合せ表を受付検査する。2. 許可行に適切snapshotを供給する。3. 不許可行の副作用なしを確認する。4. 保存結果のkind/実番号/保存先を比較する。
-- 期待結果と根拠：指定組合せだけを受け付け、boardはboard/view/settings、settingsはB0/view0とsettingsだけを保存する。settingsを未保存boardまで含むsaveAsへ拡張しない。保存先はcurrentまたは正規新規トークンの所有・ロックと一致する。[DES-026](../interface/DES-026-ipc-save-project.md)・[DES-016：SaveSnapshot](../interface/DES-016-ipc-composite-types.md#savesnapshot)。製品保存フローはDES-049。
-- 観測・障害制御：O-TRACE/O-OWNER/O-WRITEで受付・固定範囲と保存先を確認する。
-- 後片付け：各許可行の実終端を確認しK-BASE。保存先未設定を不適切なパス文字列で補わない。
-- 準備物・未決：組合せ表と保存固定状態の観測が必要。契約判定の未決なし。
+- 名称・確認目的：ボード保存kind・trigger・保存先と設定項目の拒否。
+- 対応条件：[COND-011](#cond-011)、[COND-019](#cond-019)。根拠は変更後REQ-030・DES-063、および各CONDの参照要件・設計。製品試験は未実施。
+- 確認層・品質観点：Rust状態ユニット＋Windows実ファイル結合＋実機E2E。保存責務の分離・値の保持・未保存保護。
+- 前提・データ仕様：D-BOARD/D-STATE、board/manualとboard/periodic、requiredBoardRevision="10"。禁止kind=settings、trigger=settings-change、settings、requiredSettingsRevisionを各独立行にする。
+- 準備：共通仕様の使い捨てアプリ配置・ボード保存領域を用意し、入力と正常ファイルの独立保護コピーを作る。実装・実ビルド・データ・観測口は後続担当が準備する。
+- 操作・事象：各要求を受付し、正常行だけスナップショットを供給する。別のsave_app_settingsを前後に実行。
+- 期待結果と根拠：boardだけを受付しboard/view/assetIds/boardRevisionだけ保存する。設定用項目を拒否し、ボード保存でconfigを変更しない。保存先トークン・ロックの既存条件を維持。
+- 観測・制御：独立した原本台帳と現物全体ハッシュ、サービスの現在・成功値と番号、画面状態を照合する。
+- 後片付け：結果と現物の証拠を回収し、障害・保留を解除して対象アプリを終了する。今回所有する使い捨て領域だけ整理し、未完了・唯一の正常コピー・原本退避を無条件削除しない。
+- 未決・引継ぎ：実行準備と製品検証は未完了。文書検査を動作合格としない。
 
 ### CASE-032
 
-- 名称・対応条件：保存要求集約と固定後の後続要求。[COND-019](#cond-019)・[COND-021](#cond-021)。
-- 確認層・品質観点：E-C。直列キュー・要求集約と固定対象の整合性。
-- 前提・環境：正常、E-C。保存実行前にR-A(board必要10/20)、R-B(9/19)を待機させる。固定後の編集でboard=11へ進められるようにする。
-- 入力・準備：第一snapshotは実10/20、第二は11/20。R-Cは第一固定後に必要11/20を新IDで送る。代表通知先と各待機requestIdを台帳化する。
-- 操作・事象：1. R-A/R-Bを受付する。2. 集約snapshotRequiredを受け第一対象を固定する。3. boardを11へ編集しR-Cを送る。4. 第一保存を終結する。5. 第二snapshotを供給・終結する。
-- 期待結果と根拠：集約実行のsnapshotRequiredは代表Channelへ1回・一つのsnapshotId。第一実保存を満たすR-A/R-Bへ同じ実保存結果を通知し、各requestId/eventSequenceは各要求に対応する。必要番号の上がったR-Cを第一対象で成功にせず、後続対象で満たす。成功は各要求の必要番号以上の実保存番号に基づく。[DES-026：保存要求と集約](../interface/DES-026-ipc-save-project.md)・[DES-028：処理順序と失敗保護](../interface/DES-028-ipc-retry-save.md#処理順序と失敗保護)。
-- 観測・障害制御：固定前後のC-BARRIER、O-TRACE/O-WRITEでsnapshot数・固定番号・transactionと待機要求対応を照合する。
-- 後片付け：全待機要求の終端と第二保存完了を確認しK-BASE。
-- 準備物・未決：キュー・固定境界・通知先の観測が必要。契約判定の未決なし。
+- 名称・確認目的：ボード集約と共通設定処理の独立。
+- 対応条件：[COND-019](#cond-019)、[COND-021](#cond-021)。根拠は変更後REQ-030・DES-063、および各CONDの参照要件・設計。製品試験は未実施。
+- 確認層・品質観点：Rust状態ユニット＋Windows実ファイル結合＋実機E2E。保存責務の分離・値の保持・未保存保護。
+- 前提・データ仕様：R-A必要board10、R-B必要9。第一固定10、固定後R-C必要11。共通設定20の保存を別IPCで保留。
+- 準備：共通仕様の使い捨てアプリ配置・ボード保存領域を用意し、入力と正常ファイルの独立保護コピーを作る。実装・実ビルド・データ・観測口は後続担当が準備する。
+- 操作・事象：R-A/Bを集約固定、追加編集→R-C受付→第一と第二保存の順に完了。設定処理の完了順を変える。
+- 期待結果と根拠：代表ChannelへのsnapshotRequiredは集約毎に1回。第一はR-A/Bだけ満たし、R-Cは第二11で満たす。各requestId・通知列は個別。共通設定の成功でボード必要番号を満たさず、ボードの成功でも設定番号を進めない。
+- 観測・制御：独立した原本台帳と現物全体ハッシュ、サービスの現在・成功値と番号、画面状態を照合する。
+- 後片付け：結果と現物の証拠を回収し、障害・保留を解除して対象アプリを終了する。今回所有する使い捨て領域だけ整理し、未完了・唯一の正常コピー・原本退避を無条件削除しない。
+- 未決・引継ぎ：実行準備と製品検証は未完了。文書検査を動作合格としない。
 
 ### CASE-033
 
-- 名称・対応条件：同一時点固定とWorker生バイナリ供給。[COND-020](#cond-020)。
-- 確認層・品質観点：E-C・E-T。固定状態の不変性とWorker供給の整合性。
-- 前提・環境：正常、E-C・E-T。必要10/20のsnapshotRequired受領済み。メイン画面の確定状態とWorkerへの不変コピーを観測できる環境。
-- 入力・準備：D-SNAPSHOTを固定した直後に、画面board番号11・画像座標だけを変える。供給ArrayBufferはWorkerのUTF-8 JSON化結果を使い、元saveとは別requestIdを割り当てる。
-- 操作・事象：1. board/view/settings/assetIds/両番号を同時点で固定する。2. Workerへ渡す。3. 画面を11へ編集する。4. Worker結果をheaders付き生本文で供給する。5. snapshotReceivedと実保存成功を分けて受領する。
-- 期待結果と根拠：供給内容は固定10/20の整合した集合で、後続編集を混ぜない。メイン画面で全文同期JSON化せず、Workerの生UTF-8 JSONを供給する。移譲済みArrayBufferを再利用しない。snapshotReceivedは受領であり保存成功ではなく、実保存10/20の後もboard11は未保存として残る。[DES-027](../interface/DES-027-ipc-provide-save-snapshot.md)・[DES-016：SnapshotSubmission](../interface/DES-016-ipc-composite-types.md#snapshotsubmissionsnapshotfailure)。
-- 観測・障害制御：C-BARRIERとO-TRACE/O-WRITEで固定時点、Worker実行、本文長・ハッシュ、実番号を確認する。性能閾値は別性能設計へ渡す。
-- 後片付け：実保存の終端を確認し、必要なら未保存11を通常保存してK-BASE。
-- 準備物・未決：Worker／メイン画面境界とバッファ所有の観測が必要。契約判定の未決なし。
+- 名称・確認目的：設定を含まない同時点固定とWorker供給。
+- 対応条件：[COND-020](#cond-020)。根拠は変更後REQ-030・DES-063、および各CONDの参照要件・設計。製品試験は未実施。
+- 確認層・品質観点：Rust状態ユニット＋Windows実ファイル結合＋実機E2E。保存責務の分離・値の保持・未保存保護。
+- 前提・データ仕様：D-SNAPSHOT board10固定後にboard11へ編集。別サービスの設定20→21を並行変更。
+- 準備：共通仕様の使い捨てアプリ配置・ボード保存領域を用意し、入力と正常ファイルの独立保護コピーを作る。実装・実ビルド・データ・観測口は後続担当が準備する。
+- 操作・事象：board/view/assetIds/boardRevisionだけを同時点固定し不変コピーをWorkerへ渡す。別requestIdで生UTF-8 JSONを供給。
+- 期待結果と根拠：固定10の全参照集合を保存し後続11は未保存。設定本文・番号を含めない。snapshotReceivedは受領だけで実保存成功ではない。移譲済みバッファを再利用せず、メイン画面全文JSON化をしない。
+- 観測・制御：独立した原本台帳と現物全体ハッシュ、サービスの現在・成功値と番号、画面状態を照合する。
+- 後片付け：結果と現物の証拠を回収し、障害・保留を解除して対象アプリを終了する。今回所有する使い捨て領域だけ整理し、未完了・唯一の正常コピー・原本退避を無条件削除しない。
+- 未決・引継ぎ：実行準備と製品検証は未完了。文書検査を動作合格としない。
 
 ### CASE-034
 
-- 名称・対応条件：board/settings供給内容の初回不正。[COND-003](#cond-003)・[COND-020](#cond-020)。
-- 確認層・品質観点：E-P・E-C。供給内容の妥当性と不正入力時の保存保護。
-- 前提・環境：正常／異常、E-P・E-C。有効snapshotIdに初回供給する。board必要10/20、settings必要20を独立に準備する。
-- 入力・準備：正常D-SNAPSHOT、board番号9／settings19、assetIdsの欠落・余剰・重複、DTO不正、壊れたUTF-8 JSONを一項目ずつ変える。settingsには禁止board/view/assetIds/boardRevisionを一項目ずつ混入する。
-- 操作・事象：1. 初回供給を送る。2. 供給要求と元保存要求を別々に観測する。3. 正常settings行の保存実体をB0=8/view0と比較する。
-- 期待結果と根拠：有効対象への初回内容不正は元保存を失敗終結しDB生成へ進まない。正常boardは必要番号以上・完全な参照集合と状態を持つ。正常settingsはsettingsと番号だけを供給し、未保存board10/viewを含めずRustのB0=8/view0を使用する。禁止項目や必要番号未達を補正して保存しない。[DES-027：処理と失敗時の扱い](../interface/DES-027-ipc-provide-save-snapshot.md#処理と失敗時の扱い)・[DES-016：SaveSnapshot](../interface/DES-016-ipc-composite-types.md#savesnapshot)。
-- 観測・障害制御：O-TRACE/O-WRITEで初回識別・検査失敗・DB未開始と固定範囲を確認する。
-- 後片付け：失敗要求の結果・保護位置を記録し、正規再試行／断念経路を選んでK-BASE。初回不正対象へ重複供給を成功扱いしない。
-- 準備物・未決：一項目変異の生JSONとDB開始観測が必要。契約判定の未決なし。
+- 名称・確認目的：ボード供給不正と設定混入の拒否。
+- 対応条件：[COND-003](#cond-003)、[COND-020](#cond-020)。根拠は変更後REQ-030・DES-063、および各CONDの参照要件・設計。製品試験は未実施。
+- 確認層・品質観点：Rust状態ユニット＋Windows実ファイル結合＋実機E2E。保存責務の分離・値の保持・未保存保護。
+- 前提・データ仕様：有効snapshotIdに正常board10、番号9、参照欠落／余剰／重複、壊れたUTF-8、未知キーを単一変異。設定混入はkind=settings、settings、appSettingsRevisionを独立行にする。
+- 準備：共通仕様の使い捨てアプリ配置・ボード保存領域を用意し、入力と正常ファイルの独立保護コピーを作る。実装・実ビルド・データ・観測口は後続担当が準備する。
+- 操作・事象：初回供給し元saveと供給制御の結果、DB生成有無を別々に観測。
+- 期待結果と根拠：有効対象への初回内容不正は元保存を失敗終結しDB生成せず、正常原本とconfig不変。正常供給は必要board番号以上の完全なboard/viewと参照集合。設定をB0に合成する経路は存在しない。
+- 観測・制御：独立した原本台帳と現物全体ハッシュ、サービスの現在・成功値と番号、画面状態を照合する。
+- 後片付け：結果と現物の証拠を回収し、障害・保留を解除して対象アプリを終了する。今回所有する使い捨て領域だけ整理し、未完了・唯一の正常コピー・原本退避を無条件削除しない。
+- 未決・引継ぎ：実行準備と製品検証は未完了。文書検査を動作合格としない。
 
 ### CASE-035
 
@@ -789,27 +794,29 @@ E-P/E-C/E-Tは本書の環境記号であり、ユニット／インテグレー
 
 ### CASE-037
 
-- 名称・対応条件：保存成功境界と整理保留。[COND-021](#cond-021)。
-- 確認層・品質観点：E-C。保存成功の段階整合性と整理結果の分離。
-- 前提・環境：正常／異常、E-C。正常保存のDB生成、置換、復旧反映、完了記録の同期、整理を個別観測できる環境。
-- 入力・準備：board10/20とsettings20を独立に保存する。整理だけの失敗行を用意し、前段階は正常とする。
-- 操作・事象：1. 各前段階の完了点で通知有無を観測する。2. 実保存成功境界まで進める。3. 成功後の整理だけに失敗を注入する。4. saveSucceeded/SavedResult/照会resultを照合する。
-- 期待結果と根拠：SQL commitだけでsaveSucceededを出さず、正本置換・必要な復旧反映・完了記録同期が成立して初めて実保存成功を返す。kind、実board/settings番号、transactionId、対象ハッシュ・保存先等が同じ実対象を示す。整理だけの失敗はcleanupPending=trueの成功であり保存失敗へ戻さない。settings成功は未保存boardを保存済みにしない。[DES-026：saveSucceeded](../interface/DES-026-ipc-save-project.md#savesucceeded)・[DES-016：SavedResult](../interface/DES-016-ipc-composite-types.md#savedresult)。コピーの復元合否はDES-050の主ケースへ参照する。
-- 観測・障害制御：O-WRITE/C-BARRIER/C-FAILで各境界と整理失敗を制御し、通知の実時点を照合する。
-- 後片付け：成功結果・cleanupPendingを記録し、整理前の保護位置を勝手に削除せずK-BASE。
-- 準備物・未決：実成功境界と整理の観測が必要。契約判定の未決なし。
+- 名称・確認目的：ボード保存成功境界と整理保留。
+- 対応条件：[COND-021](#cond-021)。根拠は変更後REQ-030・DES-063、および各CONDの参照要件・設計。製品試験は未実施。
+- 確認層・品質観点：Rust状態ユニット＋Windows実ファイル結合＋実機E2E。保存責務の分離・値の保持・未保存保護。
+- 前提・データ仕様：board10、DB・ZIP・置換・復旧・complete・整理の各段階を停止可能。共通設定は別に未保存。
+- 準備：共通仕様の使い捨てアプリ配置・ボード保存領域を用意し、入力と正常ファイルの独立保護コピーを作る。実装・実ビルド・データ・観測口は後続担当が準備する。
+- 操作・事象：各段階で成功通知有無を観測し、整理だけ失敗する行を独立実施。
+- 期待結果と根拠：complete同期まで成功しない。成功時kind=board・実board番号・transactionId・対象ハッシュが一致。整理失敗だけはcleanupPending付き成功。設定の適用値・未保存・成功番号には影響しない。
+- 観測・制御：独立した原本台帳と現物全体ハッシュ、サービスの現在・成功値と番号、画面状態を照合する。
+- 後片付け：結果と現物の証拠を回収し、障害・保留を解除して対象アプリを終了する。今回所有する使い捨て領域だけ整理し、未完了・唯一の正常コピー・原本退避を無条件削除しない。
+- 未決・引継ぎ：実行準備と製品検証は未完了。文書検査を動作合格としない。
 
 ### CASE-038
 
-- 名称・対応条件：元transactionの照合成功と新しい後続保存。[COND-022](#cond-022)。
-- 確認層・品質観点：E-C。中断照合・後続保存の順序整合性と成功基準の保護。
-- 前提・環境：正常、E-C。元保存T-OLDの固定番号10/20が実保存中断として保護され、元要求はfailedのまま保持する。現在確定状態は11/21。
-- 入力・準備：retry_saveはT-OLD/destinationToken、followupKind=board、requiredBoardRevision="11"、requiredSettingsRevision="21"。別行は現在も10/20で追加保存不要とする。中断フィクスチャはDES-050で仕様化したものを使う。
-- 操作・事象：1. 新IDの再試行を受付する。2. phase=reconcileのtransactionResolvedを受ける。3. 追加必要行だけ新snapshotを供給する。4. saveSucceededとretryFinishedを受ける。5. 元要求を照会する。
-- 期待結果と根拠：元T-OLDを一度照合し、completedのsavedは元10/20・元T-OLDを示す。解消後だけ最新状態を再評価し、必要ならphase=followup、新transaction T-NEW、新snapshotで11/21を保存する。retryFinishedのtransactionIdは元ID、followupStatus=savedのsavedは新IDである。追加不要はnotNeededでsavedを付けない。元failed要求を成功へ書き換えない。[DES-028](../interface/DES-028-ipc-retry-save.md)。
-- 観測・障害制御：O-TRACE/O-WRITEでreconcileとfollowup、両対象ハッシュ、元記録不変を照合する。
-- 後片付け：retry終端と必要な後続保存を確認しK-BASE。解消前の中断コピーは削除しない。
-- 準備物・未決：実中断・保護コピー、段階別観測が必要。通知欠落だけで中断T-OLDを捏造しない。
+- 名称・確認目的：ボード中断照合と後続保存。
+- 対応条件：[COND-022](#cond-022)。根拠は変更後REQ-030・DES-063、および各CONDの参照要件・設計。製品試験は未実施。
+- 確認層・品質観点：Rust状態ユニット＋Windows実ファイル結合＋実機E2E。保存責務の分離・値の保持・未保存保護。
+- 前提・データ仕様：T-OLDは固定board10の実中断、現在11。共通設定は別の未保存21。
+- 準備：共通仕様の使い捨てアプリ配置・ボード保存領域を用意し、入力と正常ファイルの独立保護コピーを作る。実装・実ビルド・データ・観測口は後続担当が準備する。
+- 操作・事象：retry_save(T-OLD,followupKind=board,requiredBoardRevision="11")を送る。設定項目は禁止行にする。
+- 期待結果と根拠：reconcileは元10/T-OLDだけを完了し、その後に必要なら新snapshot/transactionで11を保存。追加不要はnotNeeded。元failed要求不変。設定は独立し、retry_saveに設定本文・必要設定番号を渡さない。
+- 観測・制御：独立した原本台帳と現物全体ハッシュ、サービスの現在・成功値と番号、画面状態を照合する。
+- 後片付け：結果と現物の証拠を回収し、障害・保留を解除して対象アプリを終了する。今回所有する使い捨て領域だけ整理し、未完了・唯一の正常コピー・原本退避を無条件削除しない。
+- 未決・引継ぎ：実行準備と製品検証は未完了。文書検査を動作合格としない。
 
 ### CASE-039
 
@@ -825,15 +832,16 @@ E-P/E-C/E-Tは本書の環境記号であり、ユニット／インテグレー
 
 ### CASE-040
 
-- 名称・対応条件：ブロック待機とkind/triggerを保った再評価。[COND-022](#cond-022)・[COND-023](#cond-023)・[COND-030](#cond-030)。
-- 確認層・品質観点：E-C。停止中の資源保護と要求種別・ゲートを保った再評価の整合性。
-- 前提・環境：正常／異常、E-C。同じ保存先が中断T-OLDでブロック中。未達成のboard/manual、board/periodic、settings/settings-changeを内部待機させる。
-- 入力・準備：必要board11/settings21。行AはautosaveEnabled=falseに変更、行Bはgateでperiodic停止、行Cは独立した未達成manual boardあり。settings再試行のfollowupKind=settingsを基準にする。
-- 操作・事象：1. ブロック先へ保存要求を送る。2. transactionBlocked終端を受け内部未達成を観測する。3. 行A/B/Cの状態へ変える。4. 中断を解消して再評価する。
-- 期待結果と根拠：新規／待機要求は書込み開始せずtransactionBlockedのfailedで終結し、未達成番号・kind・triggerを内部保持する。自動保存無効化はperiodic内部保留も解除し、gateは新定期実行を保留する。settings再試行だけで未保存board/viewを加えない。別に適格manual boardがある行Cだけ、その必要番号へboard集約できる。失敗要求を再成功へ書き換えない。[DES-028：中断再試行と初回作成](../interface/DES-028-ipc-retry-save.md#中断再試行と初回作成)・[DES-026](../interface/DES-026-ipc-save-project.md)。
-- 観測・障害制御：O-TRACE/O-OWNER/O-WRITEで公開要求終端と内部保留・固定kindを分ける。
-- 後片付け：内部適格要求まで終結を確認しgateを返してK-BASE。解除済みperiodicを後片付けで復活させない。
-- 準備物・未決：保留番号・kind/triggerの内部観測が必要。契約判定の未決なし。
+- 名称・確認目的：ボードブロック中の再評価と設定保存継続。
+- 対応条件：[COND-022](#cond-022)、[COND-023](#cond-023)、[COND-030](#cond-030)。根拠は変更後REQ-030・DES-063、および各CONDの参照要件・設計。製品試験は未実施。
+- 確認層・品質観点：Rust状態ユニット＋Windows実ファイル結合＋実機E2E。保存責務の分離・値の保持・未保存保護。
+- 前提・データ仕様：同じボード先をT-OLDでブロック。manual/periodic必要board11。設定は別ファイル・別処理。
+- 準備：共通仕様の使い捨てアプリ配置・ボード保存領域を用意し、入力と正常ファイルの独立保護コピーを作る。実装・実ビルド・データ・観測口は後続担当が準備する。
+- 操作・事象：ブロック要求→autosave無効／gate停止の別行→設定保存→明示ボード照合・再評価。
+- 期待結果と根拠：新ボード書込はtransactionBlockedで終結し適格manualだけ再評価。periodic無効なら内部保留解除、gateなら保留。設定保存は正常に進みボード書込を解除せず、設定の成功でボード要求を満たさない。
+- 観測・制御：独立した原本台帳と現物全体ハッシュ、サービスの現在・成功値と番号、画面状態を照合する。
+- 後片付け：結果と現物の証拠を回収し、障害・保留を解除して対象アプリを終了する。今回所有する使い捨て領域だけ整理し、未完了・唯一の正常コピー・原本退避を無条件削除しない。
+- 未決・引継ぎ：実行準備と製品検証は未完了。文書検査を動作合格としない。
 
 ### CASE-041
 
@@ -842,7 +850,7 @@ E-P/E-C/E-Tは本書の環境記号であり、ユニット／インテグレー
 - 前提・環境：正常／異常、E-C。create gateで初回空プロジェクトの不変対象T-CREATEが実中断し、未採用のまま保存先を保持する。
 - 入力・準備：正常retryはdestinationToken/transactionId/onEventだけを対象固有項目とし、未採用createで禁止のfollowupKind/requiredBoardRevision/requiredSettingsRevisionを付けない。これらを一項目ずつ付けた拒否行も用意する。
 - 操作・事象：1. 同じT-CREATEを新IDで再試行する。2. 照合を成功させる。3. retryFinished.candidateを受ける。4. 禁止項目行を独立に受付検査する。5. 明示採用またはdiscardを行う。
-- 期待結果と根拠：最初に固定した空board/default settings/viewの対象を照合し、成功candidateを返す。followupStatus=notNeededで後続編集保存・新しい固定対象を作らない。旧projectは候補を採用するまで変わらない。未採用createの禁止項目を拒否する。[DES-028](../interface/DES-028-ipc-retry-save.md)・[DES-034](../interface/DES-034-ipc-create-project.md)。コピーの製品評価はDES-050。
+- 期待結果と根拠：最初に固定した空board/既定viewの対象を照合し、成功candidateを返す。followupStatus=notNeededで後続編集保存・新しい固定対象を作らない。旧projectは候補を採用するまで変わらない。未採用createの禁止項目を拒否する。[DES-028](../interface/DES-028-ipc-retry-save.md)・[DES-034](../interface/DES-034-ipc-create-project.md)。コピーの製品評価はDES-050。
 - 観測・障害制御：O-TRACE/O-WRITE/O-OWNERで不変対象のハッシュ、candidate、旧所有維持を照合する。
 - 後片付け：候補を正規採用／discardしてgateを終結しK-BASE。
 - 準備物・未決：初回作成中断フィクスチャと元固定対象の観測が必要。契約判定の未決なし。
@@ -885,15 +893,16 @@ E-P/E-C/E-Tは本書の環境記号であり、ユニット／インテグレー
 
 ### CASE-045
 
-- 名称・対応条件：close/exitの保護照合と終端記録。[COND-024](#cond-024)。
-- 確認層・品質観点：E-C・E-T。旧状態保護と処理終了・終端記録の順序整合性。
-- 前提・環境：正常／異常、E-C・E-T。対応目的ready gate、実保存済み10/20、確定現在10/20を基準とし、未保存11/21と空sessionの行を分ける。
-- 入力・準備：ProtectionDecisionのsaved/discarded、確認番号の一致／不一致、hasUnconfirmedInput=false／true。現projectなしは0/0/false。returnへのprotection混入と目的不一致を拒否行にする。
-- 操作・事象：1. 各保護入力を送る。2. 不備行のgate・旧状態不変を確認する。3. closeで空sessionを受ける。4. 独立プロセスでexitの終端記録を観測し、応答を欠落させる。
-- 期待結果と根拠：両番号と未確定入力の最新照合が必要。savedは実保存が両番号を覆う場合だけ、discardedは利用者が決定した未保存／保留の破棄だけを認める。既に保存したsettingsを旧値へ戻さない。closedはnewSessionIdを持つ空session、returned/exitedにはない。exitは要求終端を記録してから終了し、応答欠落を保存失敗にしない。プロセス終了後のオンライン照会成立は要求しない。[DES-030](../interface/DES-030-ipc-end-transition.md)・[DES-016：ProtectionDecision](../interface/DES-016-ipc-composite-types.md#protectiondecision)・[DES-032：採用と保護の順序](../interface/DES-032-ipc-adopt-project.md)。製品終了フローはDES-049。
-- 観測・障害制御：O-TRACE/O-OWNER、exit前記録の観測とC-DELIVERY。終了後は事前退避証拠で判定する。
-- 後片付け：close後の空sessionまたは独立終了プロセスを整理する。失敗行はreturnで返しK-BASE。
-- 準備物・未決：終了直前の終端記録観測とプロセス隔離が必要。契約判定の未決なし。
+- 名称・確認目的：closeとexitの独立した保護照合。
+- 対応条件：[COND-024](#cond-024)。根拠は変更後REQ-030・DES-063、および各CONDの参照要件・設計。製品試験は未実施。
+- 確認層・品質観点：Rust状態ユニット＋Windows実ファイル結合＋実機E2E。保存責務の分離・値の保持・未保存保護。
+- 前提・データ仕様：board現在10/成功10と設定現在20/成功18。別行は空ボード、設定だけ未保存。
+- 準備：共通仕様の使い捨てアプリ配置・ボード保存領域を用意し、入力と正常ファイルの独立保護コピーを作る。実装・実ビルド・データ・観測口は後続担当が準備する。
+- 操作・事象：close/adoptへ設定保護入力を混入する拒否行、exitのappSettingsProtection欠落／古い番号／未保存をsavedとする拒否行、保存／破棄／戻るを用意。
+- 期待結果と根拠：close/adoptはボード保護だけで設定未保存を保持。exitだけボードProtectionDecisionとappSettingsProtectionを独立照合し必要な各成功または明示破棄後に終了。既存保存済み設定を旧値へ戻さない。終端記録後に終了し、応答欠落を保存失敗にしない。
+- 観測・制御：独立した原本台帳と現物全体ハッシュ、サービスの現在・成功値と番号、画面状態を照合する。
+- 後片付け：結果と現物の証拠を回収し、障害・保留を解除して対象アプリを終了する。今回所有する使い捨て領域だけ整理し、未完了・唯一の正常コピー・原本退避を無条件削除しない。
+- 未決・引継ぎ：実行準備と製品検証は未完了。文書検査を動作合格としない。
 
 ### CASE-046
 
@@ -926,7 +935,7 @@ E-P/E-C/E-Tは本書の環境記号であり、ユニット／インテグレー
 - 前提・環境：正常、E-C。最新候補・B1準備・旧保護解決・旧保存なしを満たす。normal／復旧系、補正なし／あり、同一保存先／別保存先を組み合わせた代表行を準備する。
 - 入力・準備：候補が発行したcandidateToken/transitionId/nextSessionIdと適切なProtectionDecision、boardAdjusted=false／trueを送る。B0の本文・width/fontSize/viewを固定し、補正行は座標・枠だけを変えたB1とする。
 - 操作・事象：1. 移管前の旧・候補所有を記録する。2. adopt_projectを送る。3. projectAdoptedを受けて新sessionで表示する。4. 初期番号・保存先・B0/B1を照合する。
-- 期待結果と根拠：候補のロック・実体・保存先を新sessionへ一つの更新単位で移管し、nextSessionIdをnewSessionIdとして確定する。補正なしboardRevision=0、補正あり=1、settings/savedBoard/savedSettings/reference各Revision=0。B0はRustに残し、画面はB1を採用する。同一保存先は旧lockを借りて解放空白を作らず、別保存先は候補確保後に旧lockを解放する。normalは新current保存先、復旧系は未設定で次に新規保存先を求める。[DES-032](../interface/DES-032-ipc-adopt-project.md)・[DES-016：ProjectCandidate](../interface/DES-016-ipc-composite-types.md#projectcandidate)。製品表示／履歴初期化はDES-049。
+- 期待結果と根拠：候補のロック・実体・保存先を新sessionへ一つの更新単位で移管し、nextSessionIdをnewSessionIdとして確定する。補正なしboardRevision=0、補正あり=1、savedBoardRevision/referenceRevision=0。アプリ設定の値・現在／成功番号・未保存は維持。B0はRustに残し、画面はB1を採用する。同一保存先は旧lockを借りて解放空白を作らず、別保存先は候補確保後に旧lockを解放する。normalは新current保存先、復旧系は未設定で次に新規保存先を求める。[DES-032](../interface/DES-032-ipc-adopt-project.md)・[DES-016：ProjectCandidate](../interface/DES-016-ipc-composite-types.md#projectcandidate)。製品表示／履歴初期化はDES-049。
 - 観測・障害制御：O-OWNERと移管直前／後のC-BARRIER。O-TRACEで実番号・新sessionを比較する。
 - 後片付け：新projectの正規close／return可否に従って所有を終結しK-BASE。移管済み候補をdiscardしない。
 - 準備物・未決：移管の原子性とロック所有を観測する器が必要。契約判定の未決なし。
@@ -972,9 +981,9 @@ E-P/E-C/E-Tは本書の環境記号であり、ユニット／インテグレー
 - 名称・対応条件：初回作成の段階通知と採用前状態。[COND-011](#cond-011)・[COND-028](#cond-028)。
 - 確認層・品質観点：E-C・E-T。作成段階・実成功の整合性と旧状態の保護。
 - 前提・環境：正常／異常、E-C・E-T。create ready gateと正規新規destinationTokenを用意し、旧projectのまま初回保存する。
-- 入力・準備：初回空board、settings6既定値、view=(0,0,1)のRust固定対象。各保存段階を観測し、選択後の同名ファイル出現と実中断行を別にする。
+- 入力・準備：初回空board、view=(0,0,1)（共通設定は別サービスに保持）のRust固定対象。各保存段階を観測し、選択後の同名ファイル出現と実中断行を別にする。
 - 操作・事象：1. create_projectを受付する。2. createProgressのdatabase/assets/archive/prepare/replace/recovery/commit/cleanupの該当段階を記録する。3. 実成功境界まで進める。4. createSucceeded.candidateを保持し明示採用する。
-- 期待結果と根拠：進捗は保存成功・採用完了ではなく、実成功境界後にだけcreateSucceededを返す。結果はsavedBoard/settingsRevision=0、normal候補。旧projectは採用まで保持し、画面の旧編集内容を新規初回対象へ混ぜない。新規保存先は実行前にも非存在を照合する。実中断は保護位置・transactionを返し、後続はCASE-041または明示断念へ接続する。[DES-034](../interface/DES-034-ipc-create-project.md)・[DES-019](../interface/DES-019-ipc-select-inputs.md)。製品作成フローはDES-049、実コピーはDES-050。
+- 期待結果と根拠：進捗は保存成功・採用完了ではなく、実成功境界後にだけcreateSucceededを返す。結果はsavedBoardRevision=0、共通設定の番号は維持、normal候補。旧projectは採用まで保持し、画面の旧編集内容を新規初回対象へ混ぜない。新規保存先は実行前にも非存在を照合する。実中断は保護位置・transactionを返し、後続はCASE-041または明示断念へ接続する。[DES-034](../interface/DES-034-ipc-create-project.md)・[DES-019](../interface/DES-019-ipc-select-inputs.md)。製品作成フローはDES-049、実コピーはDES-050。
 - 観測・障害制御：O-TRACE/O-WRITE/C-BARRIERで段階・初回対象ハッシュ・旧所有を確認する。
 - 後片付け：成功候補を採用／discardしgateを終結する。途中書込みを取消せず実終端を確認してK-BASE。
 - 準備物・未決：初回固定対象と各進捗段階の観測が必要。契約判定の未決なし。
@@ -1029,7 +1038,7 @@ E-P/E-C/E-Tは本書の環境記号であり、ユニット／インテグレー
 
 ## 根拠・条件・ケースの対応
 
-条件内の根拠見出しとケース内の期待結果を合わせて正本とする。下表は多対多対応を追跡するための一覧であり、共通型ケースだけで22入口の処理成立を代替しない。全体根拠[DES-011](../interface/DES-011-ipc-contracts.md)のコマンド一覧を以下22行へ展開する。
+条件内の根拠見出しとケース内の期待結果を合わせて正本とする。下表は多対多対応を追跡するための一覧であり、共通型ケースだけで24入口の処理成立を代替しない。全体根拠[DES-011](../interface/DES-011-ipc-contracts.md)のコマンド一覧を以下22行へ展開する。
 
 ### 共通4契約
 
@@ -1040,7 +1049,7 @@ E-P/E-C/E-Tは本書の環境記号であり、ユニット／インテグレー
 | [DES-016](../interface/DES-016-ipc-composite-types.md) | COND-003・006・008・012〜022・025〜029・032・033 | [004](#case-004)、[009](#case-009)・[011](#case-011)・[013](#case-013)、[018](#case-018)〜[041](#case-041)、[045](#case-045)〜[053](#case-053)、[055](#case-055)・[056](#case-056)：全複合型と判別・必須・禁止項目 |
 | [DES-017](../interface/DES-017-ipc-error-contracts.md) | COND-001・031・032、異常を含む各条件 | [002](#case-002)、[024](#case-024)、[036](#case-036)・[039](#case-039)・[044](#case-044)・[054](#case-054)・[055](#case-055)、各拒否／失敗行：Promiseと通知、対象対、保護位置、phase |
 
-### 22コマンド
+### 24コマンド
 
 | コマンド・契約根拠 | 条件 | 主ケース・関連ケース |
 | --- | --- | --- |
@@ -1103,12 +1112,70 @@ E-P/E-C/E-Tは本書の環境記号であり、ユニット／インテグレー
 ## 文書レビューと引継ぎ
 
 - 具体化した範囲：COND-001〜033、CASE-001〜056。55ケースは契約に基づく期待結果と準備・操作・観測・後片付けを記載、CASE-056だけ識別台帳の保持終了境界を暫定としている。各ケースのパラメーター行は独立前提へ戻す。
-- レビュー観点：4共通契約、22コマンド、14通知の対応漏れ、必須／禁止／省略、正常／失敗・取消、通知先着／照会後着、元要求と制御要求、保存kindと実番号、候補世代と所有、専用終結を確認する。技術契約を新しいREQ受入条件にせず、製品データ・主ケースを管理元へ参照する。
-- 自身レビュー確認日：2026-10-13。既存の共通4契約・22入口と通知表へ型・識別項目・保存kind・順序・寿命を照合した。COND/CASEの連番・重複、ケースの記載項目、通常見出しリンクを形式確認し、候補トークン、Receipt、uploads、InputSpec見出しの参照を正本へ合わせた。工程全体の索引・厳格リンク検査と関連本文の同期は親担当の統合確認に従う。
+- レビュー観点：4共通契約、24コマンド、14通知の対応漏れ、必須／禁止／省略、正常／失敗・取消、通知先着／照会後着、元要求と制御要求、保存kindと実番号、候補世代と所有、専用終結を確認する。技術契約を新しいREQ受入条件にせず、製品データ・主ケースを管理元へ参照する。
+- 自身レビュー確認日：2026-10-13。既存の共通4契約・24入口と通知表へ型・識別項目・保存kind・順序・寿命を照合した。COND/CASEの連番・重複、ケースの記載項目、通常見出しリンクを形式確認し、候補トークン、Receipt、uploads、InputSpec見出しの参照を正本へ合わせた。工程全体の索引・厳格リンク検査と関連本文の同期は親担当の統合確認に従う。
 - 未決の返却先：製品設計担当。CASE-056の使用済みrequestIdと所有メタデータの保持終了条件・終了後扱いを、DES-014の「要求記録と結果受領」、DES-016の「ImageReceipt・Acknowledgement」、DES-018の初期化再取得へ返す。確定条件の実行準備は独立して進められる。結果本文除去と識別台帳の終了を混同しない。
 - 準備の引継ぎ先：実装・検証担当。E-P/E-C/E-Tの互換版確定、固定データと実体台帳、所有・要求・書込み観測、配送／段階待機／障害制御、契約テストコードと実機手順を準備する。フック・コード・実データ・環境は未作成であり、本書で準備完了を報告しない。IPC公開型・入口の追加は行わない。
 - 残る評価：実Tauri生バイナリとChannel、Worker、排他・保存境界・再起動・性能等の実物成立は未評価。文書の構文・リンク確認と契約レビューを、試験実行・試験合格・ADR採用・要件合意と区別する。
-- 工程関係：本書は詳細テスト設計のドラフト。設計索引・DES-013・全要件対応と共通準備／引継ぎは親担当が同期する。本書から他担当の文書・上流本文を変更しない。
+- 工程関係：本書は評価待ちの詳細テスト設計。設計索引・DES-013・全要件対応と共通準備／引継ぎは親担当が同期する。本書から他担当の文書・上流本文を変更しない。
 
+## 共通設定分離で追加した条件とケース
 
+### COND-034
 
+- 名称：共通設定専用IPCとアプリ寿命。
+- 根拠：[REQ-030](../../product-requirements/functional-requirements/cross-cutting/REQ-030-shared-settings.md)、[DES-063](../functional-design/cross-cutting/DES-063-common-settings-management.md)。
+- 網羅・判定：DES-064/065の全入力・全結果分岐、8項目の型・範囲・null・版、revision/fileVersion照合、失敗前後の適用、session切替・二重要求・結果回収・再作成・終了保護をCASE-057～060で確認する。
+- 状態：文書設計のみ。実行環境・実データ・製品試験は未準備／未実施。
+
+### CASE-057
+
+- 名称・確認目的：設定取得と保存の型・スコープ・所有。
+- 対応条件：[COND-034](#cond-034)。根拠は変更後REQ-030・DES-063、および各CONDの参照要件・設計。製品試験は未実施。
+- 確認層・品質観点：Rust状態ユニット＋Windows実ファイル結合＋実機E2E。保存責務の分離・値の保持・未保存保護。
+- 前提・データ仕様：get_app_settings/save_app_settingsの正常入力、不要sessionId/projectId/destinationToken、未知キー／項目欠落／不正型・値域を単一変異。ボード未オープンと通常利用中。
+- 準備：共通仕様の使い捨てアプリ配置・ボード保存領域を用意し、入力と正常ファイルの独立保護コピーを作る。実装・実ビルド・データ・観測口は後続担当が準備する。
+- 操作・事象：取得→正規mode=save、全8項目を変更。requestId二重送信・同WebView照会ack・別WebView照会を各行。
+- 期待結果と根拠：ボードなしでも取得・保存可能。版・値・path・revision・fileVersion・statusの完全snapshotを返し同一requestIdは再書込しない。別所有を拒否。設定IPCにボード保存先やsessionを混入できない。
+- 観測・制御：独立した現物ハッシュ・値台帳とサービス状態・画面表示を比較する。
+- 後片付け：結果と現物の証拠を回収し、障害・保留を解除して対象アプリを終了する。今回所有する使い捨て領域だけ整理し、未完了・唯一の正常コピー・原本退避を無条件削除しない。
+- 未決・引継ぎ：実行準備と製品検証は未完了。文書検査を動作合格としない。
+
+### CASE-058
+
+- 名称・確認目的：適用前拒否と適用後保存失敗の結果。
+- 対応条件：[COND-034](#cond-034)。根拠は変更後REQ-030・DES-063、および各CONDの参照要件・設計。製品試験は未実施。
+- 確認層・品質観点：Rust状態ユニット＋Windows実ファイル結合＋実機E2E。保存責務の分離・値の保持・未保存保護。
+- 前提・データ仕様：期待revision/fileVersion不一致、型不正、正常入力後の書込失敗、置換後同期失敗を別行。
+- 準備：共通仕様の使い捨てアプリ配置・ボード保存領域を用意し、入力と正常ファイルの独立保護コピーを作る。実装・実ビルド・データ・観測口は後続担当が準備する。
+- 操作・事象：入力受付境界と値stage境界を観測し、save/retryの結果を照合。
+- 期待結果と根拠：適用前不正はFailedEnvelopeで値不変。適用後I/O失敗はoutcome=failedと現在snapshot/lastErrorを返し、即時6項目を保持、後2項目の次回値は旧成功値。outcomeUnknownは照合まで追加書込禁止。全ボード現物不変。
+- 観測・制御：独立した現物ハッシュ・値台帳とサービス状態・画面表示を比較する。
+- 後片付け：結果と現物の証拠を回収し、障害・保留を解除して対象アプリを終了する。今回所有する使い捨て領域だけ整理し、未完了・唯一の正常コピー・原本退避を無条件削除しない。
+- 未決・引継ぎ：実行準備と製品検証は未完了。文書検査を動作合格としない。
+
+### CASE-059
+
+- 名称・確認目的：設定要求はボード切替を越えて結果回収。
+- 対応条件：[COND-034](#cond-034)。根拠は変更後REQ-030・DES-063、および各CONDの参照要件・設計。製品試験は未実施。
+- 確認層・品質観点：Rust状態ユニット＋Windows実ファイル結合＋実機E2E。保存責務の分離・値の保持・未保存保護。
+- 前提・データ仕様：設定保存受付後に応答を遅延しボードを採用・閉じる。旧ボード要求も遅延。
+- 準備：共通仕様の使い捨てアプリ配置・ボード保存領域を用意し、入力と正常ファイルの独立保護コピーを作る。実装・実ビルド・データ・観測口は後続担当が準備する。
+- 操作・事象：切替後に設定応答を届け、同WebViewからsessionなしでquery/ack。exit ready時に設定成功・未保存・進行中を別行で照合。
+- 期待結果と根拠：設定記録はアプリ寿命で保持し切替後も成功を設定だけへ反映。旧ボード成功は新ボードへ適用しない。exitは必要な設定保存完了と最新番号を照合、close/adoptは設定処理を待機・取消しない。
+- 観測・制御：独立した現物ハッシュ・値台帳とサービス状態・画面表示を比較する。
+- 後片付け：結果と現物の証拠を回収し、障害・保留を解除して対象アプリを終了する。今回所有する使い捨て領域だけ整理し、未完了・唯一の正常コピー・原本退避を無条件削除しない。
+- 未決・引継ぎ：実行準備と製品検証は未完了。文書検査を動作合格としない。
+
+### CASE-060
+
+- 名称・確認目的：明示再作成トークンと退避の順序。
+- 対応条件：[COND-034](#cond-034)。根拠は変更後REQ-030・DES-063、および各CONDの参照要件・設計。製品試験は未実施。
+- 確認層・品質観点：Rust状態ユニット＋Windows実ファイル結合＋実機E2E。保存責務の分離・値の保持・未保存保護。
+- 前提・データ仕様：破損／非対応版／読込失敗。prepareRecreate成功後の外部変更・トークン別所有・再利用・期限外は別行。
+- 準備：共通仕様の使い捨てアプリ配置・ボード保存領域を用意し、入力と正常ファイルの独立保護コピーを作る。実装・実ビルド・データ・観測口は後続担当が準備する。
+- 操作・事象：通常save/retry拒否→prepareRecreate→取消またはrecreate。退避・同期失敗も挿入。
+- 期待結果と根拠：prepareは値を変更せず観測原本のトークンだけ発行。read失敗は読取可能になるまで準備不可。正しいトークン・最新原本が一致し退避検証同期に成功してから再作成。取消・不一致・退避失敗で原本不変。
+- 観測・制御：独立した現物ハッシュ・値台帳とサービス状態・画面表示を比較する。
+- 後片付け：結果と現物の証拠を回収し、障害・保留を解除して対象アプリを終了する。今回所有する使い捨て領域だけ整理し、未完了・唯一の正常コピー・原本退避を無条件削除しない。
+- 未決・引継ぎ：実行準備と製品検証は未完了。文書検査を動作合格としない。

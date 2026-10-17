@@ -6,10 +6,10 @@ description: MagickWandによる6形式・色変換と専用プロセス分離�
 
 # ADR-013：ImageMagickを同梱する画像変換ワーカー
 
-- 状態：提案。ImageMagick同梱はユーザー選択済み。API・ビルド構成と上流差分のレビュー・成立確認を残す。
+- 状態：提案。ImageMagick同梱の方針を記録する。API・ビルド構成と上流差分のレビュー・成立確認を残す。
 - 作成日：2026-10-08
 - 決定日：未決
-- 判断権限・出典：ユーザーの対話回答と詳細設計反映の実行指示を要約。MagickWand、Q16、Little CMS、フィルターの具体化は設計担当の案。
+- 判断権限・出典：ImageMagick同梱の方針の決定者はユーザー。詳細方式の記録・検討は設計担当が[REQ-002](../../product-requirements/functional-requirements/collection/REQ-002-static-image-formats.md)、[REQ-034](../../product-requirements/non-functional-requirements/collection/REQ-034-image-conversion-timeout.md)の適用範囲を入力に、技術方式と確認できる理由を本記録へ整理する。既存の状態・未決事項は維持し、記録整理を採用・上流合意・試験合格と扱わない。
 - 関連：[REQ-002](../../product-requirements/functional-requirements/collection/REQ-002-static-image-formats.md)、[REQ-003](../../product-requirements/functional-requirements/collection/REQ-003-batch-import-errors.md)、[REQ-029](../../product-requirements/non-functional-requirements/cross-cutting/REQ-029-image-and-project-limits.md)、[DES-010](../functional-design/collection/DES-010-image-import-pipeline.md)、[ADR-012](2026-10-06-ADR-012-image-resource-limits.md)。
 
 ## 背景・比較
@@ -18,9 +18,9 @@ description: MagickWandによる6形式・色変換と専用プロセス分離�
 
 | 候補 | 利点 | 負担・判断 |
 | --- | --- | --- |
-| 同梱ImageMagickのMagickWand API | 共通APIから読込・色変換・縮小・出力を扱い、専用プロセスで制限できる | C FFI・コーデック・DLL・ライセンス・ポリシー・更新の管理が必要。ユーザー選択に沿う案 |
+| 同梱ImageMagickのMagickWand API | 共通APIから読込・色変換・縮小・出力を扱い、専用プロセスで制限できる | C FFI・コーデック・DLL・ライセンス・ポリシー・更新の管理が必要。本記録の同梱方針に沿う案 |
 | ImageMagick CLIを画像ごとに起動 | コマンド境界が明確 | 起動とプロセス管理、引数・エラー解析が増える。APIを使う常駐ワーカーを優先する設計案 |
-| Rustの個別デコーダーと色変換を組み合わせる | Rust中心で構成できる | 6形式・ICC・縮小の一貫した契約を個別に実証する必要があり、ユーザーの同梱選択から離れる |
+| Rustの個別デコーダーと色変換を組み合わせる | Rust中心で構成できる | 6形式・ICC・縮小の一貫した契約を個別に実証する必要があり、本記録の同梱方針から離れる |
 
 ## 選定案と影響
 

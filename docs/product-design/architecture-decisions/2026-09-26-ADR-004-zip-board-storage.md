@@ -9,7 +9,7 @@ description: ボードを独自の単一ZIPファイルで保存・移送し、�
 - 状態：採用
 - 作成日：2026-09-26
 - 決定日：2026-09-26
-- 決定者・判断権限の根拠：ユーザーが本チャットで独自の単一ファイル、ZIPによる内部ディレクトリの格納、取込時の内部画像形式への統一を指定した。PNGは「取り扱いやすい形式」という依頼に基づく設計担当の選定。要件の対応形式や先頭コマ・ページの範囲は変更しない。
+- 決定者・判断権限の根拠：単一ZIPと内部画像形式への統一の方針の決定者はユーザー。詳細方式の記録・検討は設計担当が[REQ-018](../../product-requirements/functional-requirements/cross-cutting/REQ-018-source-independent-resumption.md)、[REQ-019](../../product-requirements/functional-requirements/cross-cutting/REQ-019-cross-pc-transfer.md)の適用範囲を入力に、技術方式と確認できる理由を本記録へ整理する。既存の状態・未決事項は維持し、記録整理を採用・上流合意・試験合格と扱わない。
 - 関連要求・要件・設計：[REQ-002](../../product-requirements/functional-requirements/collection/REQ-002-static-image-formats.md#req-002静止画形式と複数フレームの扱い)、[REQ-011](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)、[REQ-018](../../product-requirements/functional-requirements/cross-cutting/REQ-018-source-independent-resumption.md#req-018原本に依存しない継続)、[REQ-019](../../product-requirements/functional-requirements/cross-cutting/REQ-019-cross-pc-transfer.md#req-019利用者の別pcへの引継ぎ)、[DES-001](../architecture/DES-001-system-architecture.md#des-001リファレンスボードの全体設計)。
 
 ## 背景・制約
@@ -20,10 +20,10 @@ description: ボードを独自の単一ZIPファイルで保存・移送し、�
 
 | 選択肢 | 利点 | 不利益・リスク | 判断 |
 | --- | --- | --- | --- |
-| 独自の単一ZIPファイル | 持ち運ぶ対象が一つで、画像を内部に同梱できる | 保存時の書込量・一時容量・更新途中の保護が課題 | ユーザーが選択 |
+| 独自の単一ZIPファイル | 持ち運ぶ対象が一つで、画像を内部に同梱できる | 保存時の書込量・一時容量・更新途中の保護が課題 | 本記録の選定方針 |
 | フォルダーをそのまま保存・移送 | 内部ファイルを個別に扱える | 全ファイルを揃えて移す必要がある | 不採用 |
 | 通常保存と移送用書出しを分離 | 日常保存と移送形式を別々に設計できる | 移送のための操作が増える | 不採用 |
-| 元形式の画像を保持 | 元の符号化データを残せる | 内部で複数形式を扱う | ユーザーが内部形式への統一を指定 |
+| 元形式の画像を保持 | 元の符号化データを残せる | 内部で複数形式を扱う | 内部画像形式への統一方針 |
 | PNGへ統一 | 可逆圧縮と透過に対応し、Rustで読込・書込できる | 容量増加と取込時の変換処理がある | 設計担当が選定 |
 
 ## 決定と理由
@@ -36,7 +36,7 @@ description: ボードを独自の単一ZIPファイルで保存・移送し、�
 
 ## 根拠資料・試作結果
 
-- 本チャットでのユーザーの回答の要約：独自形式の1ファイルとし、実体はディレクトリをZIP圧縮した形式。画像は取込時に内部用の扱いやすい形式へ統一する。
+- 内容の根拠：[初期版の画像取込条件](../../product-demands/product-decisions/2026-10-14-initial-image-import-policy.md#決定内容)、[保存完了と再開の保証範囲](../../product-demands/product-decisions/2026-10-14-save-completion-and-resumption-policy.md#決定内容)。プロダクト上の決定範囲を参照し、方式の理由は本書の候補比較・決定と理由で示す。
 - [PNG仕様](https://www.w3.org/TR/png-3/)、[Rust imageの形式別処理](https://docs.rs/image/latest/image/codecs/)を確認。PNGの可逆圧縮・透過と実装手段の根拠。
 - 試作・性能計測・実機確認は未実施。
 

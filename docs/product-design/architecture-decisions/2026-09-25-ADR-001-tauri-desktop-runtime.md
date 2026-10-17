@@ -9,7 +9,7 @@ description: Windows 11初期版の実行基盤にTauri 2とRustを採用し、�
 - 状態：採用
 - 作成日：2026-09-25
 - 決定日：2026-09-25
-- 決定者・判断権限の根拠：ユーザーが対話で「A案 Tauri を採用する方針で ADR を記述してほしい」と明示した。採用は実行基盤の方針であり、条件付き要件の未決事項を確定したものではない。
+- 決定者・判断権限の根拠：Tauri採用の方針の決定者はユーザー。詳細方式の記録・検討は設計担当が[REQ-020](../../product-requirements/non-functional-requirements/cross-cutting/REQ-020-portable-windows-app.md)の適用範囲を入力に、技術方式と確認できる理由を本記録へ整理する。既存の状態・未決事項は維持し、記録整理を採用・上流合意・試験合格と扱わない。
 - 関連要求・要件・設計：[DEM-004](../../product-demands/cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)、[DEM-005](../../product-demands/cross-cutting/DEM-005-continue-on-another-pc.md#dem-005別pcでも蓄積内容を使い続ける)、[REQ-001](../../product-requirements/functional-requirements/collection/REQ-001-add-image-path.md#req-001画像の追加経路)、[REQ-005](../../product-requirements/functional-requirements/comparison/REQ-005-keep-references-visible.md#req-005制作中の参照維持)、[REQ-020](../../product-requirements/non-functional-requirements/cross-cutting/REQ-020-portable-windows-app.md#req-020windows-11でのインストール不要利用)、[REQ-021](../../product-requirements/non-functional-requirements/cross-cutting/REQ-021-normal-operation-latency.md#req-021通常時の操作反応)、[REQ-022](../../product-requirements/non-functional-requirements/cross-cutting/REQ-022-normal-detail-display.md#req-022通常時の細部表示)、[REQ-023](../../product-requirements/non-functional-requirements/cross-cutting/REQ-023-saving-operation-latency.md#req-023保存中の操作反応)、[REQ-024](../../product-requirements/non-functional-requirements/cross-cutting/REQ-024-saving-detail-display.md#req-024保存中の細部表示)、[REQ-025](../../product-requirements/non-functional-requirements/cross-cutting/REQ-025-saved-project-open-performance.md#req-025保存済み500枚の再開性能)、[REQ-026](../../product-requirements/non-functional-requirements/cross-cutting/REQ-026-batch-import-performance.md#req-026ローカル500枚の初回取込性能)、[DES-001：全体設計](../architecture/DES-001-system-architecture.md#des-001リファレンスボードの全体設計)。
 
 ## 背景・制約
@@ -22,11 +22,11 @@ description: Windows 11初期版の実行基盤にTauri 2とRustを採用し、�
 | --- | --- | --- | --- | --- |
 | A：Tauri 2、Rust、TypeScript、Vite、PixiJS | RustとWebフロントを組み合わせられ、Windows向けにインストーラーを作らないビルド経路がある | OSのWebViewを利用し、将来の複数OSも視野に入る | WindowsではWebView2の存在と版に依存する。HTML5ドラッグ＆ドロップと実機性能の確認が必要 | [Tauri概要](https://v2.tauri.app/start/)、[WebViewの版](https://v2.tauri.app/reference/webview-versions/)、[配布](https://v2.tauri.app/distribute/) |
 | B：Electron、TypeScript、Vite、PixiJS | 同じWebフロントを用い、Chromiumを含めて配布できる | Web描画環境の版を配布物側で揃えやすい | 配布物が大きくなり、希望するRustバックエンドを標準構成の外で統合する必要がある | [Electronのプロセスモデル](https://www.electronjs.org/docs/latest/tutorial/process-model)、[配布](https://www.electronjs.org/docs/latest/tutorial/application-distribution) |
-| C：Avalonia、.NET | 複数OS向けのネイティブ系UIとして候補になる | WebView依存を避けられる | Rust＋TypeScript＋PixiJSというユーザーの希望から離れ、描画・UI構成を組み直す必要がある | [Avalonia公式](https://docs.avaloniaui.net/) |
+| C：Avalonia、.NET | 複数OS向けのネイティブ系UIとして候補になる | WebView依存を避けられる | Rust＋TypeScript＋PixiJSの構成方針から離れ、描画・UI構成を組み直す必要がある | [Avalonia公式](https://docs.avaloniaui.net/) |
 
 ## 決定と理由
 
-A案を採用する。デスクトップ窓とOS機能との接続をTauri 2、画像の取込・保存などのバックエンド処理をRust、画面をTypeScript＋Vite＋PixiJSで構成する。ユーザーがA案を明示選択し、Web技術での描画とRustバックエンドという希望に一致するためである。画面の描画方針は[ADR-002](2026-09-25-ADR-002-pixijs-ui-rendering.md)に記録する。
+A案を採用する。デスクトップ窓とOS機能との接続をTauri 2、画像の取込・保存などのバックエンド処理をRust、画面をTypeScript＋Vite＋PixiJSで構成する。Web技術での描画とRustバックエンドの方針を両立できるためである。画面の描画方針は[ADR-002](2026-09-25-ADR-002-pixijs-ui-rendering.md)に記録する。
 
 ## 影響・利点・不利益・リスク
 
@@ -55,4 +55,4 @@ A案を採用する。デスクトップ窓とOS機能との接続をTauri 2、�
 
 ## 同梱ランタイムの詳細化
 
-実行基盤としてのTauri採用は維持する。ユーザーが詳細設計対話で選択したHome・x64・サポート中通常リリースと常時固定WebView2を[DES-012](../non-functional-design/cross-cutting/DES-012-portable-runtime-distribution.md)へ反映した。配布方式の比較・理由は[ADR-015](2026-10-08-ADR-015-fixed-webview2-distribution.md)。OS内蔵WebView2の記述は従前の確認根拠であり、今回の配布物が端末Evergreenを選択する契約ではない。上流条件反映と実機起動は別に確認する。
+実行基盤としてのTauri採用は維持する。Home・x64・サポート中通常リリースと常時固定WebView2の方針を[DES-012](../non-functional-design/cross-cutting/DES-012-portable-runtime-distribution.md)へ反映した。配布方式の比較・理由は[ADR-015](2026-10-08-ADR-015-fixed-webview2-distribution.md)。OS内蔵WebView2の記述は従前の確認根拠であり、今回の配布物が端末Evergreenを選択する契約ではない。上流条件反映と実機起動は別に確認する。

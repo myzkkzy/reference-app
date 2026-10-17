@@ -6,7 +6,7 @@ description: 画像変換の同時実行数・メモリ・処理時間を制限�
 
 # DES-043：画像変換の資源制御
 
-- 設計状態：ドラフト
+- 設計状態：評価待ち。画像変換の同時数・メモリ・時間制限と異常時保護の成立確認を待つ。残件の担当・解消条件・進行範囲は本文の未決事項・引継ぎに従い、必要な確認後にドラフトへ戻して再レビューする。
 - 分割元：[DES-009](../../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)、[DES-010](../../functional-design/collection/DES-010-image-import-pipeline.md)。本文の意味・数値・保証範囲を保持した整理であり、新たな合意・設計完了・試験合格を表さない。
 - 目的・範囲：画像変換の資源制御の詳細を管理する。操作、データ項目、画面配置、通信項目の正本は依存設計を参照する。
 - 参照要件：[REQ-003](../../../product-requirements/functional-requirements/collection/REQ-003-batch-import-errors.md)、[REQ-026](../../../product-requirements/non-functional-requirements/cross-cutting/REQ-026-batch-import-performance.md)、[REQ-029](../../../product-requirements/non-functional-requirements/cross-cutting/REQ-029-image-and-project-limits.md)、[REQ-034](../../../product-requirements/non-functional-requirements/collection/REQ-034-image-conversion-timeout.md)。現在の合意状況と受入条件は各要件本文を正本とする。
@@ -41,16 +41,16 @@ description: 画像変換の同時実行数・メモリ・処理時間を制限�
 
 ### DES-009から引き継ぐ情報
 
-- 設計状態：ドラフト。保存統合・復元と資源制御を具体化したが、障害・性能検証と変更要件のレビューが残るため実装引継ぎ可能とはしない。
-- 入力確認日：2026-09-30。ユーザーの設定独立保存、確認中の保存停止と戻った後の集約実行、入力済みメモ保存・IME変換中除外、同一ファイル再読込、取込完了待ち、表示位置保存、全保存での復旧用更新の回答と、本設計具体化計画の実行指示を確認。要件全体への合意・製品試験合格とは区別する。
+- 分割元の確認事項：保存統合・復元と資源制御を具体化したが、障害・性能検証と変更要件のレビューが残るため実装引継ぎ可能とはしない。
+- 入力確認日：2026-09-30。確認時点の入力は[DES-009](../../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)、[DES-010](../../functional-design/collection/DES-010-image-import-pipeline.md)、[REQ-003](../../../product-requirements/functional-requirements/collection/REQ-003-batch-import-errors.md)、[REQ-026](../../../product-requirements/non-functional-requirements/cross-cutting/REQ-026-batch-import-performance.md)の本文・該当節。現在の合意状況・設計状態は各本文を正本とし、方式の反映と成立確認を区別する。
 - 関連ADR：[ADR-011](../../architecture-decisions/2026-10-05-ADR-011-project-lock-and-retry.md)（排他・明示再試行、提案）、[ADR-004](../../architecture-decisions/2026-09-26-ADR-004-zip-board-storage.md)・[ADR-010](../../architecture-decisions/2026-09-29-ADR-010-sqlite-project-storage.md)は採用、[ADR-005](../../architecture-decisions/2026-09-26-ADR-005-save-recovery-policy.md)は変更要件レビュー・障害検証が残る提案。
 
 詳細な文脈・確認事項・引継ぎは[DES-009](../../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)を参照する。
 ### DES-010から引き継ぐ情報
 
-- 設計状態：ドラフト。方式選択を反映済み。要件差分の反映・レビューと実機成立確認は未完了。
-- 入力確認日：2026-10-08。ユーザーの対話回答と詳細設計反映の実行指示を要約して記録する。URL自動取得、グリッド、長辺320、既存要素回避、ImageMagick同梱、壊れたICCの個別失敗はユーザー選択。API・補助ライブラリ・配置間隔は設計案。
-- 関連判断：[ADR-013](../../architecture-decisions/2026-10-08-ADR-013-imagemagick-worker.md)、[ADR-016](../../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)。HTML5入力はユーザー選択済み。選定と試験合格は別に管理する。
+- 分割元の確認事項：方式選択を反映済み。要件差分の反映・レビューと実機成立確認は未完了。
+- 入力確認日：2026-10-08。確認時点の入力は[DES-009](../../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)、[DES-010](../../functional-design/collection/DES-010-image-import-pipeline.md)、[REQ-003](../../../product-requirements/functional-requirements/collection/REQ-003-batch-import-errors.md)、[REQ-026](../../../product-requirements/non-functional-requirements/cross-cutting/REQ-026-batch-import-performance.md)の本文・該当節。現在の合意状況・設計状態は各本文を正本とし、方式の反映と成立確認を区別する。
+- 関連判断：[ADR-013](../../architecture-decisions/2026-10-08-ADR-013-imagemagick-worker.md)、[ADR-016](../../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)。HTML5入力はADR-016に記録済み。選定と試験合格は別に管理する。
 
 詳細な文脈・確認事項・引継ぎは[DES-010](../../functional-design/collection/DES-010-image-import-pipeline.md)を参照する。
 

@@ -6,13 +6,13 @@ description: 初期版の500枚評価条件と各3回全回合格を保持し、
 
 # DES-053：操作・細部表示・再開・取込性能のテスト設計
 
-- 設計状態：ドラフト。既定条件に基づく条件とケースを具体化。性能の固定画像・ボード・具体操作・計測方法の未決に依存する完全受入判定と引継ぎ可能判断は保留。
+- 設計状態：評価待ち。既定条件に基づく条件とケースを具体化。性能の固定画像・ボード・具体操作・計測方法の未決に依存する完全受入判定と引継ぎ可能判断は保留。残件の担当・解消条件・進行範囲は本文の未決事項・引継ぎに従い、必要な確認後にドラフトへ戻して再レビューする。
 - 目的・範囲：REQ-021～026／033の通常時・自動／手動保存中の反応と細部、保存済み500枚再開、ローカル500枚初回取込を設計する。
 - 入力確認日：2026-10-13。
-- 根拠・参照要件：[REQ-021](../../product-requirements/non-functional-requirements/cross-cutting/REQ-021-normal-operation-latency.md)、[REQ-022](../../product-requirements/non-functional-requirements/cross-cutting/REQ-022-normal-detail-display.md)、[REQ-023](../../product-requirements/non-functional-requirements/cross-cutting/REQ-023-saving-operation-latency.md)、[REQ-024](../../product-requirements/non-functional-requirements/cross-cutting/REQ-024-saving-detail-display.md)、[REQ-025](../../product-requirements/non-functional-requirements/cross-cutting/REQ-025-saved-project-open-performance.md)、[REQ-026](../../product-requirements/non-functional-requirements/cross-cutting/REQ-026-batch-import-performance.md)は条件付き合意、[REQ-033](../../product-requirements/non-functional-requirements/cross-cutting/REQ-033-performance-evaluation-conditions.md)はドラフト。既定閾値・負荷・試行と、未決解消後に必要な合意を維持する。
+- 根拠・参照要件：[REQ-021](../../product-requirements/non-functional-requirements/cross-cutting/REQ-021-normal-operation-latency.md)、[REQ-022](../../product-requirements/non-functional-requirements/cross-cutting/REQ-022-normal-detail-display.md)、[REQ-023](../../product-requirements/non-functional-requirements/cross-cutting/REQ-023-saving-operation-latency.md)、[REQ-024](../../product-requirements/non-functional-requirements/cross-cutting/REQ-024-saving-detail-display.md)、[REQ-025](../../product-requirements/non-functional-requirements/cross-cutting/REQ-025-saved-project-open-performance.md)、[REQ-026](../../product-requirements/non-functional-requirements/cross-cutting/REQ-026-batch-import-performance.md)、[REQ-033](../../product-requirements/non-functional-requirements/cross-cutting/REQ-033-performance-evaluation-conditions.md)。既定閾値・負荷・試行と、未決解消後に必要な合意を維持する。現在の合意状況は各要件本文を正本とする。
 - 依存設計・方針：[DES-042](../non-functional-design/cross-cutting/DES-042-rendering-performance-and-resources.md)、[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)、[DES-010](../functional-design/collection/DES-010-image-import-pipeline.md)、[DES-013](../test-strategy/DES-013-common-test-strategy.md)。
 - 分担：機能の正しさは047／048／049、永続化成功境界は050、IPC通知と型は051、容量上限・表示予算・解放は052、配布環境は054を参照する。時間性能の主ケースは本書。500枚を登録上限や500枚超の同じ性能保証にしない。
-- ユーザー指定：固定ボード・操作・計測方法は未決を明示して設計する。本文で暫定の距離・倍率・対象や測定法を補って未決を解消しない。
+- 未決条件：REQ-033に従い、固定ボード・操作・計測方法は未決を明示して設計する。本文で暫定の距離・倍率・対象や測定法を補って未決を解消しない。
 
 ## 共通のデータ仕様・環境要件・手順
 
@@ -50,7 +50,7 @@ description: 初期版の500枚評価条件と各3回全回合格を保持し、
 
 ### 観測の仕様と未選択の測定法
 
-実画面と内部段階を関連付けるため、入力イベント、要求受付、スナップショット固定、DB生成、ZIP close／検証／同期、置換・復旧更新・complete、候補検証／採用、PNG受信／decode、実描画、操作可能の証拠を要求する。request/session/asset/snapshot/transaction、保存trigger、両現在／成功番号を関連付ける。
+実画面と内部段階を関連付けるため、入力イベント、要求受付、スナップショット固定、DB生成、ZIP close／検証／同期、置換・復旧更新・complete、候補検証／採用、PNG受信／decode、実描画、操作可能の証拠を要求する。request/session/asset/snapshot/transaction、保存trigger、当該ボードの現在／成功番号を関連付ける。
 
 時間差の基準は上表の始点・終点。内部accepted・decode終了・通知受信を実表示の代わりにしない。時計・分解能・異なる時計の同期、画面変化／最終精細さの測定装置・判定方式、保存実処理との重なりの検出はU4として選択を残す。測定誤差で閾値を緩和したり、架空の観測フック・実測値を本文へ追加しない。
 
@@ -227,7 +227,7 @@ description: 初期版の500枚評価条件と各3回全回合格を保持し、
 - 準備：CASE-003と同じ固定負荷・開始状態にそろえる。固定された手動保存入力と実処理区間の検出を用意する。無関係な定期保存の重なりがないことを証拠化する手順はU4未決。
 - 操作・事象：1. 固定未保存状態を用意。2. 手動保存を要求し実保存開始を確認。3. 処理中に固定パン／ズームを行い表示開始を採取。4. 保存終端を確認、状態を戻し各3回を別記録する。
 - 期待結果と根拠：手動保存中の各パン／ズーム3回すべて500ms以下、操作継続可能。[REQ-023](../../product-requirements/non-functional-requirements/cross-cutting/REQ-023-saving-operation-latency.md)・[REQ-033](../../product-requirements/non-functional-requirements/cross-cutting/REQ-033-performance-evaluation-conditions.md)。自動保存の値やaccepted受付だけでこのケースを満たさない。保存成功は含まれた番号だけを反映する。
-- 観測方法・障害制御：手動trigger、保存区間、入力／実表示開始、固定対象と後続編集・両番号。保存の成功境界は050を参照する。 本性能系列に人工障害は入れない。診断で遅延・保留を使った記録は別扱い。
+- 観測方法・障害制御：手動trigger、保存区間、入力／実表示開始、固定対象と後続編集・ボードとアプリ共通設定の独立番号。保存の成功境界は050を参照する。 本性能系列に人工障害は入れない。診断で遅延・保留を使った記録は別扱い。
 - 後片付け：共通手順で測定・取込・保存を終結、証拠を回収して設定・観測制御を戻し、原本と唯一正常コピーを保護してアプリを終了する。
 - 実現方法・準備物：実物のアプリ・評価機・画像・保存データと画面観測。自動化／手動観測の具体選択はU4、コード・測定機器・記録台帳の実体は後続準備。実Canvas・実保存を通す。
 - 未決・影響：U1～U4。手動操作と保存重なりの具体判定が未決。 具体ビルド、実画像、実機、測定コード・機器の不存在は準備未完了として別管理。閾値・3回全回合格は変更しない。
@@ -314,7 +314,7 @@ description: 初期版の500枚評価条件と各3回全回合格を保持し、
 | 未決U2：ボード固定状態 | 配置・回転・拡縮、グループ数、メモ数・文章量、表示位置・倍率・設定。CASE-001～007、取込開始設定は008 | 設計・検証担当が実利用・試作を確認し検証計画時に固定。内容・保存負荷を台帳化して影響CASEを再レビュー |
 | 未決U3：具体入力 | 対象画像、パン・ズーム・停止・開く・handoffの対象／手順。全CASE | 設計・検証担当が検証計画時に再現する手順を固定し、REQ始点終点を維持した条件への必要な合意を確認 |
 | 未決U4：計測と保存中／細部検出 | 時計・分解能・計測方法、保存との重なり、最終精細さ・操作可能の具体的観測。全CASE | 設計・検証担当が検証実施前に実画面・実処理に対して固定し、誤差や区間分類の影響を含め再レビュー。新閾値へ置き換えない |
-| 上流合意待ち | REQ-021～026の条件付き合意、REQ-033現在本文と固定評価条件の合意 | 要件担当が未決解消内容と変更後評価条件を照合。ユーザーが未決維持を選んだ現在段階で完全受入へ昇格しない |
+| 上流条件の解消・合意待ち | REQ-033の未決4項目の具体化と固定評価条件への合意 | 要件担当が未決解消内容と変更後評価条件を照合し、ユーザーの合意を確認する。確定済み条件での設計・試作・予備計測まで進め、条件解消・合意前は完全受入判定を行わない |
 | 後続準備未完了 | 実ビルド・依存版、評価機、実画像／保存ファイル、計測・観測コード／機器、台帳・実行計画 | 実装・検証担当が仕様確定後に準備。U1～U4の判断待ちと単なる実体の未作成を別に記録し、実行前に照合 |
 | 未確認 | 全性能実測、実保存中の重なり、対象最終実表示、3回全回、復元・操作可能 | 検証担当が未決解消・準備後に実行し証拠と結果を保存。設計担当は結果による契約・ケース変更だけを再レビュー |
 
@@ -323,4 +323,3 @@ description: 初期版の500枚評価条件と各3回全回合格を保持し、
 - 前回の独立受入行レビュー：機能担当がREQ-021～026の各受入行とREQ-033の共通条件全体を、根拠表・共通仕様とリスクに応じた必要ケースへ独立照合した。閾値・各3回全回・保存種別と始点終点の維持を確認済み。全CASEを同じ深さで再読したという主張や性能実測・未決解消ではない。
 - 文書レビュー判断：既定条件と未決の範囲は文書化済み。未決依存の詳細条件と最終的な受入判断は保留。文書作成を未決解消・実行準備・性能達成・上流合意にしない。
 - 次の作業：構文・リンク確認後、本仕様とU1～U4を役割宛てに引き継ぐ。独立した機能・容量・障害・配布の文書設計は進める。実データ生成・環境構築・コード・試作・計測・試験実行は本担当で行わない。
-

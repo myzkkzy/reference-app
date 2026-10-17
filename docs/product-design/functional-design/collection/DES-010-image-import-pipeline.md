@@ -1,16 +1,16 @@
 ---
 type: Product Design
 title: 画像取込と初期配置の詳細設計
-description: HTML5入力とチャンク転送、画像変換ワーカー、部分成功、初期サイズと衝突回避配置を具体化するドラフト。
+description: HTML5入力とチャンク転送、画像変換ワーカー、部分成功、初期サイズと衝突回避配置を具体化する。
 ---
 
 # DES-010：画像取込と初期配置の詳細設計
 
-- 設計状態：ドラフト。方式選択を反映済み。要件差分の反映・レビューと実機成立確認は未完了。
+- 設計状態：評価待ち。入力・転送・画像変換・部分成功・初期配置の方式を具体化済み。合意済み要件との詳細照合、実機での入力・転送、画像変換ライブラリの配布構成、色・透過の品質、資源制限と配置性能の確認が残る。設計担当が要件・関連設計との整合を確認し、実装・検証担当が方式の成立を確認する。必要な確認後、ドラフトに戻して再レビューする。
 - 目的・範囲：画像入力から表示完了まで。保存・資源所有は[DES-009](../cross-cutting/DES-009-project-persistence-recovery.md)、通信の全体入口は[DES-011](../../interface/DES-011-ipc-contracts.md)、画像取込の通信契約は[import_images](../../interface/DES-020-ipc-import-images.md#import_images)を正本とする。
-- 入力確認日：2026-10-08。ユーザーの対話回答と詳細設計反映の実行指示を要約して記録する。URL自動取得、グリッド、長辺320、既存要素回避、ImageMagick同梱、壊れたICCの個別失敗はユーザー選択。API・補助ライブラリ・配置間隔は設計案。
+- 入力確認日：2026-10-08。確認時点の入力は[DES-009](../cross-cutting/DES-009-project-persistence-recovery.md)、[DES-011](../../interface/DES-011-ipc-contracts.md)、[import_images](../../interface/DES-020-ipc-import-images.md#import_images)、[REQ-001](../../../product-requirements/functional-requirements/collection/REQ-001-add-image-path.md)の本文・該当節。現在の合意状況・設計状態は各本文を正本とし、方式の反映と成立確認を区別する。
 - 参照要件：[REQ-001](../../../product-requirements/functional-requirements/collection/REQ-001-add-image-path.md)、[REQ-002](../../../product-requirements/functional-requirements/collection/REQ-002-static-image-formats.md)、[REQ-003](../../../product-requirements/functional-requirements/collection/REQ-003-batch-import-errors.md)、[REQ-004](../../../product-requirements/functional-requirements/comparison/REQ-004-board-overview-and-detail.md)、[REQ-026](../../../product-requirements/non-functional-requirements/cross-cutting/REQ-026-batch-import-performance.md)、[REQ-029](../../../product-requirements/non-functional-requirements/cross-cutting/REQ-029-image-and-project-limits.md)。001～004・029はドラフト、026は条件付き合意。受入条件の正本は各要件本文。
-- 関連判断：[ADR-013](../../architecture-decisions/2026-10-08-ADR-013-imagemagick-worker.md)、[ADR-016](../../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)。HTML5入力はユーザー選択済み。選定と試験合格は別に管理する。
+- 関連判断：[ADR-013](../../architecture-decisions/2026-10-08-ADR-013-imagemagick-worker.md)、[ADR-016](../../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)。HTML5入力はADR-016に記録済み。選定と試験合格は別に管理する。
 
 ## 責務と処理経路
 
@@ -32,6 +32,8 @@ flowchart LR
 [itemSucceeded](../../interface/DES-020-ipc-import-images.md#itemsucceeded)／[itemFailed](../../interface/DES-020-ipc-import-images.md#itemfailed)は変換結果、[importProcessed](../../interface/DES-020-ipc-import-images.md#importprocessed)は全変換の終結。画面は変換成功対象の配置・表示をdisplayed／placementFailed／displayFailedへ確定し、[sync_asset_refs](../../interface/DES-024-ipc-sync-asset-refs.md#sync_asset_refs)の受領後に[complete_import](../../interface/DES-025-ipc-complete-import.md#complete_import)を呼ぶ。[importFinished](../../interface/DES-020-ipc-import-images.md#importfinished)までバッチ参照を保持する。終了・切替はこの表示終結まで待ち、変換終結だけで進まない。
 
 ## 入力取得
+
+[初期UI方針のPDR](../../../product-demands/product-decisions/2026-10-14-initial-board-ui-policy.md#決定内容)のURL自動取得と初期配置の方針を具体化する。
 
 1. Windowsの`dragDropEnabled: false`でローカル・ブラウザのドラッグをHTML5へ統一する。ドロップ・貼付イベント中にFile／Blobと文字列を取得して保持し、後続の非同期処理からDataTransferを再読込しない。OSファイル選択は[select_inputs](../../interface/DES-019-ipc-select-inputs.md#select_inputs)(images)を使い、Rustが直接処理する入力トークンを返す。
 2. ブラウザが直接渡す画像ファイル／画素データを優先する。ドラッグで直接画像を得られず画像URLだけを得た場合は自動取得する。画像コピー後の貼付は画像データを対象とし、任意のURL文字列貼付やURL入力欄は追加しない。入力が取得不能ならその対象を失敗として通知する。
@@ -73,9 +75,11 @@ Rustの専用子プロセスからImageMagick 7のMagickWand C APIを呼ぶ。Q1
 
 取得・形式・寸法・色変換・変換資源・PNG登録・配置・表示を別の失敗段階として返す。取込時に追加されなかった対象と、ボードへ追加済みだが表示に失敗した対象を区別する。後者は画像実体を消さず、表示再要求の対象とする。証拠のない破損・権限・色プロファイル原因を推測しない。
 
-要件担当へ：REQ-001のURL自動取得条件、REQ-003の壊れたICC・配置失敗・部分成功、REQ-004の320px・既存要素回避を本文・受入条件と照合する。正常案は各取込経路で初期サイズと間隔を満たし操作可能になること。異常案は直接入力／URL取得／ICC／配置の失敗対象を識別し成功分と既存内容を保持すること。未合意の変更後要件全体を合意済みへ自動変更しない。
+設計担当へ：実装引継ぎ前にREQ-001のURL自動取得条件、REQ-003の壊れたICC・配置失敗・部分成功、REQ-004の320px・既存要素回避を合意済み要件の本文・受入条件と照合し、不一致を解消する。正常は各取込経路で初期サイズと間隔を満たし操作可能になること、異常は直接入力／URL取得／ICC／配置の失敗対象を識別し成功分と既存内容を保持することを照合観点とする。要件の意味変更が必要な場合は要件担当へ戻す。
 
 実装・検証担当へ：[DES-013](../../test-strategy/DES-013-common-test-strategy.md)に従い、6形式・先頭コマ／ページ・ICC・透過・巨大入力・HTML5入力・OS選択・チャンク再送／不一致・取得途中失敗・配置競合・表示失敗を小規模成立確認で評価する。MagickWandのWindowsビルド、FFI、実Tauri転送、色変換・ピーク資源と配置探索性能は未検証。成立しない場合は証拠と影響を記録して本書・ADR-013・016を見直す。
+
+上記を評価待ちの残件として実装引継ぎ前に確認し、必要な確認後にドラフトへ戻して再レビューする。
 
 根拠：[reqwest ClientBuilder](https://docs.rs/reqwest/latest/reqwest/struct.ClientBuilder.html)は接続・取得タイムアウトと転送制御の確認元。数値は本設計の初期値でありライブラリの既定値ではない。
 

@@ -6,7 +6,7 @@ description: save_projectの責務・事前条件、項目別の入出力、応�
 
 # DES-026：保存要求受付のIPC契約
 
-- 設計状態：評価待ち。契約は決定済み。実Tauriの成立確認・性能・障害評価は未実施。
+- 設計状態：ドラフト。共通設定分離を反映した変更後契約は再レビュー対象。実Tauriの成立確認・性能・障害評価は未実施。
 - 目的・範囲：保存要求受付。この入口とその応答・処理条件を管理し、編集正本や保存・排他の契約は根拠設計を参照する。
 - 分割関係：[DES-011](DES-011-ipc-contracts.md)から項目別契約を分割した。全体方針と参照要件・確認時点は分割元を参照する。
 - 関連判断：[ADR-016](../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)。文書の分割で方式の選択・設計状態を変更しない。
@@ -33,15 +33,14 @@ description: save_projectの責務・事前条件、項目別の入出力、応�
 | 要求元セッション | `sessionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。現セッション。解放・受領確認は所有を証明できる旧セッションも可。 | 対応要求 | `requestId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。元の受付要求。 |
 | 現プロジェクト | `projectId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。現プロジェクト。 | 要求元セッション | `sessionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。[CommonEnvelope](DES-014-ipc-common-protocol.md#commonenvelope)の照合規則。 |
 | 保存先 | `destinationToken` | [Token](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。現在先または選択済みsaveAs用途。 | 対象プロジェクト | `projectId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 対象判明時に必須。空セッション・対象不明では省略。 |
-| 保存種類 | `kind` | string（enum） | 必須。boardまたはsettings。 | — | — | — | — |
-| 保存契機 | `trigger` | string（enum） | 必須。boardはmanual・periodic、settingsはsettings-change。 | — | — | — | — |
-| 必要ボード番号 | `requiredBoardRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | boardだけ必須。settingsでは禁止。 | — | — | — | — |
-| 必要設定番号 | `requiredSettingsRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。 | — | — | — | — |
+| 保存種類 | `kind` | string（enum） | 必須。board固定。 | — | — | — | — |
+| 保存契機 | `trigger` | string（enum） | 必須。manual・periodic。共通設定保存は禁止。 | — | — | — | — |
+| 必要ボード番号 | `requiredBoardRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。 | — | — | — | — |
 | 後続通知経路 | `onEvent` | Tauri Channel（[NotificationEnvelope](DES-014-ipc-common-protocol.md#包絡型の参照先)） | 必須。要求ごとに画面が生成し、invoke前にハンドラーを登録する。 | — | — | — | — |
 
 ### 処理と失敗時の扱い
 
-[snapshotRequired](#snapshotrequired)は実行開始時に代表Channelへ一度だけ送る。保存の最終結果は達成した各要求へ[saveSucceeded](#savesucceeded)を返す。settingsのsaveAsは不可。保存先未確立なら先に[select_inputs](DES-019-ipc-select-inputs.md#select_inputs)(saveAs)し、board保存で確立する。
+[snapshotRequired](#snapshotrequired)は実行開始時に代表Channelへ一度だけ送る。対象はボードだけで、実保存番号が必要番号を満たした各要求へ[saveSucceeded](#savesucceeded)を返す。保存先未確立なら先にselect_inputs(saveAs)を行う。共通設定は[save_app_settings](DES-065-ipc-save-app-settings.md)へ分離し、このキュー・スナップショット・結果には含めない。
 
 ## 応答・通知・エラー
 
@@ -70,9 +69,8 @@ description: save_projectの責務・事前条件、項目別の入出力、応�
 | — | — | — | — | 対象プロジェクト | `projectId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 対象判明時に必須。空セッションでは省略。 |
 | — | — | — | — | 通知順序 | `eventSequence` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。要求内で増加。照会再掲では同じ値。 |
 | — | — | — | — | 保存対象識別子 | `snapshotId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。Rust発行。この実行に一意。 |
-| — | — | — | — | 保存種類 | `kind` | string（enum） | 必須。boardまたはsettings。 |
-| — | — | — | — | 必要ボード番号 | `requiredBoardRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | boardだけ必須。settingsでは省略。 |
-| — | — | — | — | 必要設定番号 | `requiredSettingsRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。 |
+| — | — | — | — | 保存種類 | `kind` | string（enum） | 必須。board固定。 |
+| — | — | — | — | 必要ボード番号 | `requiredBoardRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。 |
 | — | — | — | — | 再試行段階 | `phase` | string | [retry_save](DES-028-ipc-retry-save.md#retry_save)の後続保存だけ必須。followup。通常保存では省略。 |
 
 集約実行の代表Channelへ一度だけ発行する。照会では供給待ちの有効なものを再掲し、同じsnapshotIdを二重供給しない。
@@ -91,9 +89,8 @@ description: save_projectの責務・事前条件、項目別の入出力、応�
 | — | — | — | — | 要求元セッション | `sessionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。採用先セッションと混ぜない。 |
 | — | — | — | — | 対象プロジェクト | `projectId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 対象判明時に必須。空セッションでは省略。 |
 | — | — | — | — | 通知順序 | `eventSequence` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。要求内で増加。照会再掲では同じ値。 |
-| — | — | — | — | 保存種類 | `kind` | string（enum） | 必須。boardまたはsettings。 |
+| — | — | — | — | 保存種類 | `kind` | string（enum） | 必須。board固定。 |
 | — | — | — | — | 実保存ボード番号 | `savedBoardRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。[SavedResult](DES-016-ipc-composite-types.md#savedresult)。 |
-| — | — | — | — | 実保存設定番号 | `savedSettingsRevision` | [Revision](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。[SavedResult](DES-016-ipc-composite-types.md#savedresult)。 |
 | — | — | — | — | 保存先 | `destinationToken` | [Token](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。[SavedResult](DES-016-ipc-composite-types.md#savedresult)。 |
 | — | — | — | — | 表示保存先 | `destinationDisplayPath` | string | 必須。[SavedResult](DES-016-ipc-composite-types.md#savedresult)。 |
 | — | — | — | — | トランザクション | `transactionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。成功した処理。 |
@@ -101,7 +98,7 @@ description: save_projectの責務・事前条件、項目別の入出力、応�
 | — | — | — | — | 後片付け保留 | `cleanupPending` | boolean | 必須。[SavedResult](DES-016-ipc-composite-types.md#savedresult)。 |
 | — | — | — | — | 再試行段階 | `phase` | string | [retry_save](DES-028-ipc-retry-save.md#retry_save)だけ必須。followup。通常保存では省略。 |
 
-達成した保存要求それぞれへ同じ実保存結果を返す。settings結果で現在のboard成功番号を進めない。
+達成した保存要求それぞれへ同じ実保存結果を返す。設定の保存結果には反映しない。
 
 ## 処理順序と失敗保護
 
@@ -127,9 +124,9 @@ sequenceDiagram
 
 キュー先頭でRustがsnapshotIdを発行し、代表要求へ必要番号を通知する。供給のrequestIdは別。集約した要求へ[snapshotRequired](#snapshotrequired)を重複発行せず、実保存番号が必要番号を満たした各待機要求へ個別に[saveSucceeded](#savesucceeded)を返す。固定後に受付した、より新しい必要番号は次の対象で満たす。
 
-画面はDES-002の確定単位・メモ保存境界に従い、board/settings/viewと両番号、参照集合を同一時点で固定する。固定したオブジェクトは書き換えず、後続編集は別オブジェクトへ適用する。ドラッグ途中・IME変換中を混ぜない。Workerへの受渡しも大きな同期コピーで操作を止めない構成を成立確認する。JSON化はWorkerで行い、転送したArrayBufferは移譲後に再使用しない。実Tauriで必要なコピー量・メモリ予算・保存中反応を計測し、ゼロコピーを保証済みとしない。
+画面はDES-002の確定単位・メモ境界に従い、board/viewとboardRevision・画像集合を同時点で固定する。固定状態は変更せず、後続編集を別状態へ反映する。途中ドラッグ・IME変換部分を混ぜず、WorkerでUTF-8 JSONへ変換する。ArrayBuffer移譲後は再利用しない。実Tauriでコピー量・メモリ・操作反応を評価する。
 
-board保存は[BoardState](DES-015-ipc-state-dtos.md#boardstate)・[SettingsState](DES-015-ipc-state-dtos.md#settingsstate)・[ViewState](DES-015-ipc-state-dtos.md#viewstate)・[AssetIds](DES-014-ipc-common-protocol.md#共通スカラー型)・両番号を必須とする。settings保存では最新[SettingsState](DES-015-ipc-state-dtos.md#settingsstate)と設定番号だけを渡し、未保存board/view/assets/boardRevisionを禁止する。Rustは先行成功後のB0/view0/画像参照へ合成する。番号不足、使用画像集合不一致、欠損画像は対象不正として書込前に失敗終結する。
+ボード保存は[BoardState](DES-015-ipc-state-dtos.md#boardstate)・[ViewState](DES-015-ipc-state-dtos.md#viewstate)・[AssetIds](DES-014-ipc-common-protocol.md#共通スカラー型)・boardRevisionだけを必須とする。settings・settingsRevision・requiredSettingsRevisionは未知項目として拒否する。復旧用保持はRustが保存開始時に共通設定サービスから捕捉する処理オプションで、本文に含めない。番号不足・使用集合不一致・欠損画像は書込前に失敗終結する。
 
 供給前にWorkerが失敗した場合は、小さな[SnapshotFailure](DES-016-ipc-composite-types.md#snapshotsubmissionsnapshotfailure)本文を同じ有効snapshotIdへ送って元の保存を失敗終結する。古い供給はstaleSnapshot。供給済みへの重複はsnapshotAlreadySuppliedとして、既に開始した保存を続行する。要求自身の不正なID・ヘッダーは該当する有効な別保存を終了させない。
 
@@ -137,7 +134,7 @@ board保存は[BoardState](DES-015-ipc-state-dtos.md#boardstate)・[SettingsStat
 
 ## 検証観点と関連契約
 
-保存キューの集約、settings保存の範囲、保存先未確立、ブロック待機の失敗終結、保存中編集と実保存番号。具体的な成立確認・性能・障害評価は[DES-059](../test-strategy/DES-059-ipc-contract-test-strategy.md#ipc契約の共通評価観点)へ引き継ぐ。
+保存キューの集約、共通設定を拒否する範囲、保存先未確立、ブロック待機の失敗終結、保存中編集と実保存番号。具体的な成立確認・性能・障害評価は[DES-059](../test-strategy/DES-059-ipc-contract-test-strategy.md#ipc契約の共通評価観点)へ引き継ぐ。
 
 - [DES-011](DES-011-ipc-contracts.md)：全体方針とコマンド一覧。
 - [共通通信・資源寿命](DES-014-ipc-common-protocol.md)、[エラー契約](DES-017-ipc-error-contracts.md)：識別・照会・保持・終結と失敗分類。

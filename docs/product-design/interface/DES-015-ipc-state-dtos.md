@@ -6,7 +6,7 @@ description: ボード、画像、メモ、グループ、設定、表示、画�
 
 # DES-015：IPCの状態DTO
 
-- 設計状態：評価待ち。契約は決定済み。実Tauriの成立確認・性能・障害評価は未実施。
+- 設計状態：ドラフト。共通設定分離を反映した変更後契約は再レビュー対象。実Tauriの成立確認・性能・障害評価は未実施。
 - 目的・範囲：状態DTOの物理フィールド・型・単位・値域・参照整合。永続値域の正本は[DES-004](../data-design/DES-004-board-data-model.md)・[DES-008](../data-design/DES-008-project-file-data.md)。
 - 分割関係：[DES-011](DES-011-ipc-contracts.md)から項目別契約を分割した。全体方針と参照要件・確認時点は分割元を参照する。
 - 関連判断：[ADR-016](../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)。文書の分割で方式の選択・設計状態を変更しない。
@@ -68,18 +68,37 @@ description: ボード、画像、メモ、グループ、設定、表示、画�
 | 枠幅 | `frameWidth` | [FiniteNumber](DES-014-ipc-common-protocol.md#共通スカラー型) | 64以上のボード単位。 |
 | 枠高さ | `frameHeight` | [FiniteNumber](DES-014-ipc-common-protocol.md#共通スカラー型) | 64以上のボード単位。 |
 
-### SettingsState
+### AppSettings
 
-プロジェクト設定。30秒周期は固定仕様であり通信項目に追加しない。
+アプリ配置先の全プロジェクトに共通するRustの型。ボードDTOには含めない。通信時は形式版を付けず、ファイル時だけformatVersionを加える。前6項目は即時、後2項目は保存成功後の次回ボードから適用する。物理保存・適用境界は[DES-063](../functional-design/cross-cutting/DES-063-common-settings-management.md)。
 
 | 論理名 | 物理名 | 型 | 説明 |
 | --- | --- | --- | --- |
-| 自動保存有効 | `autosaveEnabled` | boolean | 新規true。 |
-| 復旧用保持有効 | `recoveryEnabled` | boolean | 新規true。 |
-| グリッド表示 | `gridVisible` | boolean | 新規true。 |
-| 吸着有効 | `snapEnabled` | boolean | 新規true。グリッド非表示でも有効可。 |
-| グリッド間隔 | `gridSpacing` | number（整数） | 8・16・32・64・128ボード単位。新規32。 |
-| 角度吸着間隔 | `rotationSnapDeg` | number（整数） | 5・15・45・90度。新規15。 |
+| 自動保存 | `autosaveEnabled` | boolean | 既定true。周期30秒は固定 |
+| 復旧用保持 | `recoveryEnabled` | boolean | 既定true |
+| グリッド表示 | `gridVisible` | boolean | 既定true |
+| グリッド間隔 | `gridSpacing` | integer | 8・16・32・64・128。既定32 |
+| スナップ | `snapEnabled` | boolean | 既定true。表示と独立 |
+| 回転刻み | `rotationSnapDeg` | integer | 5・15・45・90。既定15 |
+| 履歴上限 | `historyLimit` | integer | 1～1,000。既定100 |
+| 画像作業先 | `imageWorkspaceOverride` | stringまたはnull | 既定nullはプロジェクト隣の方針。指定は絶対ディレクトリーパス。空文字は禁止 |
+
+### AppSettingsSnapshot
+
+Rustサービスの一貫した状態を取得・保存の応答へ含める。設定番号はアプリ寿命で単調増加し、ボード切替で初期化しない。
+
+| 論理名 | 物理名 | 型 | 説明 |
+| --- | --- | --- | --- |
+| 最新確定値 | `values` | [AppSettings](#appsettings) | 必須。即時6項目の適用値を含む |
+| 最後の成功値 | `lastSavedValues` | AppSettingsまたはnull | 必須。成功ファイルなしはnull |
+| 次回ボード適用値 | `nextBoardSettings` | object | 必須、historyLimit・imageWorkspaceOverrideだけ。成功値なしは既定値 |
+| 現在番号 | `appSettingsRevision` | Revision | 必須、アプリ寿命の番号 |
+| 成功番号 | `savedAppSettingsRevision` | Revision | 必須。保存成功時だけ更新 |
+| 未保存 | `dirty` | boolean | 必須。未作成・保護中もtrue。番号一致だけでcleanと推定しない |
+| 保存状態 | `persistenceStatus` | string enum | clean・saving・unsaved・protectedInvalid・conflict・outcomeUnknown |
+| ファイル基準 | `fileVersion` | string | missing・unknown・正常読込または保存成功現物のSHA-256 |
+| 固定保存先表示 | `settingsDisplayPath` | stringまたはnull | 必須。パス解決不能時だけnull、入力用トークンではない |
+| 最新エラー | `lastError` | ErrorInfoまたはnull | 必須。エラー型は[DES-017](DES-017-ipc-error-contracts.md#errorinfo)。unknown文字列を生の例外へ置換しない |
 
 ### ViewState
 

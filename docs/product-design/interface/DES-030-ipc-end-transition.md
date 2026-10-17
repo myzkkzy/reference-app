@@ -6,7 +6,7 @@ description: end_transitionの責務・事前条件、項目別の入出力、�
 
 # DES-030：戻る・閉じる・終了の確定のIPC契約
 
-- 設計状態：評価待ち。契約は決定済み。実Tauriの成立確認・性能・障害評価は未実施。
+- 設計状態：ドラフト。共通設定分離を反映した変更後契約は再レビュー対象。実Tauriの成立確認・性能・障害評価は未実施。
 - 目的・範囲：戻る・閉じる・終了の確定。この入口とその応答・処理条件を管理し、編集正本や保存・排他の契約は根拠設計を参照する。
 - 分割関係：[DES-011](DES-011-ipc-contracts.md)から項目別契約を分割した。全体方針と参照要件・確認時点は分割元を参照する。
 - 関連判断：[ADR-016](../architecture-decisions/2026-10-09-ADR-016-ipc-transport-lifecycle.md)。文書の分割で方式の選択・設計状態を変更しない。
@@ -34,12 +34,13 @@ description: end_transitionの責務・事前条件、項目別の入出力、�
 | 現プロジェクト | `projectId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 現プロジェクトがある場合必須。ない場合は省略。対象候補のIDはRustが特定。 | 要求元セッション | `sessionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。[CommonEnvelope](DES-014-ipc-common-protocol.md#commonenvelope)の照合規則。 |
 | 遷移識別子 | `transitionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。 | 対象プロジェクト | `projectId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 対象判明時に必須。空セッション・対象不明では省略。 |
 | 終結操作 | `outcome` | string（enum） | 必須。return・close・exit。create／openの成功切替は[adopt_project](DES-032-ipc-adopt-project.md#adopt_project)を使う。 | 終結した遷移 | `transitionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | 必須。 |
-| 旧状態保護 | `protection` | object（[ProtectionDecision](DES-016-ipc-composite-types.md#protectiondecision)） | close／exitで必須。returnでは禁止。現プロジェクトなしなら0／0とhasUnconfirmedInput=false。 | 終結結果 | `outcome` | string（enum） | 必須。returned・closed・exited。 |
+| 旧状態保護 | `protection` | object（[ProtectionDecision](DES-016-ipc-composite-types.md#protectiondecision)） | close／exitで必須。returnでは禁止。現プロジェクトなしならboardRevision=0とhasUnconfirmedInput=false。 | 終結結果 | `outcome` | string（enum） | 必須。returned・closed・exited。 |
 | — | — | — | — | 閉じた後の空セッション | `newSessionId` | [UUID](DES-014-ipc-common-protocol.md#共通スカラー型) | closedだけ必須。returned／exitedでは省略。 |
+| 共通設定の終了保護 | `appSettingsProtection` | object | exitだけ必須。kind=saved/discarded、appSettingsRevision（Revision）。close・returnでは禁止。 | — | — | — | — |
 
 ### 処理と失敗時の扱い
 
-returnは遷移と候補だけを取消し、実行中の取込・保存を続行する。候補生成／初回保存が進行中なら終結後に不採用資源を解放する。closedでは空セッションへ移る。exitedは要求記録を終端にしてから終了し、応答欠落を保存失敗にしない。
+returnは遷移と候補だけを取消し、実行中の取込・保存を続行する。候補生成／初回保存が進行中なら終結後に不採用資源を解放する。closedでは空セッションへ移り、共通設定の値・処理・未保存は保持する。exitでは設定サービスの最新appSettingsRevisionと保護方法を照合し、保存選択ではclean・処理終結、破棄では未保存分だけ破棄を確認する。不一致・進行中・保存失敗では終了しない。ボードなしでも検査する。exitedは要求記録を終端にしてから終了し、応答欠落を保存失敗にしない。
 
 ## 応答・通知・エラー
 

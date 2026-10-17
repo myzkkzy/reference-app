@@ -6,12 +6,12 @@ description: 保存成功と異常終了後の復元、再試行、画像実体�
 
 # DES-058：保存整合性・障害復旧・画像実体保護のテスト戦略
 
-- 設計状態：ドラフト。テーマの検証方針を具体化し、実置換・同期・復元の成立確認を後続へ引き継ぐ。
+- 設計状態：評価待ち。テーマの検証方針を具体化し、実置換・同期・復元の成立確認を後続へ引き継ぐ。残件の担当・解消条件・進行範囲は本文の未決事項・引継ぎに従い、必要な確認後にドラフトへ戻して再レビューする。
 - 戦略区分：テーマ別。
 - 上位戦略：[DES-013：共通テスト戦略](DES-013-common-test-strategy.md)。層・基盤、証拠保全、文書と実行の状態区分は上位を適用する。
 - 具体化先：[DES-050：保存整合性・障害復旧・画像実体保護のテスト設計](../test-design/DES-050-save-integrity-recovery-test-design.md)。固定データ、停止点、条件・ケース、準備・操作・後片付けは同本文を正本とする。
 - 目的・範囲：保存の厳密な成功境界、保存未開始・途中・成功後の異常終了、明示再試行、復旧記録と現物の照合、画像実体と唯一の正常コピーの保護を確認する。
-- 入力確認日：2026-10-13。共通戦略と8テーマ別戦略から既存テスト設計へ具体化するユーザーの指示に基づく。
+- 入力確認日：2026-10-13。確認時点の入力は[DES-013：共通テスト戦略](DES-013-common-test-strategy.md)、[DES-050：保存整合性・障害復旧・画像実体保護のテスト設計](../test-design/DES-050-save-integrity-recovery-test-design.md)、[REQ-016](../../product-requirements/functional-requirements/cross-cutting/REQ-016-save-failure-recovery.md)、[REQ-032](../../product-requirements/functional-requirements/cross-cutting/REQ-032-file-lock-and-save-retry.md)の本文・該当節。現在の合意状況・設計状態は各本文を正本とし、方式の反映と成立確認を区別する。
 - 根拠：[REQ-016](../../product-requirements/functional-requirements/cross-cutting/REQ-016-save-failure-recovery.md)、[REQ-032](../../product-requirements/functional-requirements/cross-cutting/REQ-032-file-lock-and-save-retry.md)、[REQ-037](../../product-requirements/non-functional-requirements/cross-cutting/REQ-037-saved-content-durability.md)、[REQ-039](../../product-requirements/non-functional-requirements/cross-cutting/REQ-039-image-asset-retention.md)。変更後本文の合意レビュー待ちを維持する。
 - 依存する製品契約：[DES-008](../data-design/DES-008-project-file-data.md)、[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)、[DES-041](../non-functional-design/cross-cutting/DES-041-save-integrity-and-recovery.md)、[DES-042](../non-functional-design/cross-cutting/DES-042-rendering-performance-and-resources.md)、[DES-046](../functional-design/cross-cutting/DES-046-image-workspace-management.md)。関連ADRの状態はDES-050の参照元を維持する。
 - 抽出関係：旧DES-013の保存・復旧の先行成立確認と、DES-050に含まれていたテーマ方針を本書へ接続する。既存COND・CASEと保証範囲は維持する。
@@ -42,7 +42,7 @@ description: 保存成功と異常終了後の復元、再試行、画像実体�
 ## 網羅方針
 
 - 保存状態は、保存未開始の編集中、complete前の処理中、complete同期後の通知前、成功後の整理中を分ける。保存未開始では要求・待機・実処理がないことを証明し、保存途中の停止点やpreviousの前提を適用しない。
-- 既存保存の全対象永続化段階を、ボード／設定保存、復旧保持有効／無効で確認する。初回の旧なし状態、設定だけ／表示位置だけの保存は独立して扱う。
+- 既存保存の全対象永続化段階を、ボード保存と復旧保持有効／無効。設定保存は独立JSONの障害条件で確認する。初回の旧なし状態、設定だけ／表示位置だけの保存は独立して扱う。
 - I/O障害は置換前と以降、短い書込、同期失敗、容量不足、アクセス拒否を区別する。再試行は旧／新現物、照合競合、中断分完了後の追加入力、後続保存、再試行中再障害を含む。
 - 記録は型・帰属・完全性・ハッシュ連鎖を、外部変更は置換直前・直後・再試行前を確認する。時刻だけで世代・成功を選ばない。
 - 画像実体は現在ボード、Undo、Redo、直前成功基準、実行中保存、候補の各保持元を独立させる。未完了・帰属不明・他処理所有・復旧後別名保存前のコピーを整理対象へ混ぜない。
@@ -51,7 +51,7 @@ description: 保存成功と異常終了後の復元、再試行、画像実体�
 
 ## 観測と制御の方針
 
-保存固定対象、両現在／成功番号、request・session・transaction、段階到達、実ファイルの所在・サイズ・ハッシュ・検証結果を関連付ける。復元した全保存項目とPNG集合を照合し、再開後の番号だけで旧セッションの保存成功を推定しない。
+保存固定対象、ボード・アプリ設定それぞれの現在／成功番号、request・session・transaction、段階到達、実ファイルの所在・サイズ・ハッシュ・検証結果を関連付ける。復元した全保存項目とPNG集合を照合し、再開後の番号だけで旧セッションの保存成功を推定しない。
 
 強制終了は観測した状態・段階で制御し、正常終了保存や追加の後片付けを制御器が代行しない。通知だけの欠落は要求照会による元結果の回収へ接続し、実保存ブロック・中断保持を示す証拠がある行と分離する。失敗通知、書込停止、実現物はそれぞれ観測する。
 
@@ -75,4 +75,8 @@ description: 保存成功と異常終了後の復元、再試行、画像実体�
 
 ## テスト設計への接続
 
-DES-050の「適用テスト戦略」「戦略判断の具体化」から本書の通常見出しを参照し、COND群・共通仕様へ対応付ける。既存のCOND-001～010、CASE-001～018と根拠対応表は同設計で維持する。本書の方針具体化と、実置換・同期・復元の成立確認を別に判断する。
+DES-050の「適用テスト戦略」「戦略判断の具体化」から本書の通常見出しを参照し、COND群・共通仕様へ対応付ける。既存のCOND-001～011、CASE-001～022と根拠対応表は同設計で維持する。本書の方針具体化と、実置換・同期・復元の成立確認を別に判断する。
+
+## 共通設定分離の検証方針
+
+共通設定JSONの一時出力・検証・同期・置換、退避、競合、異常終了とボード復旧分離を独立した状態・現物の証拠で確認する。[DES-050](../test-design/DES-050-save-integrity-recovery-test-design.md)のCOND-011・CASE-019～022へ具体化する。既存のボード試験の成功で設定保存の成立を代替しない。実装、実行準備と製品試験は未完了。

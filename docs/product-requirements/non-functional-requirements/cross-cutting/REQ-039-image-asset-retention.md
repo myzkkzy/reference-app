@@ -6,12 +6,13 @@ description: 表示キャッシュの解放や作業領域の整理でも画像�
 
 # REQ-039：画像実体と復旧候補の保持
 
-- 合意状況：ドラフト
+- 合意状況：合意済み
 - 分割元：[REQ-016](../../functional-requirements/cross-cutting/REQ-016-save-failure-recovery.md)、[REQ-029](REQ-029-image-and-project-limits.md)。本文の意味・数値・保証範囲を保持した整理であり、新たな合意・設計完了・試験合格を表さない。
 - 種類：非機能
 - 参照要求：[DEM-004](../../../product-demands/cross-cutting/DEM-004-resume-saved-work.md#dem-004蓄積内容を保ち後日再開する)、[DEM-001](../../../product-demands/collection/DEM-001-collect-reference-images.md)、[DEM-003](../../../product-demands/organization/DEM-003-organize-image-insights.md)
-- 優先度・理由：必須。画像・配置・グループ・メモを保ち後日再開するという初期成果を、今回回答された保存失敗時の内容保護と再試行の振る舞い・条件で満たすため。
+- 優先度・理由：必須。画像・配置・グループ・メモを保ち後日再開するという初期成果を、保存失敗時の内容保護と再試行の振る舞い・条件で満たすため。
 - 依存要件：[REQ-016](../../functional-requirements/cross-cutting/REQ-016-save-failure-recovery.md)、[REQ-029](REQ-029-image-and-project-limits.md)
+- 根拠・出典：[保存完了と再開の保証範囲](../../../product-demands/product-decisions/2026-10-14-save-completion-and-resumption-policy.md#決定内容)、[設定の独立保存とフォント差再開の反映判断](../../../product-demands/product-decisions/2026-10-06-project-settings-and-font-resumption.md#決定内容)、[同一ファイル利用と保存再試行の判断](../../../product-demands/product-decisions/2026-10-06-project-lock-and-save-retry.md#決定内容)、[画像とプロジェクトの利用上限の反映判断](../../../product-demands/product-decisions/2026-10-06-image-and-project-limits.md#決定内容)。参照要求の期待成果と、各記録の決定内容・適用範囲を具体化する。
 
 ## 保持の保証
 
@@ -36,18 +37,14 @@ description: 表示キャッシュの解放や作業領域の整理でも画像�
 
 ### REQ-016から引き継ぐ情報
 
-- 分割元の合意状況：ドラフト
+- 分割時のREQ-016の合意状況：ドラフト。現在の合意状況は[REQ-016](../../functional-requirements/cross-cutting/REQ-016-save-failure-recovery.md)本文を正本とする。
 - 参照時点の要求：DEM-004「画像・配置・グループ・メモを保ち後日再開する」。参照要求はいずれも合意済み。
-- 今回の反映根拠：ユーザーのセッション決定と要件反映計画実行指示。[設定と再開の判断](../../../product-demands/product-decisions/2026-10-06-project-settings-and-font-resumption.md#決定内容)および[同一ファイル利用と再試行の判断](../../../product-demands/product-decisions/2026-10-06-project-lock-and-save-retry.md#決定内容)の決定内容に基づく反映。技術方式の採用、REQ全体の合意、実機試験は区別する。
-- 根拠・出典：上記参照要求、[現行5要求への合意](../../../product-demands/product-decisions/2026-09-13-final-demand-agreement.md#決定内容)、今回の要件定義対話でのユーザーの回答（親エージェント経由の要約）。 未決事項インタビューにおけるユーザーの回答：異常終了後は最後に保存成功した内容まで保証し、未保存変更の復元は保証しない。失敗の再現手順は設計・検証へスキップする。 現在の根拠：ユーザーの保存方式に関する個別回答と「保存処理の統合と、異常終了後の復元設計」の実行指示。合意済み本文を変更したため現在はドラフト。個別の方針決定と変更後REQ全体の合意・試験合格は区別する。
-- 変更根拠：ユーザーの計画実行指示。意味・受入条件の変更によりドラフトとし、従前の合意を変更後本文への合意とはしない。
 - 未決事項：保存失敗後の振る舞い・復元保証範囲は具体化済み。設計担当は実装引継ぎ前にライブラリ・排他／再試行契約を確認し、検証担当は検証計画時に障害・異常終了の再現手順を固定し、受入実施前に本項・共通条件の成立を確認する。変更後REQの合意レビューと技術検証待ちであり、未実施の試験を合格としない。
 
 詳細な文脈・確認事項・引継ぎは[REQ-016](../../functional-requirements/cross-cutting/REQ-016-save-failure-recovery.md)を参照する。
 ### REQ-029から引き継ぐ情報
 
-- 分割元の合意状況：ドラフト
+- 分割時のREQ-029の合意状況：ドラフト。現在の合意状況は[REQ-029](REQ-029-image-and-project-limits.md)本文を正本とする。
 - 参照時点の要求：適用先の既存要件が参照する要求を根拠とする。各要求の現在の内容・合意状況はリンク先を参照する。
-- 根拠・出典：既存の共通ルールを独立文書へ移した。既存の適用範囲・判断根拠・受入条件を保持し、独立採番を新たな合意として扱わない。
 
 詳細な文脈・確認事項・引継ぎは[REQ-029](REQ-029-image-and-project-limits.md)を参照する。

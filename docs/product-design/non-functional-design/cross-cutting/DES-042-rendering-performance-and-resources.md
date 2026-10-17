@@ -6,7 +6,7 @@ description: 表示画像のCPU・GPU予算、画像転送・キャッシュ解�
 
 # DES-042：表示性能とキャッシュ資源管理
 
-- 設計状態：ドラフト
+- 設計状態：評価待ち。表示性能・キャッシュ予算・画像実体保持の成立確認と評価条件の確定を待つ。残件の担当・解消条件・進行範囲は本文の未決事項・引継ぎに従い、必要な確認後にドラフトへ戻して再レビューする。
 - 分割元：[DES-001](../../architecture/DES-001-system-architecture.md)、[DES-005](../../screen-design/DES-005-screen-overview.md)、[DES-009](../../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)。本文の意味・数値・保証範囲を保持した整理であり、新たな合意・設計完了・試験合格を表さない。
 - 目的・範囲：表示性能とキャッシュ資源管理の詳細を管理する。操作、データ項目、画面配置、通信項目の正本は依存設計を参照する。
 - 参照要件：[REQ-021](../../../product-requirements/non-functional-requirements/cross-cutting/REQ-021-normal-operation-latency.md)、[REQ-022](../../../product-requirements/non-functional-requirements/cross-cutting/REQ-022-normal-detail-display.md)、[REQ-023](../../../product-requirements/non-functional-requirements/cross-cutting/REQ-023-saving-operation-latency.md)、[REQ-024](../../../product-requirements/non-functional-requirements/cross-cutting/REQ-024-saving-detail-display.md)、[REQ-025](../../../product-requirements/non-functional-requirements/cross-cutting/REQ-025-saved-project-open-performance.md)、[REQ-026](../../../product-requirements/non-functional-requirements/cross-cutting/REQ-026-batch-import-performance.md)、[REQ-033](../../../product-requirements/non-functional-requirements/cross-cutting/REQ-033-performance-evaluation-conditions.md)、[REQ-039](../../../product-requirements/non-functional-requirements/cross-cutting/REQ-039-image-asset-retention.md)。現在の合意状況と受入条件は各要件本文を正本とする。
@@ -52,21 +52,20 @@ REQ-021～026の目標・評価条件は[要件本文](../../../product-requirem
 
 ### DES-001から引き継ぐ情報
 
-- 設計状態：ドラフト
-- 入力確認日：2026-09-26。要求・要件の本文、合意状況、受入条件、設計担当への引継ぎ、ADR-001～007と本チャットの保存・復旧・編集状態に関するユーザーの回答を確認した。
+- 入力確認日：2026-09-26。確認時点の入力は[DES-001](../../architecture/DES-001-system-architecture.md)、[DES-005](../../screen-design/DES-005-screen-overview.md)、[DES-009](../../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)、[REQ-021](../../../product-requirements/non-functional-requirements/cross-cutting/REQ-021-normal-operation-latency.md)の本文・該当節。現在の合意状況・設計状態は各本文を正本とし、方式の反映と成立確認を区別する。
 - 関連ADR：[ADR-001：デスクトップ実行基盤](../../architecture-decisions/2026-09-25-ADR-001-tauri-desktop-runtime.md)、[ADR-002：PixiJSを中心にした描画](../../architecture-decisions/2026-09-25-ADR-002-pixijs-ui-rendering.md)、[ADR-003：メモ編集時の入力方式](../../architecture-decisions/2026-09-25-ADR-003-text-editing.md)、[ADR-004：独自ZIPとPNG](../../architecture-decisions/2026-09-26-ADR-004-zip-board-storage.md)、[ADR-005：保存と復旧](../../architecture-decisions/2026-09-26-ADR-005-save-recovery-policy.md)、[ADR-006：編集履歴](../../architecture-decisions/2026-09-26-ADR-006-session-edit-history.md)、[ADR-007：座標とグループ](../../architecture-decisions/2026-09-26-ADR-007-board-coordinates-and-groups.md)、[ADR-008：整形・静的検査基盤](../../architecture-decisions/2026-09-29-ADR-008-formatting-and-static-analysis.md)、[ADR-009：テスト自動化基盤](../../architecture-decisions/2026-09-29-ADR-009-test-automation.md)。
 
 詳細な文脈・確認事項・引継ぎは[DES-001](../../architecture/DES-001-system-architecture.md)を参照する。
 ### DES-005から引き継ぐ情報
 
-- 設計状態：ドラフト。決定済みの振る舞いと設計上の配置・文言案を区別し、要件反映・実証待ちを維持する。
+- 分割元の確認事項：決定済みの振る舞いと設計上の配置・文言案を区別し、要件反映・実証待ちを維持する。
 - 入力確認日：2026-09-28。REQ-001～026の本文・受入条件・合意状態を確認。REQ-004・006・010・020～026は条件付き合意、011～017・019は更新でドラフト、その他は合意済み。条件付き合意の限界値・評価条件は確定しない。
 
 詳細な文脈・確認事項・引継ぎは[DES-005](../../screen-design/DES-005-screen-overview.md)を参照する。
 ### DES-009から引き継ぐ情報
 
-- 設計状態：ドラフト。保存統合・復元と資源制御を具体化したが、障害・性能検証と変更要件のレビューが残るため実装引継ぎ可能とはしない。
-- 入力確認日：2026-09-30。ユーザーの設定独立保存、確認中の保存停止と戻った後の集約実行、入力済みメモ保存・IME変換中除外、同一ファイル再読込、取込完了待ち、表示位置保存、全保存での復旧用更新の回答と、本設計具体化計画の実行指示を確認。要件全体への合意・製品試験合格とは区別する。
+- 分割元の確認事項：保存統合・復元と資源制御を具体化したが、障害・性能検証と変更要件のレビューが残るため実装引継ぎ可能とはしない。
+- 入力確認日：2026-09-30。確認時点の入力は[DES-001](../../architecture/DES-001-system-architecture.md)、[DES-005](../../screen-design/DES-005-screen-overview.md)、[DES-009](../../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)、[REQ-021](../../../product-requirements/non-functional-requirements/cross-cutting/REQ-021-normal-operation-latency.md)の本文・該当節。現在の合意状況・設計状態は各本文を正本とし、方式の反映と成立確認を区別する。
 - 関連ADR：[ADR-011](../../architecture-decisions/2026-10-05-ADR-011-project-lock-and-retry.md)（排他・明示再試行、提案）、[ADR-004](../../architecture-decisions/2026-09-26-ADR-004-zip-board-storage.md)・[ADR-010](../../architecture-decisions/2026-09-29-ADR-010-sqlite-project-storage.md)は採用、[ADR-005](../../architecture-decisions/2026-09-26-ADR-005-save-recovery-policy.md)は変更要件レビュー・障害検証が残る提案。
 
 詳細な文脈・確認事項・引継ぎは[DES-009](../../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)を参照する。

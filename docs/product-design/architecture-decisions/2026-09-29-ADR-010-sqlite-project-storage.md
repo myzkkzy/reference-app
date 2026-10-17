@@ -8,8 +8,10 @@ description: ZIP内の構造化データにSQLiteを採用し、確定状態か�
 
 - 状態：採用（構造化データの保存技術と保存用DB生成の範囲）。設定・復旧等の追加動作の要件合意を含まない。
 - 作成日・決定日：2026-09-29。
-- 決定者・根拠：ユーザーが本チャットで「sqlite とする方針で設計検討」を指定し、文書整備計画の実行を依頼した。保存時のDB生成は既存のTypeScript正本とスナップショット境界を維持する設計担当の技術選定。
+- 決定者・根拠：SQLite利用の方針の決定者はユーザー。詳細方式の記録・検討は設計担当が[REQ-011](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md)、[REQ-019](../../product-requirements/functional-requirements/cross-cutting/REQ-019-cross-pc-transfer.md)の適用範囲を入力に、技術方式と確認できる理由を本記録へ整理する。既存の状態・未決事項は維持し、記録整理を採用・上流合意・試験合格と扱わない。
 - 関連：[REQ-011](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)、[REQ-014](../../product-requirements/functional-requirements/cross-cutting/REQ-014-manual-save.md#req-014手動保存)、[REQ-016](../../product-requirements/functional-requirements/cross-cutting/REQ-016-save-failure-recovery.md#req-016保存失敗時の内容保護と再試行)、[REQ-018](../../product-requirements/functional-requirements/cross-cutting/REQ-018-source-independent-resumption.md#req-018原本に依存しない継続)、[REQ-019](../../product-requirements/functional-requirements/cross-cutting/REQ-019-cross-pc-transfer.md#req-019利用者の別pcへの引継ぎ)、[DES-008](../data-design/DES-008-project-file-data.md)、[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)。
+
+置換関係の更新：[ADR-017](2026-10-17-ADR-017-executable-relative-common-settings.md)が設定のSQLite同梱・ボードへの合成部分を置き換える。ボードの形式・保存成功境界と通信方式の既存理由・状態は維持し、共通設定IPCだけアプリ寿命へ分離する。
 
 ## 背景・制約と比較
 
@@ -17,8 +19,8 @@ description: ZIP内の構造化データにSQLiteを採用し、確定状態か�
 
 | 選択肢 | 読解・整合性管理 | 負担・判断 |
 | --- | --- | --- |
-| JSON | テキストで直接確認可能。参照・型・制約の検証をアプリが担う | 全体スナップショットには適するが、ユーザーのSQLite指定により不採用。既存採用ADRの置換ではない |
-| SQLite | SQL、主キー・外部キー・制約、トランザクションで構造化データを扱える | バインディングと版移行の管理が必要。ユーザーの指定と整合性を明示できる点から採用 |
+| JSON | テキストで直接確認可能。参照・型・制約の検証をアプリが担う | 全体スナップショットには適するが、SQLiteの採用方針と異なるため不採用。既存採用ADRの置換ではない |
+| SQLite | SQL、主キー・外部キー・制約、トランザクションで構造化データを扱える | バインディングと版移行の管理が必要。主キー・外部キー・制約による整合性を明示できる点から採用 |
 | MessagePack等のバイナリ構造化形式 | 型付きの値を保存できるが、関係整合性は別途アプリで管理 | 容量や速度の具体的な課題・実測がなく追加形式の利点を根拠付けられないため不採用 |
 | TOML等の手編集設定形式 | 設定を人が編集しやすい | 多数のボード要素と関係を同じ契約で扱う利益が薄く不採用 |
 

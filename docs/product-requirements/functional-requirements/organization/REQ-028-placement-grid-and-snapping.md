@@ -10,12 +10,15 @@ description: 「配置・グリッド・スナップの共通ルール」の適�
 - 参照要求：[DEM-002](../../../product-demands/comparison/DEM-002-compare-image-overviews.md)、[DEM-003](../../../product-demands/organization/DEM-003-organize-image-insights.md)
 - 参照時点の要求：適用先の既存要件が参照する要求を根拠とする。各要求の現在の内容・合意状況はリンク先を参照する。
 - 適用要件：[REQ-006](REQ-006-image-transform.md)、[REQ-008](REQ-008-group-membership.md)、[REQ-009](REQ-009-group-movement.md)、[REQ-010](REQ-010-independent-notes.md)
-- 合意状況：ドラフト
-- 根拠・出典：既存の共通ルールを独立文書へ移した。既存の適用範囲・判断根拠・受入条件を保持し、独立採番を新たな合意として扱わない。
+- 優先度・理由：必須。画像・グループ・メモの配置範囲と、グリッド・位置・角度の吸着を共通のルールで扱うため。
+- 合意状況：ドラフト（共通設定への統合・ボード分離の変更部分は再レビュー対象）
+- 根拠・出典：[ボード編集・履歴・スナップの反映判断](../../../product-demands/product-decisions/2026-10-06-board-editing-and-snap.md#決定内容)、[全体表示・再開倍率・メモ表示の反映判断](../../../product-demands/product-decisions/2026-10-06-board-view-and-note-display.md#決定内容)。参照要求の期待成果と、各記録の決定内容・適用範囲を具体化する。
+
+- 変更根拠：[共通設定とボード分離の判断](../../../product-demands/product-decisions/2026-10-17-common-settings-and-board-separation.md)。設定の範囲・保存先・適用時点はREQ-030を正本とし、変更範囲の詳細レビューと製品検証は未完了。
 
 ## 配置・グリッド・スナップの共通ルール
 
-REQ-006・008～010に適用する。[編集・履歴・スナップの判断](../../../product-demands/product-decisions/2026-10-06-board-editing-and-snap.md#決定内容)の決定内容を反映する。以前の「自由回転のみ・スナップなし」はユーザーの追加指定により変更する。
+REQ-006・008～010に適用する。[編集・履歴・スナップの判断](../../../product-demands/product-decisions/2026-10-06-board-editing-and-snap.md#決定内容)の決定内容を反映する。以前の自由回転のみ・スナップなしの範囲を、根拠文書の決定内容に従って変更する。
 
 - 配置範囲はX・Y各軸−1,000,000～＋1,000,000ボード単位。画像・メモ・グループ枠の外周まで含める。移動・回転・拡縮は寸法・倍率・座標の全制約を満たす状態だけを確定する。限界を超えるドラッグは最後の有効状態で止めて上限を通知し、解放で確定、取消で開始前へ戻す。
 - グリッドは原点基準で、間隔8・16・32・64・128ボード単位、初期32。表示とスナップは独立切替で初期は両方オン。縮小時の線の間引きで吸着間隔を変えない。設定切替だけで既存要素を移動しない。保存・別PC引継ぎは[設定の共通ルール](../cross-cutting/REQ-030-shared-settings.md#設定の共通ルール)に従う。

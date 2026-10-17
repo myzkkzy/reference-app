@@ -10,8 +10,11 @@ description: 「フォント差による再開調整の共通ルール」の適�
 - 参照要求：[DEM-004](../../../product-demands/cross-cutting/DEM-004-resume-saved-work.md)、[DEM-005](../../../product-demands/cross-cutting/DEM-005-continue-on-another-pc.md)
 - 参照時点の要求：適用先の既存要件が参照する要求を根拠とする。各要求の現在の内容・合意状況はリンク先を参照する。
 - 適用要件：[REQ-011](REQ-011-restore-saved-content.md)、[REQ-019](REQ-019-cross-pc-transfer.md)
-- 合意状況：ドラフト
-- 根拠・出典：既存の共通ルールを独立文書へ移した。既存の適用範囲・判断根拠・受入条件を保持し、独立採番を新たな合意として扱わない。
+- 優先度・理由：必須。フォント環境が異なるPCでも本文・寸法・相対配置を保持して再開し、調整後の保存状態と未保存変更を区別するため。
+- 合意状況：ドラフト（共通設定への統合・ボード分離の変更部分は再レビュー対象）
+- 根拠・出典：[設定の独立保存とフォント差再開の反映判断](../../../product-demands/product-decisions/2026-10-06-project-settings-and-font-resumption.md#決定内容)、[同一ファイル利用と保存再試行の判断](../../../product-demands/product-decisions/2026-10-06-project-lock-and-save-retry.md#決定内容)。参照要求の期待成果と、各記録の決定内容・適用範囲を具体化する。
+
+- 変更根拠：[共通設定とボード分離の判断](../../../product-demands/product-decisions/2026-10-17-common-settings-and-board-separation.md)。設定の範囲・保存先・適用時点はREQ-030を正本とし、変更範囲の詳細レビューと製品検証は未完了。
 
 ## フォント差による再開調整の共通ルール
 

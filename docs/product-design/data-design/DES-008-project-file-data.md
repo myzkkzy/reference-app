@@ -1,15 +1,15 @@
 ---
 type: Product Design
 title: プロジェクトファイルのデータ設計
-description: 独自ZIP内のSQLite・PNGの構造、項目、参照制約と保存形式の互換性を定義するドラフト。
+description: 独自ZIP内のSQLite・PNGの構造、項目、参照制約と保存形式の互換性を定義する。
 ---
 
 # DES-008：プロジェクトファイルのデータ設計
 
-- 設計状態：ドラフト。保存処理の補助ファイルを追加。変更要件のレビュー・障害検証は未完了。
+- 設計状態：評価待ち。保存構造・項目制約・互換性と保存処理の補助ファイルを具体化済み。合意済み要件との詳細照合、保存・復元での値の保持、資源上限、障害時の整合性、SQLiteの配布構成と性能の確認が残る。設計担当が要件・関連設計との整合を確認し、実装・検証担当が方式の成立を確認する。必要な確認後、ドラフトに戻して再レビューする。
 - 目的・範囲：単一ボードを持つプロジェクトの物理保存構造の正本。画面・保存処理・実装DDLは対象外。
-- 入力確認日：2026-09-29。ユーザーのSQLite方針と文書整備計画の実行指示、および下記要件本文・受入条件を確認。
-- 参照要件：[REQ-006～010](../../product-requirements/functional-requirements/organization/REQ-006-image-transform.md#req-006画像の移動回転拡縮)（006・010は条件付き合意、007～009は合意済み）、[REQ-011～019](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)（011～017・019は意味変更でドラフト、018は合意済み）。方針回答と要件全体への合意を区別する。
+- 入力確認日：2026-09-29。確認時点の入力は[REQ-006～010](../../product-requirements/functional-requirements/organization/REQ-006-image-transform.md#req-006画像の移動回転拡縮)、[REQ-011～019](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)、[DES-003](DES-003-data-overview.md)、[DES-004](DES-004-board-data-model.md)の本文・該当節。現在の合意状況・設計状態は各本文を正本とし、方式の反映と成立確認を区別する。
+- 参照要件：[REQ-006～010](../../product-requirements/functional-requirements/organization/REQ-006-image-transform.md#req-006画像の移動回転拡縮)（006・010は条件付き合意、007～009は合意済み）、[REQ-011～019](../../product-requirements/functional-requirements/cross-cutting/REQ-011-restore-saved-content.md#req-011保存内容の復元)（011～017・019は意味変更でドラフト、018は合意済み）。判断記録の範囲と要件全体の合意状況を区別する。
 - 依存設計：[DES-003](DES-003-data-overview.md)、[DES-004](DES-004-board-data-model.md)、[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)。DES-004は論理モデル、本書は物理形式を管理する。
 - 関連判断：[ADR-004](../architecture-decisions/2026-09-26-ADR-004-zip-board-storage.md)、[ADR-010](../architecture-decisions/2026-09-29-ADR-010-sqlite-project-storage.md)。
 - 資源上限の判断：[ADR-012](../architecture-decisions/2026-10-06-ADR-012-image-resource-limits.md)。
@@ -28,7 +28,7 @@ example.refboard                 # ZIP、初版コンテナーバージョン1
         └── <asset-id>.png
 ```
 
-manifestはUTF-8のJSONオブジェクトで、必須の`format`（TEXT相当、固定値`reference-app-project`）と`containerVersion`（整数、初版`1`）だけを出力する。設定・プロジェクトIDはDBだけに保持する。DBスキーマ版は`PRAGMA user_version = 1`で管理する。アプリのリリース版とは別である。拡張子だけで形式を判定しない。
+manifestはUTF-8のJSONオブジェクトで、必須の`format`（TEXT相当、固定値`reference-app-project`）と`containerVersion`（整数、初版`1`）だけを出力する。プロジェクトIDはDBだけに保持し、共通設定はZIP・DBに含めない。DBスキーマ版は`PRAGMA user_version = 1`で管理する。アプリのリリース版とは別である。拡張子だけで形式を判定しない。
 
 PNGパスは画像実体IDから導出し、DBに絶対パス・元ファイル位置・ZIPパスを重複保存しない。ZIPエントリー名は上記の小文字ASCIIと`/`に統一する。初版は必須ファイルと参照中PNGだけを出力し、不要画像・縮小キャッシュ・SQLiteのjournal/WAL/SHMは同梱しない。読込もこの集合と整合することを確認する。将来項目の追加は形式版で管理し、未知版を推測して読み書きしない。
 
@@ -83,15 +83,6 @@ classDiagram
         REAL width
         INTEGER font_size
     }
-    class project_settings {
-        TEXT project_id
-        INTEGER autosave_enabled
-        INTEGER recovery_enabled
-        INTEGER grid_visible
-        INTEGER grid_spacing
-        INTEGER snap_enabled
-        INTEGER rotation_snap_deg
-    }
     class board_view {
         TEXT board_id
         REAL center_x
@@ -99,7 +90,6 @@ classDiagram
         REAL zoom
     }
     project "1" *-- "1" board
-    project "1" *-- "1" project_settings
     board "1" *-- "1" board_view
     board "1" *-- "0..*" board_groups
     board "1" *-- "0..*" board_items
@@ -109,7 +99,7 @@ classDiagram
     image_items "1..*" --> "1" assets : 実体参照
 ```
 
-初版はproject・board・project_settings・board_viewがそれぞれ必ず1行。image_itemsとnote_itemsは排他的で、各board_itemsに種類と一致する詳細行が必ず1行ある。保存DBのassetsは全行が画像要素から参照される。画像のないプロジェクトではassetsは0行。
+初版はproject・board・board_viewがそれぞれ必ず1行。image_itemsとnote_itemsは排他的で、各board_itemsに種類と一致する詳細行が必ず1行ある。保存DBのassetsは全行が画像要素から参照される。画像のないプロジェクトではassetsは0行。
 
 ## 項目定義
 
@@ -140,12 +130,6 @@ classDiagram
 | note_items.text | TEXT NN | 初期空文字、確定したUnicode本文を保持。明示改行を保持し上限10,000文字。Unicode 17.0 UAX #29の拡張書記素クラスタ。改行はLFで1文字 |
 | note_items.width | REAL NN | メモ表示外幅、初期320、120～4,096単位。高さは本文・幅・font_size・端末フォントから算出し保存しない |
 | note_items.font_size | INTEGER NN | 初期16、CHECKで12・14・16・18・24・32。行高は1.5倍で列にしない |
-| project_settings.project_id | TEXT PK FK NN | project.id |
-| project_settings.autosave_enabled | INTEGER NN | 新規1。CHECKで0または1。30秒周期は仕様で固定しDB列にはしない |
-| project_settings.recovery_enabled | INTEGER NN | 新規1。CHECKで0または1 |
-| project_settings.grid_visible / snap_enabled | INTEGER NN | 初期1、CHECKで0または1。グリッド非表示でも吸着有効可 |
-| project_settings.grid_spacing | INTEGER NN | 初期32、CHECKで8・16・32・64・128、ボード単位 |
-| project_settings.rotation_snap_deg | INTEGER NN | 初期15、CHECKで5・15・45・90、度 |
 | board_view.board_id | TEXT PK FK NN | board.id |
 | board_view.center_x / center_y | REAL NN | 新規0、表示中心のボード座標 |
 | board_view.zoom | REAL NN | 新規1、0.000001以上16以下。復元は保存値を無補正で採用。手動範囲・fitはDES-004。画像自身のscaleと区別 |
@@ -164,13 +148,13 @@ REALは有限の64bit浮動小数値として変換する。NaN・無限大・�
 
 保存PNGはsRGB・各色8ビット（透過がある場合はアルファも8ビット）とし、向き情報を引き継がない。取込時だけ上限寸法へ縮小する。変換手順は[DES-010](../functional-design/collection/DES-010-image-import-pipeline.md)を参照する。
 
-ボード保存はTypeScriptの確定済みboard/view/settings、設定保存はRustの直前成功board/viewと最新settingsを合成し、本表の全行を新規DBへ一括変換する。更新中DBを編集の正本にしない。画像参照を先に固定して、構造化データと同じ保存スナップショットに結び付ける。読込は逆変換した候補のボード・設定・表示状態をまとめて採用する。[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)が処理順序と失敗保護を管理する。
+ボード保存はTypeScriptの確定済みboard/viewと画像参照を固定し、本表の全行を新規DBへ一括変換する。更新中DBを編集の正本にしない。画像参照を先に固定して、構造化データと同じ保存スナップショットに結び付ける。読込は逆変換した候補のボード・表示状態をまとめて採用する。共通設定は採用・復旧で変更しない。[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)が処理順序と失敗保護を管理する。
 
-選択・履歴・未確定操作・描画キャッシュ・保存先パス・要求ID・boardRevision/settingsRevisionと両成功番号・タイマー起算時刻はセッション状態であり保存しない。読込成功時に更新番号を再初期化する。表示中心と倍率は画面寸法によらず復元し、ウィンドウサイズや前面表示等のOS固有状態は今回のプロジェクト設定に追加しない。
+選択・履歴・未確定操作・描画キャッシュ・保存先パス・要求ID・boardRevisionとsavedBoardRevision・タイマー起算時刻はセッション状態であり保存しない。読込成功時に更新番号を再初期化する。表示中心と倍率は画面寸法によらず復元し、ウィンドウサイズや前面表示等のOS固有状態は今回のボードデータに追加しない。
 
 初版読込対応はコンテナー1かつDBスキーマ1だけ。0・未来版・組合せ不一致は非対応として入力を変更しない。将来の移行は専用一時コピーで行い、旧版ごとの変換と検証を追加し、別ファイルへ保存する。DB版だけを上げる操作を移行としない。
 
-設計反映で、枠列を空時専用のempty_*から常時保持するframe_*へ変更し、note_items.widthを追加した。リリース済み形式の移行ではなく、形式1の実装前ドラフトの修正である。既存成果物の互換性を検証済みとはしない。履歴上限と画像作業先はアプリ設定のため本DBに含めない。
+設計反映で、枠列を空時専用のempty_*から常時保持するframe_*へ変更し、note_items.widthを追加した。リリース済み形式の移行ではなく、形式1の実装前ドラフトの修正である。既存成果物の互換性を検証済みとはしない。全8項目のAppSettingsは実行ファイル配下のconfig/settings.jsonへ保存し、本DBに含めない。設定の物理形式・検証は[DES-063](../functional-design/cross-cutting/DES-063-common-settings-management.md)を正本とする。
 
 ## 保存処理の補助ファイル
 
@@ -192,24 +176,24 @@ example.refboard.recovery                 # 保持有効時の直前1世代
 
 | 記録 | 必須情報・検証 |
 | --- | --- |
-| prepare.json | 記録形式版1、transactionId（UUID）、projectId、保存先の正規化識別、保存種類、両更新番号、旧ファイルの有無、新旧ZIPのSHA-256・バイト数、適用した保持設定。UTF-8 JSON、必須値と型を完全検証 |
+| prepare.json | 記録形式版1、transactionId（UUID）、projectId、保存先の正規化識別、保存種類（board固定）、boardRevision、旧ファイルの有無、新旧ZIPのSHA-256・バイト数、適用した保持設定。UTF-8 JSON、必須値と型を完全検証 |
 | complete.json | 同じ識別情報と新旧ZIPのハッシュ・サイズ、保持設定、復旧用更新の要否と完了結果、準備記録のハッシュ。準備記録が後片付けでなくなっても本ファイルを照合できる情報を保持 |
 
 記録は書込途中のファイルを完了記録として扱わない。全必須値の読取・対応照合と同期成功を必要とする。記録にある保存先は、利用者が選択した保存先と処理領域の帰属に一致することを確認する。パストラバーサル、リンク経由の別領域、同名の帰属不明データを受け入れない。新旧ハッシュで世代を結び、時刻だけで新旧を判断しない。部分記録や矛盾時は保存成功と推測せず現物を保全する。
 
-previousは本ファイルと独立したコピーで、ハードリンクや置換APIの移動だけに保護を依存しない。保持設定は成功後の継続保持だけを制御し、無効でもpreviousを作る。有効時は設定・表示位置だけの保存でも毎回.recoveryを更新する。無効時は既存.recoveryを更新・削除しない。初回は旧ファイルなしと記録し、架空の復旧用を作らない。
+previousは本ファイルと独立したコピーで、ハードリンクや置換APIの移動だけに保護を依存しない。保持設定は成功後の継続保持だけを制御し、無効でもpreviousを作る。有効時は表示位置だけのボード保存でも毎回.recoveryを更新する。設定保存は本ファイル・復旧用を変更しない。保持値はボード保存開始時に共通設定サービスから捕捉し、ボードの保存属性にはしない。無効時は既存.recoveryを更新・削除しない。初回は旧ファイルなしと記録し、架空の復旧用を作らない。
 
 成功後の整理は不要なZIP・退避等、prepare、completeの順とし、completeを最後に削除する。途中終了した処理や唯一の正常コピーは自動整理しない。読込時の判定と候補提示は[DES-041](../non-functional-design/cross-cutting/DES-041-save-integrity-and-recovery.md#中断した保存の判定)を正本とする。
 
 ## 検証観点・未決事項・引継ぎ
 
-DB往復変換で値・ID・重なり順・全グループ枠・メモ幅・画像共有参照・設定・表示位置が保たれること、参照不正とPNG欠損を別々に検出することを確認する。構文・リンク以外の試験は未実施。変更要件のレビュー、資源上限の成立検証、配布用SQLiteライブラリと性能の確認は[DES-009の引継ぎ](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md#未決事項引継ぎ)を正本とする。
+DB往復変換で値・ID・重なり順・全グループ枠・メモ幅・画像共有参照・表示位置が保たれること、参照不正とPNG欠損を別々に検出することを確認する。構文・リンク以外の試験は未実施。設計担当は実装引継ぎ前に合意済み要件の本文・受入条件と関連設計を照合し、不一致を解消する。要件の意味変更が必要な場合は要件担当へ戻す。実装・検証担当による資源上限・保存中断時の整合性・配布用SQLiteライブラリと性能の成立確認は[DES-009の引継ぎ](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md#未決事項引継ぎ)を正本とし、評価待ちの残件として実装引継ぎ前に確認する。
 
 ## 今回追加項目の互換性
 
-note_items.font_sizeとグリッド／スナップ4列を形式1の実装前ドラフトへ追加。新規作成だけ初期値を補い、読込時の列欠落・NULL・列型不一致・選択肢外は破損として全候補を拒否する。未リリース旧ドラフト形式の読込互換性を追加せず、コンテナー1／スキーマ1を維持する。実装済みの旧ファイルがある場合は担当が識別・移行方針を確認するまで更新しない。グリッド線、補助線、吸着候補・一時解除状態、フォント名・メモ高は保存しない。
+note_items.font_sizeを形式1の実装前ドラフトへ追加。共通設定分離に伴いproject_settingsテーブルを削除する。新規作成だけ初期値を補い、読込時の列欠落・NULL・列型不一致・選択肢外は破損として全候補を拒否する。未リリース旧ドラフト形式の読込互換性を追加せず、コンテナー1／スキーマ1を維持する。旧ドラフト形式の移行処理は追加しない。グリッド線、補助線、吸着候補・一時解除状態、フォント名・メモ高は保存しない。
 
-入力確認：要件本文の現在状態は維持し、本セッションの決定と計画実行指示を設計へ反映した。振る舞い差分は要件担当の反映・レビュー待ち。製品試験は未実施。
+入力確認：判断記録の決定内容を設計へ具体化した。振る舞い差分と合意済み要件の詳細照合は設計担当の確認待ち。製品試験は未実施。
 
 ## 共通要件の対応と引継ぎ
 

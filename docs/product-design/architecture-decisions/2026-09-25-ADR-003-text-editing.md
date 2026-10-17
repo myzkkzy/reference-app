@@ -9,12 +9,12 @@ description: PixiJS表示のメモを編集するときにHTML textareaを併用
 - 状態：提案
 - 作成日：2026-09-25
 - 決定日：未決
-- 決定者・判断権限の根拠：設計担当の技術提案。従前はユーザーが「ほぼ全てPixiJS」を選択し`@pixi/ui`の入力を質問した段階だった。今回の詳細設計対話で非編集時PixiJS・編集時textarea併用を選択し、文書反映を指示した。変更後要件のレビューと実機品質は別に残る。
+- 決定者・判断権限の根拠：非編集時PixiJS・編集時textarea併用の方針の決定者はユーザー。詳細方式の記録・検討は設計担当が[REQ-010](../../product-requirements/functional-requirements/organization/REQ-010-independent-notes.md)、[REQ-036](../../product-requirements/non-functional-requirements/organization/REQ-036-note-text-capacity.md)の適用範囲を入力に、技術方式と確認できる理由を本記録へ整理する。既存の状態・未決事項は維持し、記録整理を採用・上流合意・試験合格と扱わない。
 - 関連要求・要件・設計：[DEM-003](../../product-demands/organization/DEM-003-organize-image-insights.md#dem-003画像の関係や気づきを自分なりに整理する)、[REQ-010](../../product-requirements/functional-requirements/organization/REQ-010-independent-notes.md#req-010独立メモの編集と配置)、[DES-001：全体設計](../architecture/DES-001-system-architecture.md#des-001リファレンスボードの全体設計)。
 
 ## 背景・制約
 
-メモは画像やグループから独立して作成・編集・配置できる。表示は[ADR-002](2026-09-25-ADR-002-pixijs-ui-rendering.md)に従いPixiJSを使う。ユーザーはテキスト入力も`@pixi/ui`で実現可能か質問した。今回のセッション計画は改行、拡張書記素クラスタ10,000文字、編集境界を指定している。要件本文への差分はDES-002に示す。日本語入力を含む編集操作の成立を設計上確認する必要がある。
+メモは画像やグループから独立して作成・編集・配置できる。表示は[ADR-002](2026-09-25-ADR-002-pixijs-ui-rendering.md)に従いPixiJSを使う。改行、拡張書記素クラスタ10,000文字、編集境界は関連要件とDES-002に従う。要件本文への差分はDES-002に示す。日本語入力を含む編集操作の成立を設計上確認する必要がある。
 
 ## 選択肢と判断基準
 
@@ -42,7 +42,7 @@ description: PixiJS表示のメモを編集するときにHTML textareaを併用
 
 ## 未決条件
 
-- 改行・文字上限・文字サイズ・編集境界は計画反映としてDES-002・006へ具体化。textarea併用はユーザー選択済み。要件担当の本文反映・レビューと実機成立確認を残す。
+- 改行・文字上限・文字サイズ・編集境界は計画反映としてDES-002・006へ具体化。textarea併用の方針を本書に記録する。要件担当の本文反映・レビューと実機成立確認を残す。
 - 設計担当はメモ編集UIの表示位置・確定/取消・フォーカス遷移を設計本文で具体化し、実装・検証担当へ日本語IME、改行、カーソル移動、範囲選択、貼り付けの確認を引き継ぐ。
 
 ## 置換関係
@@ -52,18 +52,18 @@ description: PixiJS表示のメモを編集するときにHTML textareaを併用
 
 ## 今回の具体化と状態
 
-セッション決定の計画実行指示を反映。提案中のADRの詳細を更新したため、採用済み判断の置換ではない。現在の本文契約は[DES-002](../functional-design/organization/DES-002-board-editing-state.md)・[DES-006](../screen-design/DES-006-board-screen.md)。要件担当の差分反映・レビュー、入力・操作・障害の成立確認を待ち、提案状態を維持する。旧回答の理由と出典は保持する。
+関連PDRの決定範囲を設計へ反映。提案中のADRの詳細を更新したため、採用済み判断の置換ではない。現在の本文契約は[DES-002](../functional-design/organization/DES-002-board-editing-state.md)・[DES-006](../screen-design/DES-006-board-screen.md)。要件担当の差分反映・レビュー、入力・操作・障害の成立確認を待ち、提案状態を維持する。確認できる理由と根拠文書の参照を維持する。
 
 ## 上流見直しの経緯
 
 - 理由：複数行・日本語入力と本文確定を成立させるには、文字数計数、IME中の操作・保存、拒否入力の復元、文章内Undoを区別する必要がある。
 - 対象・変更案：REQ-010の本文・受入条件に改行と10,000文字上限、保存を越える文章内履歴、本文確定と取消、IME・超過貼付けの保護を反映する。計数の版・入力方式・状態モデルは設計の責務とする。
-- プロダクト判断：[編集・履歴・スナップのPDR](../../product-demands/product-decisions/2026-10-06-board-editing-and-snap.md#決定内容)。取得経路は既存文書の要約であり、すべての具体化境界を個別の回答として扱わない。
+- プロダクト判断：[編集・履歴・スナップのPDR](../../product-demands/product-decisions/2026-10-06-board-editing-and-snap.md#決定内容)。既存の判断範囲を参照し、技術的な具体化と区別する。
 - 発端・技術根拠：[DES-002の入力契約と変更案](../functional-design/organization/DES-002-board-editing-state.md#メモ編集の入力契約)。ボードの確定履歴と文章内履歴は[ADR-006](2026-09-26-ADR-006-session-edit-history.md#上流見直しの経緯)と関連する。
 - 判断状況：要件への反映は記載済みだが変更後REQ全体のレビュー、ADRの採用判断、実機成立確認は別に残る。提案状態と従前の理由・作成日を維持する。
 
 ## 入力方式の選択の反映
 
-入力確認日：2026-10-08。取得経路は本チャットのユーザー回答と詳細設計反映計画の実行指示の要約。非編集時はPixiJS、編集時だけtextareaを重ねる方式をユーザーが選択した。従前の未選択という理由は当時の経緯として保持し、現在の方式選択の残件にはしない。
+入力確認日：2026-10-08。非編集時PixiJS・編集時textareaの方式を本書の決定と理由へ記録する。方式選択と上流レビュー・実機品質の確認を分ける。
 
 表示同等性・長文タイル・Unicode 17ライブラリと入力優先を[DES-002](../functional-design/organization/DES-002-board-editing-state.md)・[DES-006](../screen-design/DES-006-board-screen.md)へ具体化した。選択の反映だけで上流REQの変更後レビューや実機入力品質が完了した扱いにせず、提案状態を維持する。実装・検証の引継ぎは[DES-013](../test-strategy/DES-013-common-test-strategy.md)。

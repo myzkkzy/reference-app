@@ -1,6 +1,6 @@
 # インターフェース設計（IPC）：文書案内
 
-- [DES-011：画面とRustのIPC契約](DES-011-ipc-contracts.md) - IPCの責務分担と導出方針、22コマンド・4共通契約の定義元を案内する。
+- [DES-011：画面とRustのIPC契約](DES-011-ipc-contracts.md) - IPCの責務分担と導出方針、24コマンド・4共通契約の定義元を案内する。
 - [DES-014：IPCの共通通信・資源寿命](DES-014-ipc-common-protocol.md) - 通信形式、共通型・ヘッダー、要求記録とトークン・画像参照の寿命を定義する。
 - [DES-015：IPCの状態DTO](DES-015-ipc-state-dtos.md) - ボード、画像、メモ、グループ、設定、表示、画像メタデータの通信項目を定義する。
 - [DES-016：IPCの入出力複合型](DES-016-ipc-composite-types.md) - 入力・取込・保存・候補・遷移・要求照会で用いる複合型の通信項目を定義する。
@@ -27,3 +27,5 @@
 - [DES-037：取消可能な要求の取消のIPC契約](DES-037-ipc-cancel-request.md) - cancel_requestの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
 - [DES-038：要求状態照会のIPC契約](DES-038-ipc-get-request-status.md) - get_request_statusの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
 - [DES-039：終端結果の受領確認のIPC契約](DES-039-ipc-acknowledge-requests.md) - acknowledge_requestsの責務・事前条件、項目別の入出力、応答と処理・失敗条件を定義する。
+- [DES-064：共通設定取得のIPC契約](DES-064-ipc-get-app-settings.md) - get_app_settingsの起動読込結果・適用値・未保存・保存基準を取得する契約を定義する。
+- [DES-065：共通設定保存のIPC契約](DES-065-ipc-save-app-settings.md) - save_app_settingsの即時適用・独立保存・再試行・原本退避と保存結果を定義する。

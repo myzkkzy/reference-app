@@ -6,13 +6,13 @@ description: 既定の500枚負荷・性能値・各3回全回合格を維持し
 
 # DES-061：操作・細部表示・再開・取込性能のテスト戦略
 
-- 設計状態：ドラフト。既定条件に基づく性能評価の方針を具体化。固定画像・ボード・操作・計測法の未決に依存する完全受入判定と引継ぎ可能判断は保留する。
+- 設計状態：評価待ち。既定条件に基づく性能評価の方針を具体化。固定画像・ボード・操作・計測法の未決に依存する完全受入判定と引継ぎ可能判断は保留する。残件の担当・解消条件・進行範囲は本文の未決事項・引継ぎに従い、必要な確認後にドラフトへ戻して再レビューする。
 - 戦略区分：テーマ別。
 - 上位戦略：[DES-013：共通テスト戦略](DES-013-common-test-strategy.md)。層・基盤、証拠保全、文書と実行の状態区分は上位を適用する。
 - 具体化先：[DES-053：性能のテスト設計](../test-design/DES-053-performance-test-design.md)。評価負荷・始点終点・閾値・試行、条件・ケース、記録仕様と未決U1～U4は同本文を正本とする。
 - 目的・範囲：通常時と自動／手動保存中のパン・ズーム反応と対象細部、保存済み500枚再開、ローカル500枚初回取込の実時間を確認する。
-- 入力確認日：2026-10-13。共通戦略と8テーマ別戦略から既存テスト設計へ具体化し、性能の未決は維持するユーザーの指示に基づく。
-- 根拠：[REQ-021](../../product-requirements/non-functional-requirements/cross-cutting/REQ-021-normal-operation-latency.md)、[REQ-022](../../product-requirements/non-functional-requirements/cross-cutting/REQ-022-normal-detail-display.md)、[REQ-023](../../product-requirements/non-functional-requirements/cross-cutting/REQ-023-saving-operation-latency.md)、[REQ-024](../../product-requirements/non-functional-requirements/cross-cutting/REQ-024-saving-detail-display.md)、[REQ-025](../../product-requirements/non-functional-requirements/cross-cutting/REQ-025-saved-project-open-performance.md)、[REQ-026](../../product-requirements/non-functional-requirements/cross-cutting/REQ-026-batch-import-performance.md)、[REQ-033](../../product-requirements/non-functional-requirements/cross-cutting/REQ-033-performance-evaluation-conditions.md)。REQ-021～026の条件付き合意、REQ-033のドラフトと必要な条件合意を維持する。
+- 入力確認日：2026-10-13。確認時点の入力は[DES-013：共通テスト戦略](DES-013-common-test-strategy.md)、[DES-053：性能のテスト設計](../test-design/DES-053-performance-test-design.md)、[REQ-021](../../product-requirements/non-functional-requirements/cross-cutting/REQ-021-normal-operation-latency.md)、[REQ-022](../../product-requirements/non-functional-requirements/cross-cutting/REQ-022-normal-detail-display.md)の本文・該当節。現在の合意状況・設計状態は各本文を正本とし、方式の反映と成立確認を区別する。
+- 根拠：[REQ-021](../../product-requirements/non-functional-requirements/cross-cutting/REQ-021-normal-operation-latency.md)、[REQ-022](../../product-requirements/non-functional-requirements/cross-cutting/REQ-022-normal-detail-display.md)、[REQ-023](../../product-requirements/non-functional-requirements/cross-cutting/REQ-023-saving-operation-latency.md)、[REQ-024](../../product-requirements/non-functional-requirements/cross-cutting/REQ-024-saving-detail-display.md)、[REQ-025](../../product-requirements/non-functional-requirements/cross-cutting/REQ-025-saved-project-open-performance.md)、[REQ-026](../../product-requirements/non-functional-requirements/cross-cutting/REQ-026-batch-import-performance.md)、[REQ-033](../../product-requirements/non-functional-requirements/cross-cutting/REQ-033-performance-evaluation-conditions.md)。既定閾値・負荷・試行と、未決解消後に必要な条件合意を維持する。現在の合意状況は各要件本文を正本とする。
 - 依存する製品契約：[DES-042](../non-functional-design/cross-cutting/DES-042-rendering-performance-and-resources.md)、[DES-009](../functional-design/cross-cutting/DES-009-project-persistence-recovery.md)、[DES-010](../functional-design/collection/DES-010-image-import-pipeline.md)。
 - 抽出関係：旧DES-013の「製品評価へ渡す条件」と実処理を切り分ける観測判断、DES-053に含まれていた性能方針を本書へ接続する。既存条件・ケースとU1～U4を維持する。
 
@@ -60,7 +60,7 @@ description: 既定の500枚負荷・性能値・各3回全回合格を維持し
 
 ## 観測と制御の方針
 
-入力イベント、要求受付、スナップショット固定、DB生成、ZIP完了、置換・復旧更新・complete、候補検証・採用、PNG受信・デコード、実描画と操作可能化を関連付ける。request・session・asset・snapshot・transaction、保存trigger、両現在／成功番号を証拠へ残す。保存中にパン・ズーム・編集を続けても、古い成功番号で後続編集を保存済みに進めないことを機能・整合性の主判定へ接続する。
+入力イベント、要求受付、スナップショット固定、DB生成、ZIP完了、置換・復旧更新・complete、候補検証・採用、PNG受信・デコード、実描画と操作可能化を関連付ける。request・session・asset・snapshot・transaction、保存trigger、当該ボードの現在／成功番号を証拠へ残す。保存中にパン・ズーム・編集を続けても、古い成功番号で後続編集を保存済みに進めないことを機能・整合性の主判定へ接続する。
 
 時間差は既定の始点・終点で判定する。時計・分解能・時計間同期、画面変化・最終精細さ・操作可能の測定方法、実保存との重なりの検出はU4として未決を維持する。観測負荷と測定誤差の扱いを再レビューし、閾値緩和や架空のフックで補わない。診断用の段階停止と実負荷測定は別の証拠にする。
 
